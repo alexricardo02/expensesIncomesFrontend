@@ -1,65 +1,128 @@
 import Image from "next/image";
+import React from 'react';
+import { 
+  ArrowUpCircle, 
+  ArrowDownCircle, 
+  Wallet, 
+  PlusCircle, 
+  History, 
+  TrendingUp 
+} from 'lucide-react';
+import Link from "next/link";
+
+// Mock data para previsualización (esto luego vendrá de tu API de Java)
+const recentTransactions = [
+  { id: 1, type: 'income', category: 'Salario', amount: 2500, date: '2025-12-20' },
+  { id: 2, type: 'expense', category: 'Supermercado', amount: 85.50, date: '2025-12-21' },
+  { id: 3, type: 'expense', category: 'Suscripción Netflix', amount: 15.99, date: '2025-12-22' },
+  { id: 4, type: 'income', category: 'Freelance Design', amount: 450, date: '2025-12-22' },
+];
+
+async function getIncomes() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL_INCOMES}`);
+  return res.json();
+}
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-8">
+        
+        {/* HEADER SECTION */}
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Financial Dashboard</h1>
+            <p className="text-slate-500">Welcome back, here is your summary for today.</p>
+          </div>
+          <div className="flex gap-3">
+            <Link href="/new-transaction">
+            <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-all shadow-sm">
+              <PlusCircle size={20} />
+              New Transaction
+            </button>
+            </Link>
+          </div>
+        </header>
+
+        {/* SUMMARY CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Total Balance */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                <Wallet size={24} />
+              </div>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Balance</span>
+            </div>
+            <h2 className="text-3xl font-bold">$2,848.51</h2>
+            <div className="mt-4 flex items-center text-sm text-emerald-600 font-medium">
+              <TrendingUp size={16} className="mr-1" />
+              <span>+12% from last month</span>
+            </div>
+          </div>
+
+          {/* Incomes */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                <ArrowUpCircle size={24} />
+              </div>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Incomes</span>
+            </div>
+            <h2 className="text-3xl font-bold text-emerald-600">$3,200.00</h2>
+            <p className="text-sm text-slate-500 mt-4">2 transactions this month</p>
+          </div>
+
+          {/* Expenses */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 bg-rose-50 text-rose-600 rounded-lg">
+                <ArrowDownCircle size={24} />
+              </div>
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Expenses</span>
+            </div>
+            <h2 className="text-3xl font-bold text-rose-600">$351.49</h2>
+            <p className="text-sm text-slate-500 mt-4">15 transactions this month</p>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        {/* RECENT ACTIVITY TABLE */}
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+          <div className="p-6 border-b border-slate-50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <History className="text-slate-400" size={20} />
+              <h3 className="font-semibold text-lg">Recent Activity</h3>
+            </div>
+            <button className="text-indigo-600 text-sm font-medium hover:underline">View all</button>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
+                <tr>
+                  <th className="px-6 py-4 font-medium">Category</th>
+                  <th className="px-6 py-4 font-medium">Date</th>
+                  <th className="px-6 py-4 font-medium text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {recentTransactions.map((t) => (
+                  <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4 font-medium">{t.category}</td>
+                    <td className="px-6 py-4 text-slate-500">{t.date}</td>
+                    <td className={`px-6 py-4 text-right font-semibold ${
+                      t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                    }`}>
+                      {t.type === 'income' ? '+' : '-'} ${t.amount.toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
   );
 }
