@@ -18,12 +18,76 @@ const recentTransactions = [
   { id: 4, type: 'income', category: 'Freelance Design', amount: 450, date: '2025-12-22' },
 ];
 
-async function getIncomes() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL_INCOMES}`);
-  return res.json();
+async function getTransactions() {
+  try {
+    const [incomesRes, expensesRes] = await Promise.all([
+      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { cache: 'no-store' }),
+      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { cache: 'no-store' })
+    ]);
+
+    if (!incomesRes.ok || !expensesRes.ok) throw new Error('Failed to fetch data');
+
+    const incomes = await incomesRes.json();
+    const expenses = await expensesRes.json();
+
+    const combined = [
+      ...incomes.map((i: any) => ({ 
+        ...i, 
+        kind: 'income',
+        // Usamos i.id o i.incomeId según devuelva tu ResponseDTO
+        displayId: `in-${i.id || i.incomeId}` 
+      })),
+      ...expenses.map((e: any) => ({ 
+        ...e, 
+        kind: 'expense',
+        displayId: `ex-${e.id || e.expenseId}` 
+      }))
+    ];
+
+    return combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return [];
+  }
 }
 
-export default function Home() {
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+};
+
+/**
+ * The Home component renders the main dashboard page, showing the user's total balance,
+ * their recent income and expenses, and a list of their recent transactions.
+ */
+export default async function Home() {
+  const transactions = await getTransactions();
+
+  const totalIncomes = transactions
+    .filter(t => t.kind === 'income')
+    .reduce((acc, curr) => acc + curr.amount, 0);
+
+  const totalExpenses = transactions
+  .filter(t=> t.kind === 'expense')
+  .reduce((acc, curr) => acc + curr.amount, 0);
+
+  const totalBalance = totalIncomes - totalExpenses;
+
+  const now = new Date();
+  const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+  const monthlyIncomesCount = transactions.filter(t => 
+  t.kind === 'income' && t.date.startsWith(currentMonthStr)
+).length;
+
+const monthlyExpensesCount = transactions.filter(t => 
+  t.kind === 'expense' && t.date.startsWith(currentMonthStr)
+).length;
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -36,7 +100,7 @@ export default function Home() {
           </div>
           <div className="flex gap-3">
             <Link href="/new-transaction">
-            <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-all shadow-sm">
+            <button className="cursor-pointer flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-all shadow-sm">
               <PlusCircle size={20} />
               New Transaction
             </button>
@@ -54,7 +118,7 @@ export default function Home() {
               </div>
               <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Balance</span>
             </div>
-            <h2 className="text-3xl font-bold">$2,848.51</h2>
+            <h2 className="text-3xl font-bold">{formatCurrency(totalBalance)}</h2>
             <div className="mt-4 flex items-center text-sm text-emerald-600 font-medium">
               <TrendingUp size={16} className="mr-1" />
               <span>+12% from last month</span>
@@ -69,8 +133,8 @@ export default function Home() {
               </div>
               <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Incomes</span>
             </div>
-            <h2 className="text-3xl font-bold text-emerald-600">$3,200.00</h2>
-            <p className="text-sm text-slate-500 mt-4">2 transactions this month</p>
+            <h2 className="text-3xl font-bold text-emerald-600">{formatCurrency(totalIncomes)}</h2>
+            <p className="text-sm text-slate-500 mt-4">{monthlyIncomesCount} transactions this month</p>
           </div>
 
           {/* Expenses */}
@@ -81,11 +145,11 @@ export default function Home() {
               </div>
               <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Expenses</span>
             </div>
-            <h2 className="text-3xl font-bold text-rose-600">$351.49</h2>
-            <p className="text-sm text-slate-500 mt-4">15 transactions this month</p>
+            <h2 className="text-3xl font-bold text-rose-600">{formatCurrency(totalExpenses)}</h2>
+            <p className="text-sm text-slate-500 mt-4">{monthlyExpensesCount} transactions this month</p>
           </div>
         </div>
-
+ 
         {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           <div className="p-6 border-b border-slate-50 flex items-center justify-between">
@@ -93,7 +157,7 @@ export default function Home() {
               <History className="text-slate-400" size={20} />
               <h3 className="font-semibold text-lg">Recent Activity</h3>
             </div>
-            <button className="text-indigo-600 text-sm font-medium hover:underline">View all</button>
+            <button className="text-indigo-600 text-sm font-medium hover:underline cursor-pointer">View all</button>
           </div>
           
           <div className="overflow-x-auto">
@@ -106,17 +170,28 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
-                {recentTransactions.map((t) => (
-                  <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-4 font-medium">{t.category}</td>
-                    <td className="px-6 py-4 text-slate-500">{t.date}</td>
-                    <td className={`px-6 py-4 text-right font-semibold ${
-                      t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
-                    }`}>
-                      {t.type === 'income' ? '+' : '-'} ${t.amount.toFixed(2)}
+                {transactions.length > 0 ? (
+                  transactions.map((t) => (
+                    <tr key={t.displayId} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <span className="font-medium">{t.typeName}</span>
+                        <span className="block text-xs text-slate-400 uppercase">{t.kind}</span>
+                      </td>
+                      <td className="px-6 py-4 text-slate-500">{t.date}</td>
+                      <td className={`px-6 py-4 text-right font-semibold ${
+                        t.kind === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                      }`}>
+                        {t.kind === 'income' ? '+' : '-'} {t.amount.toFixed(2)} {t.currency}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={3} className="px-6 py-10 text-center text-slate-400">
+                      No transactions found. Try adding one!
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

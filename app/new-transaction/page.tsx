@@ -107,11 +107,11 @@ export default function NewTransactionPage() {
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => router.push("/")}
-          className="flex items-center text-slate-500 hover:text-slate-800 mb-6 group transition-colors"
+          className="flex items-center text-slate-500 hover:text-slate-800 mb-6 group transition-colors cursor-pointer"
         >
           <ArrowLeft
             size={20}
-            className="mr-2 group-hover:-translate-x-1 transition-transform"
+            className="mr-2 group-hover:-translate-x-1 transition-transform cursor-pointer"
           />
           Back to Dashboard
         </button>
@@ -137,7 +137,7 @@ export default function NewTransactionPage() {
                     setType(t);
                     setFormData({ ...formData, typeName: "" }); // Reset category when switching type
                   }}
-                  className={`flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${
+                  className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${
                     type === t
                       ? "bg-white text-indigo-600 shadow-sm"
                       : "text-slate-500 hover:text-slate-700"
@@ -158,7 +158,7 @@ export default function NewTransactionPage() {
                   required
                   type="number"
                   step="0.01"
-                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-lg"
+                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-lg text-slate-900 placeholder:text-slate-400"
                   placeholder="0.00"
                   value={formData.amount}
                   onChange={(e) =>
@@ -174,7 +174,7 @@ export default function NewTransactionPage() {
                 </label>
                 <div className="relative">
                   <select
-                    className="w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                    className="w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-slate-900"
                     value={formData.currency}
                     onChange={(e) =>
                       setFormData({ ...formData, currency: e.target.value })
@@ -201,7 +201,7 @@ export default function NewTransactionPage() {
                 <div className="relative">
                   <select
                     required
-                    className="w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                    className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
                     value={formData.typeName}
                     onChange={(e) =>
                       setFormData({ ...formData, typeName: e.target.value })
@@ -217,7 +217,7 @@ export default function NewTransactionPage() {
                     ))}
                   </select>
                   <ChevronDown
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-900"
                     size={18}
                   />
                 </div>
@@ -231,7 +231,7 @@ export default function NewTransactionPage() {
                 <input
                   required
                   type="date"
-                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                  className="text-slate-900 w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
                   value={formData.date}
                   onChange={(e) =>
                     setFormData({ ...formData, date: e.target.value })
@@ -248,7 +248,7 @@ export default function NewTransactionPage() {
               <textarea
                 rows={3}
                 placeholder="Add a note..."
-                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none font-medium"
+                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
