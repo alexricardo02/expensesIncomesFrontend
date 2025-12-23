@@ -8,6 +8,7 @@ import {
   History,
   TrendingUp,
   TrendingDown,
+  BarChart3,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -222,16 +223,25 @@ export default async function Home() {
         {/* HEADER SECTION */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-3xl font-bold text-slate-900">
               Financial Dashboard
             </h1>
-            <p className="text-slate-500">
-              Welcome back, here is your summary for today.
+            <p className="text-slate-500 text-sm">
+              Real-time tracking of your finances
             </p>
           </div>
+
           <div className="flex gap-3">
+            {/* NEW STATISTICS BUTTON */}
+            <Link href="/statistics">
+              <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
+                <BarChart3 size={20} />
+                View Stats
+              </button>
+            </Link>
+
             <Link href="/new-transaction">
-              <button className="cursor-pointer flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-all shadow-sm">
+              <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
                 <PlusCircle size={20} />
                 New Transaction
               </button>
