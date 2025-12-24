@@ -200,7 +200,7 @@ export default function TransactionTable({
                   {formatCurrency(t.amount, t.currency)}
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center justify-end gap-2 opacity-100 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => openEditModal(t)}
                       className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg cursor-pointer"
@@ -228,7 +228,7 @@ export default function TransactionTable({
               </h3>
               <button
                 onClick={closeModal}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-slate-400 hover:text-slate-600 cursor-pointer"
               >
                 <X size={24} />
               </button>
