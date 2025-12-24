@@ -75,9 +75,7 @@ export default async function EditTransactionsPage() {
 
       {/* RECENT ACTIVITY TABLE */}
       <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <TransactionTable
-          initialTransactions={transactions}
-        />
+        <TransactionTable initialTransactions={transactions} />
       </section>
     </main>
   );
