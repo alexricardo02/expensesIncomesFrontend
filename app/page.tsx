@@ -12,37 +12,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-// Mock data para previsualización (esto luego vendrá de tu API de Java)
-const recentTransactions = [
-  {
-    id: 1,
-    type: "income",
-    category: "Salario",
-    amount: 2500,
-    date: "2025-12-20",
-  },
-  {
-    id: 2,
-    type: "expense",
-    category: "Supermercado",
-    amount: 85.5,
-    date: "2025-12-21",
-  },
-  {
-    id: 3,
-    type: "expense",
-    category: "Suscripción Netflix",
-    amount: 15.99,
-    date: "2025-12-22",
-  },
-  {
-    id: 4,
-    type: "income",
-    category: "Freelance Design",
-    amount: 450,
-    date: "2025-12-22",
-  },
-];
 
 async function getTransactions() {
   try {
@@ -328,9 +297,12 @@ export default async function Home() {
               <History className="text-slate-400" size={20} />
               <h3 className="font-semibold text-lg">Recent Activity</h3>
             </div>
-            <button className="text-indigo-600 text-sm font-medium hover:underline cursor-pointer">
-              View all
-            </button>
+            <Link href="/edit-transactions">
+              <button className="text-indigo-600 text-sm font-medium hover:underline cursor-pointer">
+                View all
+              </button>
+            </Link>
+            
           </div>
 
           <div className="overflow-x-auto">
