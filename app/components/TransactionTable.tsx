@@ -28,6 +28,48 @@ interface TransactionTableProps {
   initialTransactions: any[];
 }
 
+ const handleDelete = async (transaction: any) => {
+  // 1. Pedir confirmación al usuario por seguridad
+  const confirmed = window.confirm(
+    `Are you sure you want to delete this ${transaction.kind}?`
+  );
+  if (!confirmed) return;
+
+  // 2. Obtener el ID real
+  const realId =
+    transaction.incomeId ||
+    transaction.expenseId ||
+    transaction.id;
+
+  try {
+    // 3. Determinar el endpoint según el tipo
+    const baseUrl =
+      transaction.kind === "income"
+        ? process.env.NEXT_PUBLIC_API_URL_INCOMES
+        : process.env.NEXT_PUBLIC_API_URL_EXPENSES;
+
+    const endpoint = `${baseUrl}/${realId}`;
+
+    // 4. Ejecutar la petición DELETE
+    const response = await fetch(endpoint, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      alert("Transaction deleted successfully");
+      // Refrescamos la página para actualizar la lista
+      window.location.reload();
+    } else {
+      const errorData = await response.json().catch(() => ({}));
+      alert(`Error: ${errorData.message || "Could not delete transaction"}`);
+    }
+  } catch (error) {
+    console.error("Delete error:", error);
+    alert("Backend is offline or unreachable.");
+  }
+};
+
+
 export default function TransactionTable({
   initialTransactions,
 }: TransactionTableProps) {
@@ -111,6 +153,8 @@ export default function TransactionTable({
     }
   };
 
+ 
+
   return (
     <>
       <div className="overflow-x-auto">
@@ -163,7 +207,7 @@ export default function TransactionTable({
                     >
                       <Pencil size={18} />
                     </button>
-                    <button className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer">
+                    <button onClick={() => handleDelete(t)} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer">
                       <Trash2 size={18} />
                     </button>
                   </div>
