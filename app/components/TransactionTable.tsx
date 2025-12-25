@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle } from "lucide-react";
+import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle, Eraser, DollarSign, Calendar, Filter } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import router from "next/dist/shared/lib/router/router";
-import { toast } from "react-hot-toast/headless";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const INCOME_CATEGORIES = [
   "Salary",
@@ -24,6 +23,7 @@ const EXPENSE_CATEGORIES = [
   "Bills",
   "Shopping",
 ];
+const ALL_CATEGORIES = [...INCOME_CATEGORIES, ...EXPENSE_CATEGORIES];
 const CURRENCIES = ["USD", "EUR", "GBP", "JPY"];
 
 interface TransactionTableProps {
@@ -34,9 +34,25 @@ interface TransactionTableProps {
 export default function TransactionTable({
   initialTransactions,
 }: TransactionTableProps) {
+  // Estados para Modales
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // Modal de borrado
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+
+  // --- ESTADOS PARA FILTROS ---
+  const [filterType, setFilterType] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [filterDate, setFilterDate] = useState<string>("");
+  const [filterMinAmount, setFilterMinAmount] = useState<string>("");
+
+  const filteredTransactions = initialTransactions.filter((t) => {
+    const matchesType = filterType === "all" || t.kind === filterType;
+    const matchesCategory = filterCategory === "all" || (t.typeName || t.type) === filterCategory;
+    const matchesDate = filterDate === "" || t.date === filterDate;
+    const matchesAmount = filterMinAmount === "" || t.amount >= parseFloat(filterMinAmount);
+
+    return matchesType && matchesCategory && matchesDate && matchesAmount;
+  });
 
   const openEditModal = (transaction: any) => {
     setSelectedTransaction(transaction);
@@ -140,6 +156,79 @@ export default function TransactionTable({
     <>
 
     <Toaster position="top-right" />
+    {/* --- SECCIÓN DE FILTROS --- */}
+      <div className="bg-slate-50 p-6 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        {/* Filtro Tipo */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
+            <Filter size={14} /> Type
+          </label>
+          <select 
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+          >
+            <option value="all">All Types</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+
+        {/* Filtro Categoría */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
+            <Tag size={14} /> Category
+          </label>
+          <select 
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+          >
+            <option value="all">All Categories</option>
+            {ALL_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+          </select>
+        </div>
+
+        {/* Filtro Fecha */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
+            <Calendar size={14} /> Date
+          </label>
+          <input 
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+          />
+        </div>
+
+        {/* Filtro Monto Mínimo */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
+            <DollarSign size={14} /> Min Amount
+          </label>
+          <input 
+            type="number"
+            placeholder="0.00"
+            value={filterMinAmount}
+            onChange={(e) => setFilterMinAmount(e.target.value)}
+            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+          />
+        </div>
+
+        {/* Botón Limpiar */}
+        <button 
+          onClick={() => {
+            setFilterType("all");
+            setFilterCategory("all");
+            setFilterDate("");
+            setFilterMinAmount("");
+          }}
+          className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition-colors text-sm cursor-pointer"
+        >
+          <Eraser size={16} /> Clear
+        </button>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
@@ -152,7 +241,7 @@ export default function TransactionTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-700">
-            {initialTransactions.map((t) => (
+            {filteredTransactions.map((t) => (
               <tr
                 key={t.displayId}
                 className="hover:bg-slate-50/50 transition-colors group"

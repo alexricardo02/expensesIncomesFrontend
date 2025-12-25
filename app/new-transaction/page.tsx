@@ -12,6 +12,8 @@ import {
   Globe,
   ChevronDown,
 } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
+import Link from "next/link";
 
 // Define the available categories (Types)
 const INCOME_CATEGORIES = [
@@ -46,6 +48,9 @@ export default function NewTransactionPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const loadingToast = toast.loading("Creating transaction...");
+    
+
     const transactionData: any = {
       amount: parseFloat(formData.amount),
       currency: formData.currency,
@@ -74,27 +79,26 @@ export default function NewTransactionPage() {
       });
 
       if (response.ok) {
-        alert("Saved successfully!");
-        router.push("/");
+        toast.success("Saved successfully!", { id: loadingToast });
+        setTimeout(() => {
+          router.push("/");
+        }, 1200);
       } else {
         // ESTO ES LO IMPORTANTE:
         const errorBody = await response.json();
         console.error("DETALLE DEL ERROR DESDE SPRING:", errorBody);
+
+        const errorMessage = errorBody.message || "Check the fields and try again";
+        toast.error(`Error: ${errorMessage}`, { id: loadingToast });
 
         // Si tienes errores de validación (@NotBlank, etc), Spring los pone en una lista
         if (errorBody.errors) {
           console.table(errorBody.errors);
         }
 
-        alert(
-          `Error 400: ${
-            errorBody.message ||
-            "Check the console (F12) to see which field failed"
-          }`
-        );
       }
     } catch (error) {
-      alert("Backend is offline.");
+      toast.error("Backend is offline.", { id: loadingToast });
     }
   };
 
@@ -104,6 +108,8 @@ export default function NewTransactionPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8">
+
+      <Toaster position="top-right" />
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => router.push("/")}
@@ -258,7 +264,7 @@ export default function NewTransactionPage() {
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all text-lg"
+              className="cursor-pointer w-full flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all text-lg"
             >
               <Save size={22} />
               Confirm Transaction

@@ -11,6 +11,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import Link from "next/link";
+import TransactionList from "./components/TransactionList";
 
 async function getTransactions() {
   try {
@@ -293,6 +294,7 @@ export default async function Home() {
 
         {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+
           <div className="p-6 border-b border-slate-50 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="text-slate-400" size={20} />
@@ -305,65 +307,55 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
-                <tr>
-                  <th className="px-6 py-4 font-medium">Type</th>
-                  <th className="px-6 py-4 font-medium">Category</th>
-                  <th className="px-6 py-4 font-medium">Date</th>
-                  <th className="px-6 py-4 font-medium text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {recentTransactions.length > 0 ? (
-                  recentTransactions.map((t) => (
-                    <tr
-                      key={t.displayId}
-                      className="hover:bg-slate-50/50 transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${
-                            t.kind === "income"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-rose-100 text-rose-700"
-                          }`}
-                        >
-                          {t.kind}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-slate-900">
-                          {t.typeName || t.type || "Uncategorized"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-slate-500">{t.date}</td>
-                      <td
-                        className={`px-6 py-4 text-right font-semibold ${
-                          t.kind === "income"
-                            ? "text-emerald-600"
-                            : "text-rose-600"
-                        }`}
-                      >
-                        {t.kind === "income" ? "+" : "-"}{" "}
-                        {formatCurrency(t.amount, t.currency)} {t.currency}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={3}
-                      className="px-6 py-10 text-center text-slate-400"
-                    >
-                      No transactions found. Try adding one!
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+            {/* 1. VISTA MOBILE: Se muestra en celulares, se oculta en PC (md:hidden) */}
+            <div className="block md:hidden">
+              {recentTransactions.length > 0 ? (
+                <TransactionList 
+                  transactions={recentTransactions} 
+                />
+              ) : (
+                <div className="p-10 text-center text-slate-400">No transactions.</div>
+              )}
+            </div>
+
+
+          
+
+          {/* 2. VISTA DESKTOP: Se oculta en celulares (hidden), se muestra en PC (md:block) */}
+  <div className="hidden md:block overflow-x-auto">
+    <table className="w-full text-left border-collapse">
+      <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
+        <tr>
+          <th className="px-6 py-4 font-medium">Type</th>
+          <th className="px-6 py-4 font-medium">Category</th>
+          <th className="px-6 py-4 font-medium">Date</th>
+          <th className="px-6 py-4 font-medium text-right">Amount</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-slate-100 text-slate-700">
+        {recentTransactions.map((t) => (
+          <tr key={t.displayId} className="hover:bg-slate-50/50 transition-colors">
+            <td className="px-6 py-4">
+              <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${
+                t.kind === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
+              }`}>
+                {t.kind}
+              </span>
+            </td>
+            <td className="px-6 py-4 font-medium text-slate-900">
+              {t.typeName || t.type}
+            </td>
+            <td className="px-6 py-4 text-slate-500">{t.date}</td>
+            <td className={`px-6 py-4 text-right font-semibold ${
+              t.kind === "income" ? "text-emerald-600" : "text-rose-600"
+            }`}>
+              {t.kind === "income" ? "+" : "-"} {formatCurrency(t.amount, t.currency)}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
         </section>
       </div>
     </main>
