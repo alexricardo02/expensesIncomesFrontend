@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Pencil, Trash2, X, Save, Tag, Globe } from "lucide-react";
+import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import router from "next/dist/shared/lib/router/router";
+import { toast } from "react-hot-toast/headless";
+import { Toaster } from "react-hot-toast";
 
 const INCOME_CATEGORIES = [
   "Salary",
@@ -28,52 +30,12 @@ interface TransactionTableProps {
   initialTransactions: any[];
 }
 
- const handleDelete = async (transaction: any) => {
-  // 1. Pedir confirmación al usuario por seguridad
-  const confirmed = window.confirm(
-    `Are you sure you want to delete this ${transaction.kind}?`
-  );
-  if (!confirmed) return;
-
-  // 2. Obtener el ID real
-  const realId =
-    transaction.incomeId ||
-    transaction.expenseId ||
-    transaction.id;
-
-  try {
-    // 3. Determinar el endpoint según el tipo
-    const baseUrl =
-      transaction.kind === "income"
-        ? process.env.NEXT_PUBLIC_API_URL_INCOMES
-        : process.env.NEXT_PUBLIC_API_URL_EXPENSES;
-
-    const endpoint = `${baseUrl}/${realId}`;
-
-    // 4. Ejecutar la petición DELETE
-    const response = await fetch(endpoint, {
-      method: "DELETE",
-    });
-
-    if (response.ok) {
-      alert("Transaction deleted successfully");
-      // Refrescamos la página para actualizar la lista
-      window.location.reload();
-    } else {
-      const errorData = await response.json().catch(() => ({}));
-      alert(`Error: ${errorData.message || "Could not delete transaction"}`);
-    }
-  } catch (error) {
-    console.error("Delete error:", error);
-    alert("Backend is offline or unreachable.");
-  }
-};
-
 
 export default function TransactionTable({
   initialTransactions,
 }: TransactionTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // Modal de borrado
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
   const openEditModal = (transaction: any) => {
@@ -81,8 +43,14 @@ export default function TransactionTable({
     setIsModalOpen(true);
   };
 
+  const openDeleteModal = (transaction: any) => {
+    setSelectedTransaction(transaction);
+    setIsDeleteModalOpen(true);
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
+    setIsDeleteModalOpen(false);
     setSelectedTransaction(null);
   };
 
@@ -106,7 +74,7 @@ export default function TransactionTable({
 
     const transactionData: any = {
       amount: parseFloat(formData.get("amount") as string),
-      type: formData.get("typeName"),
+      typeName: formData.get("typeName"),
       currency: formData.get("currency"),
       date: formData.get("date"),
       description: formData.get("description"),
@@ -115,12 +83,6 @@ export default function TransactionTable({
 
     // 2. Mapeo de categoría según lo que espera tu DTO de Spring
     const categoryValue = formData.get("typeName");
-
-    if (kind === "income") {
-      transactionData.type = categoryValue; // IncomeDTO suele usar 'type'
-    } else {
-      transactionData.typeName = categoryValue; // ExpenseDTO usa 'typeName'
-    }
 
     try {
       // 3. Construimos el endpoint dinámico para PUT
@@ -153,10 +115,31 @@ export default function TransactionTable({
     }
   };
 
- 
+  const confirmDelete = async () => {
+    const realId = selectedTransaction.incomeId || selectedTransaction.expenseId || selectedTransaction.id;
+    const loadingToast = toast.loading("Deleting...");
+
+    try {
+      const baseUrl = selectedTransaction.kind === "income" ? process.env.NEXT_PUBLIC_API_URL_INCOMES : process.env.NEXT_PUBLIC_API_URL_EXPENSES;
+      const response = await fetch(`${baseUrl}/${realId}`, { method: "DELETE" });
+
+      if (response.ok) {
+        toast.success("Deleted successfully!", { id: loadingToast });
+        closeModal();
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        toast.error("Could not delete", { id: loadingToast });
+      }
+    } catch (error) {
+      toast.error("Network error", { id: loadingToast });
+    }
+  };
+
 
   return (
     <>
+
+    <Toaster position="top-right" />
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
@@ -207,7 +190,7 @@ export default function TransactionTable({
                     >
                       <Pencil size={18} />
                     </button>
-                    <button onClick={() => handleDelete(t)} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer">
+                    <button onClick={() => openDeleteModal(t)} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer">
                       <Trash2 size={18} />
                     </button>
                   </div>
@@ -329,6 +312,30 @@ export default function TransactionTable({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* --- NUEVO: MODAL DE CONFIRMACIÓN DE BORRADO --- */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-8 text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 text-rose-600 mb-4">
+                <AlertTriangle size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Are you sure?</h3>
+              <p className="text-slate-500">
+                You are about to delete this {selectedTransaction?.kind}. This action cannot be undone.
+              </p>
+            </div>
+            <div className="bg-slate-50 p-4 flex gap-3">
+              <button onClick={closeModal} className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer">
+                Cancel
+              </button>
+              <button onClick={confirmDelete} className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 transition-colors cursor-pointer">
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

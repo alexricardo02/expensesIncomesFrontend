@@ -92,6 +92,8 @@ const formatCurrency = (value: number, currency: string) => {
 export default async function Home() {
   const transactions = await getTransactions();
 
+  const recentTransactions = transactions.slice(0, 10);
+
   const totalIncomes = transactions
     .filter((t) => t.kind === "income")
     .reduce((acc, curr) => acc + curr.amount, 0);
@@ -314,8 +316,8 @@ export default async function Home() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
-                {transactions.length > 0 ? (
-                  transactions.map((t) => (
+                {recentTransactions.length > 0 ? (
+                  recentTransactions.map((t) => (
                     <tr
                       key={t.displayId}
                       className="hover:bg-slate-50/50 transition-colors"
