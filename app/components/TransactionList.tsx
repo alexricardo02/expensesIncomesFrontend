@@ -39,9 +39,13 @@ export default function TransactionList({ transactions }: { transactions: any[] 
               </div>
 
               {/* 2. Nombre (Centro - Ocupa el espacio restante y centra el texto) */}
-              <div className="flex-1 min-w-0"> 
-                <p className="font-semibold text-slate-800 text-[13px] text-left truncate">
+                {/* 2. Información Central: Nombre + FECHA (Nueva mejora) */}
+              <div className="flex-1 min-w-0 flex flex-col justify-center"> 
+                <p className="font-semibold text-slate-800 text-[13px] text-left truncate leading-snug">
                   {t.typeName || t.type || "Uncategorized"}
+                </p>
+                <p className="text-slate-400 text-[11px] text-left leading-none mt-0.5">
+                  {t.date}
                 </p>
               </div>
 

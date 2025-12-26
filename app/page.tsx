@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import TransactionList from "./components/TransactionList";
+import BalanceChart from "./components/BalanceChart";
 
 async function getTransactions() {
   try {
@@ -222,65 +223,80 @@ export default async function Home() {
 
         {/* SUMMARY CARDS */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {/* 1. Total Balance - Ocupa 2 columnas en móvil, 1 en desktop */}
-          <div className="col-span-2 md:col-span-1 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-2 md:mb-4">
-              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                <Wallet size={20} className="md:w-6 md:h-6" />
+          {/* 1. Total Balance */}
+          <div className="col-span-2 md:col-span-1 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                  <Wallet size={18} />
+                </div>
+                <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  Total Balance
+                </span>
               </div>
-              <span className="text-[10px] md:text-xs font-medium text-slate-400 uppercase tracking-wider">
-                Total Balance
-              </span>
             </div>
 
-            <h2 className="text-2xl md:text-3xl font-bold">
-              {formatCurrency(totalBalance, "USD")}
-            </h2>
-
-            <div
-              className={`mt-2 md:mt-4 flex items-center text-xs font-medium ${
-                monthlykpipercentage >= 0 ? "text-emerald-600" : "text-rose-600"
-              }`}
-            >
-              {monthlykpipercentage >= 0 ? (
-                <TrendingUp size={14} className="mr-1" />
-              ) : (
-                <TrendingDown size={14} className="mr-1" />
-              )}
-              <span>
-                {monthlykpipercentage >= 0 ? "+" : ""}
-                {monthlykpipercentage.toFixed(2)}%
-                <span className="md:inline"> from last month</span>
-              </span>
+            <div className="flex items-end justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                {/* REDUCIDO: text-2xl en móvil, text-3xl en PC (antes era 4xl) */}
+                <h2 className="text-2xl md:text-2xl font-black text-slate-900 truncate tracking-tight">
+                  {formatCurrency(totalBalance, "USD")}
+                </h2>
+                <div
+                  className={`flex items-center text-xs font-bold mt-1 ${
+                    monthlykpipercentage >= 0
+                      ? "text-emerald-600"
+                      : "text-rose-600"
+                  }`}
+                >
+                  {monthlykpipercentage >= 0 ? (
+                    <TrendingUp size={14} className="mr-1" />
+                  ) : (
+                    <TrendingDown size={14} className="mr-1" />
+                  )}
+                  <span>
+                    {monthlykpipercentage >= 0 ? "+" : ""}
+                    {monthlykpipercentage.toFixed(2)}%
+                  </span>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <BalanceChart
+                  transactions={transactions}
+                  isPositive={monthlykpipercentage >= 0}
+                />
+              </div>
             </div>
           </div>
 
-          {/* 2. Incomes - 1 columna en móvil, 1 en desktop */}
-          <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center justify-between mb-2 md:mb-4">
+          {/* 2. Incomes (Solo PC) */}
+          <div className="hidden md:block bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                <ArrowUpCircle size={20} className="md:w-6 md:h-6" />
+                <ArrowUpCircle size={20} />
               </div>
-              <span className="text-[10px] md:text-xs font-medium text-slate-400 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-400 uppercase">
                 Incomes
               </span>
             </div>
-            <h2 className="text-xl md:text-3xl font-bold text-emerald-600">
+            {/* REDUCIDO: text-2xl para que respire mejor */}
+            <h2 className="text-3xl font-bold text-emerald-600 truncate">
               {formatCurrency(totalIncomes, "USD")}
             </h2>
           </div>
 
-          {/* 3. Expenses - 1 columna en móvil, 1 en desktop */}
-          <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center justify-between mb-2 md:mb-4">
+          {/* 3. Expenses (Solo PC) */}
+          <div className="hidden md:block bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-rose-50 text-rose-600 rounded-lg">
-                <ArrowDownCircle size={20} className="md:w-6 md:h-6" />
+                <ArrowDownCircle size={20} />
               </div>
-              <span className="text-[10px] md:text-xs font-medium text-slate-400 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-400 uppercase">
                 Expenses
               </span>
             </div>
-            <h2 className="text-xl md:text-3xl font-bold text-rose-600">
+            {/* REDUCIDO: text-2xl para coherencia visual */}
+            <h2 className="text-3xl font-bold text-rose-600 truncate">
               {formatCurrency(totalExpenses, "USD")}
             </h2>
           </div>
