@@ -30,7 +30,7 @@ export default function TransactionList({ transactions }: { transactions: any[] 
               onClick={() => toggleRow(t.displayId)}
             >
               {/* 1. Badge (Izquierda - Ancho fijo) */}
-              <div className="w-14 flex-shrink-0 mr-3">
+              <div className="w-14 shrink-0 mr-3">
                 <span className={`inline-block w-full text-center py-1 rounded-full text-[9px] font-bold uppercase ${
                   isIncome ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
                 }`}>
@@ -50,7 +50,7 @@ export default function TransactionList({ transactions }: { transactions: any[] 
               </div>
 
               {/* 3. Monto e Icono (Derecha - Alineado al final) */}
-              <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+              <div className="flex items-center gap-2 ml-2 shrink-0">
                 <div className={`text-right text-[13px] font-bold whitespace-nowrap ${
                   isIncome ? "text-emerald-600" : "text-rose-600"
                 }`}>
@@ -58,9 +58,9 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                   {isIncome ? "+ " : "- "} {formatCurrency(t.amount, t.currency)}
                 </div>
                 {isExpanded ? (
-                  <ChevronUp size={16} className="text-slate-400 flex-shrink-0" />
+                  <ChevronUp size={16} className="text-slate-400 shrink-0" />
                 ) : (
-                  <ChevronDown size={16} className="text-slate-400 flex-shrink-0" />
+                  <ChevronDown size={16} className="text-slate-400 shrink-0" />
                 )}
               </div>
             </div>

@@ -94,6 +94,16 @@ const formatCurrency = (value: number, currency: string) => {
 export default async function Home() {
   const transactions = await getTransactions();
 
+  const now = new Date();
+  const currentMonthStr = `${now.getFullYear()}-${String(
+    now.getMonth() + 1
+  ).padStart(2, "0")}`;
+
+  const lastMonthStr = `${now.getFullYear()}-${String(now.getMonth()).padStart(
+    2,
+    "0"
+  )}`;
+
   const recentTransactions = transactions.slice(0, 10);
 
   const totalIncomes = transactions
@@ -105,75 +115,22 @@ export default async function Home() {
     .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalIncomesThisMonth = transactions
-    .filter(
-      (t) =>
-        t.date >=
-          (() => {
-            const now = new Date();
-            const thisMonth = new Date(
-              now.getFullYear() - String(now.getMonth() + 1)
-            );
-            return thisMonth.toISOString().slice(0, 7);
-          })() && t.kind === "income"
-    )
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  .filter((t) => t.date.startsWith(currentMonthStr) && t.kind === "income")
+  .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalExpensesThisMonth = transactions
-    .filter(
-      (t) =>
-        t.date >=
-          (() => {
-            const now = new Date();
-            const thisMonth = new Date(
-              now.getFullYear() - String(now.getMonth() + 1)
-            );
-            return thisMonth.toISOString().slice(0, 7);
-          })() && t.kind === "expense"
-    )
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  .filter((t) => t.date.startsWith(currentMonthStr) && t.kind === "expense")
+  .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalIncomesLastMonth = transactions
-    .filter(
-      (t) =>
-        t.date >=
-          (() => {
-            const now = new Date();
-            const lastMonth = new Date(
-              now.getFullYear(),
-              now.getMonth() - 1,
-              1
-            );
-            return lastMonth.toISOString().slice(0, 7);
-          })() && t.kind === "income"
-    )
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  .filter((t) => t.date.startsWith(lastMonthStr) && t.kind === "income")
+  .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalExpensesLastMonth = transactions
-    .filter(
-      (t) =>
-        t.date >=
-          (() => {
-            const now = new Date();
-            const lastMonth = new Date(
-              now.getFullYear(),
-              now.getMonth() - 1,
-              1
-            );
-            return lastMonth.toISOString().slice(0, 7);
-          })() && t.kind === "expense"
-    )
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  .filter((t) => t.date.startsWith(lastMonthStr) && t.kind === "expense")
+  .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalBalance = totalIncomes - totalExpenses;
-
-  const now = new Date();
-  const currentMonthStr = `${now.getFullYear()}-${String(
-    now.getMonth() + 1
-  ).padStart(2, "0")}`;
-  const lastMonthStr = `${now.getFullYear()}-${String(now.getMonth()).padStart(
-    2,
-    "0"
-  )}`;
 
   const monthlyIncomesCount = transactions.filter(
     (t) => t.kind === "income" && t.date.startsWith(currentMonthStr)
@@ -260,7 +217,7 @@ export default async function Home() {
                   </span>
                 </div>
               </div>
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <BalanceChart
                   transactions={transactions}
                   isPositive={monthlykpipercentage >= 0}
