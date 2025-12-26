@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle, Eraser, DollarSign, Calendar, Filter } from "lucide-react";
+import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle, Eraser, DollarSign, Calendar, Filter, ChevronUp, ChevronDown } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import router from "next/dist/shared/lib/router/router";
 import toast, { Toaster } from "react-hot-toast";
@@ -38,6 +38,7 @@ export default function TransactionTable({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // --- ESTADOS PARA FILTROS ---
   const [filterType, setFilterType] = useState<string>("all");
@@ -53,6 +54,11 @@ export default function TransactionTable({
 
     return matchesType && matchesCategory && matchesDate && matchesAmount;
   });
+
+
+  const toggleAccordion = (id: string) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
 
   const openEditModal = (transaction: any) => {
     setSelectedTransaction(transaction);
@@ -229,7 +235,10 @@ export default function TransactionTable({
           <Eraser size={16} /> Clear
         </button>
       </div>
-      <div className="overflow-x-auto">
+
+
+      {/* --- VISTA DESKTOP (TABLA) --- */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
             <tr>
@@ -242,41 +251,22 @@ export default function TransactionTable({
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-700">
             {filteredTransactions.map((t) => (
-              <tr
-                key={t.displayId}
-                className="hover:bg-slate-50/50 transition-colors group"
-              >
+              <tr key={t.displayId} className="hover:bg-slate-50/50 transition-colors group">
                 <td className="px-6 py-4">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${
-                      t.kind === "income"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-rose-100 text-rose-700"
-                    }`}
-                  >
+                  <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${t.kind === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
                     {t.kind}
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="font-medium text-slate-900">
-                    {t.typeName || t.type || "Uncategorized"}
-                  </span>
+                  <span className="font-medium text-slate-900">{t.typeName || t.type || "Uncategorized"}</span>
                 </td>
                 <td className="px-6 py-4 text-slate-500">{t.date}</td>
-                <td
-                  className={`px-6 py-4 text-right font-semibold ${
-                    t.kind === "income" ? "text-emerald-600" : "text-rose-600"
-                  }`}
-                >
-                  {t.kind === "income" ? "+" : "-"}{" "}
-                  {formatCurrency(t.amount, t.currency)}
+                <td className={`px-6 py-4 text-right font-semibold ${t.kind === "income" ? "text-emerald-600" : "text-rose-600"}`}>
+                  {t.kind === "income" ? "+" : "-"} {formatCurrency(t.amount, t.currency)}
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <div className="flex items-center justify-end gap-2 opacity-100 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => openEditModal(t)}
-                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg cursor-pointer"
-                    >
+                  <div className="flex items-center justify-end gap-2">
+                    <button onClick={() => openEditModal(t)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg cursor-pointer">
                       <Pencil size={18} />
                     </button>
                     <button onClick={() => openDeleteModal(t)} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer">
@@ -288,6 +278,59 @@ export default function TransactionTable({
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* --- VISTA MÓVIL (ACORDEÓN) --- */}
+      <div className="md:hidden divide-y divide-slate-100">
+        {filteredTransactions.map((t) => {
+          const isExpanded = expandedId === t.displayId;
+          const isIncome = t.kind === "income";
+          
+          return (
+            <div key={t.displayId} className="bg-white">
+              {/* Parte Visible */}
+              <div 
+                onClick={() => toggleAccordion(t.displayId)}
+                className="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50"
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${isIncome ? "bg-emerald-500" : "bg-rose-500"}`} />
+                  <div>
+                    <p className="font-bold text-slate-900">{t.typeName || t.type}</p>
+                    <p className="text-xs text-slate-500">{t.date}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className={`font-bold ${isIncome ? "text-emerald-600" : "text-rose-600"}`}>
+                    {isIncome ? "+" : "-"} {formatCurrency(t.amount, t.currency)}
+                  </span>
+                  {isExpanded ? <ChevronUp size={20} className="text-slate-400" /> : <ChevronDown size={20} className="text-slate-400" />}
+                </div>
+              </div>
+
+              {/* Parte Expandible (Acciones) */}
+              {isExpanded && (
+                <div className="px-4 pb-4 pt-2 bg-slate-50/50 border-t border-slate-50 animate-in slide-in-from-top-2 duration-200">
+                  <p className="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">Actions</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button 
+                      onClick={() => openEditModal(t)}
+                      className="flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-indigo-600 font-bold shadow-sm active:scale-95 transition-transform"
+                    >
+                      <Pencil size={18} /> Edit
+                    </button>
+                    <button 
+                      onClick={() => openDeleteModal(t)}
+                      className="flex items-center justify-center gap-2 py-3 bg-white border border-rose-100 rounded-xl text-rose-600 font-bold shadow-sm active:scale-95 transition-transform"
+                    >
+                      <Trash2 size={18} /> Delete
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* --- MODAL DE EDICIÓN --- */}

@@ -221,80 +221,73 @@ export default async function Home() {
         </header>
 
         {/* SUMMARY CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Total Balance */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {/* 1. Total Balance - Ocupa 2 columnas en móvil, 1 en desktop */}
+          <div className="col-span-2 md:col-span-1 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-2 md:mb-4">
               <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                <Wallet size={24} />
+                <Wallet size={20} className="md:w-6 md:h-6" />
               </div>
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              <span className="text-[10px] md:text-xs font-medium text-slate-400 uppercase tracking-wider">
                 Total Balance
               </span>
             </div>
 
-            <h2 className="text-3xl font-bold">
+            <h2 className="text-2xl md:text-3xl font-bold">
               {formatCurrency(totalBalance, "USD")}
             </h2>
 
-            {/* LÓGICA DINÁMICA: Cambia color e icono según el porcentaje */}
             <div
-              className={`mt-4 flex items-center text-sm font-medium ${
+              className={`mt-2 md:mt-4 flex items-center text-xs font-medium ${
                 monthlykpipercentage >= 0 ? "text-emerald-600" : "text-rose-600"
               }`}
             >
               {monthlykpipercentage >= 0 ? (
-                <TrendingUp size={16} className="mr-1" />
+                <TrendingUp size={14} className="mr-1" />
               ) : (
-                <TrendingDown size={16} className="mr-1" />
+                <TrendingDown size={14} className="mr-1" />
               )}
               <span>
                 {monthlykpipercentage >= 0 ? "+" : ""}
-                {monthlykpipercentage.toFixed(2)}% from last month
+                {monthlykpipercentage.toFixed(2)}%
+                <span className="md:inline"> from last month</span>
               </span>
             </div>
           </div>
 
-          {/* Incomes */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
+          {/* 2. Incomes - 1 columna en móvil, 1 en desktop */}
+          <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center justify-between mb-2 md:mb-4">
               <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                <ArrowUpCircle size={24} />
+                <ArrowUpCircle size={20} className="md:w-6 md:h-6" />
               </div>
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              <span className="text-[10px] md:text-xs font-medium text-slate-400 uppercase tracking-wider">
                 Incomes
               </span>
             </div>
-            <h2 className="text-3xl font-bold text-emerald-600">
+            <h2 className="text-xl md:text-3xl font-bold text-emerald-600">
               {formatCurrency(totalIncomes, "USD")}
             </h2>
-            <p className="text-sm text-slate-500 mt-4">
-              {monthlyIncomesCount} transactions this month
-            </p>
           </div>
 
-          {/* Expenses */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
+          {/* 3. Expenses - 1 columna en móvil, 1 en desktop */}
+          <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center justify-between mb-2 md:mb-4">
               <div className="p-2 bg-rose-50 text-rose-600 rounded-lg">
-                <ArrowDownCircle size={24} />
+                <ArrowDownCircle size={20} className="md:w-6 md:h-6" />
               </div>
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              <span className="text-[10px] md:text-xs font-medium text-slate-400 uppercase tracking-wider">
                 Expenses
               </span>
             </div>
-            <h2 className="text-3xl font-bold text-rose-600">
+            <h2 className="text-xl md:text-3xl font-bold text-rose-600">
               {formatCurrency(totalExpenses, "USD")}
             </h2>
-            <p className="text-sm text-slate-500 mt-4">
-              {monthlyExpensesCount} transactions this month
-            </p>
           </div>
         </div>
 
         {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-
           <div className="p-6 border-b border-slate-50 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="text-slate-400" size={20} />
@@ -307,55 +300,64 @@ export default async function Home() {
             </Link>
           </div>
 
-            {/* 1. VISTA MOBILE: Se muestra en celulares, se oculta en PC (md:hidden) */}
-            <div className="block md:hidden">
-              {recentTransactions.length > 0 ? (
-                <TransactionList 
-                  transactions={recentTransactions} 
-                />
-              ) : (
-                <div className="p-10 text-center text-slate-400">No transactions.</div>
-              )}
-            </div>
-
-
-          
+          {/* 1. VISTA MOBILE: Se muestra en celulares, se oculta en PC (md:hidden) */}
+          <div className="block md:hidden">
+            {recentTransactions.length > 0 ? (
+              <TransactionList transactions={recentTransactions} />
+            ) : (
+              <div className="p-10 text-center text-slate-400">
+                No transactions.
+              </div>
+            )}
+          </div>
 
           {/* 2. VISTA DESKTOP: Se oculta en celulares (hidden), se muestra en PC (md:block) */}
-  <div className="hidden md:block overflow-x-auto">
-    <table className="w-full text-left border-collapse">
-      <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
-        <tr>
-          <th className="px-6 py-4 font-medium">Type</th>
-          <th className="px-6 py-4 font-medium">Category</th>
-          <th className="px-6 py-4 font-medium">Date</th>
-          <th className="px-6 py-4 font-medium text-right">Amount</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-slate-100 text-slate-700">
-        {recentTransactions.map((t) => (
-          <tr key={t.displayId} className="hover:bg-slate-50/50 transition-colors">
-            <td className="px-6 py-4">
-              <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${
-                t.kind === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
-              }`}>
-                {t.kind}
-              </span>
-            </td>
-            <td className="px-6 py-4 font-medium text-slate-900">
-              {t.typeName || t.type}
-            </td>
-            <td className="px-6 py-4 text-slate-500">{t.date}</td>
-            <td className={`px-6 py-4 text-right font-semibold ${
-              t.kind === "income" ? "text-emerald-600" : "text-rose-600"
-            }`}>
-              {t.kind === "income" ? "+" : "-"} {formatCurrency(t.amount, t.currency)}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
+                <tr>
+                  <th className="px-6 py-4 font-medium">Type</th>
+                  <th className="px-6 py-4 font-medium">Category</th>
+                  <th className="px-6 py-4 font-medium">Date</th>
+                  <th className="px-6 py-4 font-medium text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {recentTransactions.map((t) => (
+                  <tr
+                    key={t.displayId}
+                    className="hover:bg-slate-50/50 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${
+                          t.kind === "income"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-rose-100 text-rose-700"
+                        }`}
+                      >
+                        {t.kind}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 font-medium text-slate-900">
+                      {t.typeName || t.type}
+                    </td>
+                    <td className="px-6 py-4 text-slate-500">{t.date}</td>
+                    <td
+                      className={`px-6 py-4 text-right font-semibold ${
+                        t.kind === "income"
+                          ? "text-emerald-600"
+                          : "text-rose-600"
+                      }`}
+                    >
+                      {t.kind === "income" ? "+" : "-"}{" "}
+                      {formatCurrency(t.amount, t.currency)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       </div>
     </main>
