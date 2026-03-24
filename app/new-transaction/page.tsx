@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 // Define the available categories (Types)
 const INCOME_CATEGORIES = [
@@ -49,7 +50,8 @@ export default function NewTransactionPage() {
     e.preventDefault();
 
     const loadingToast = toast.loading("Creating transaction...");
-    
+
+    const token = Cookies.get("auth_token")
 
     const transactionData: any = {
       amount: parseFloat(formData.amount),
@@ -74,13 +76,17 @@ export default function NewTransactionPage() {
 
       const response = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // <--- ¡ESTO ES LO QUE FALTA!
+      },
         body: JSON.stringify(transactionData),
       });
 
       if (response.ok) {
         toast.success("Saved successfully!", { id: loadingToast });
         setTimeout(() => {
+          router.refresh();
           router.push("/");
         }, 1200);
       } else {

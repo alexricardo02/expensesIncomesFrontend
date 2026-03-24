@@ -13,16 +13,34 @@ import {
 import Link from "next/link";
 import TransactionList from "./components/TransactionList";
 import BalanceChart from "./components/BalanceChart";
+import { cookies } from "next/headers";
 
 async function getTransactions() {
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
+
+  if (!token) return [];
+
   try {
     const [incomesRes, expensesRes] = await Promise.all([
-      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { cache: "no-store" }),
-      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { cache: "no-store" }),
+      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { headers: {
+          "Authorization": `Bearer ${token}`, // <--- AQUÍ ENVIAMOS LA LLAVE
+          "Content-Type": "application/json",
+        }, cache: "no-store" }),
+      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { headers: {
+          "Authorization": `Bearer ${token}`, // <--- Y AQUÍ TAMBIÉN
+          "Content-Type": "application/json",
+        }, cache: "no-store" }),
     ]);
 
-    if (!incomesRes.ok || !expensesRes.ok)
-      throw new Error("Failed to fetch data");
+    if (!incomesRes.ok || !expensesRes.ok) {
+      const text = await incomesRes.text(); 
+      console.log("Status:", incomesRes.status);
+      console.log("Body del error:", text);
+      throw new Error(`Error ${incomesRes.status}`);
+    }
+      
 
     const incomes = await incomesRes.json();
     const expenses = await expensesRes.json();
@@ -143,7 +161,7 @@ export default async function Home() {
   const totalBalanceThisMonth = totalIncomesThisMonth - totalExpensesThisMonth;
   const totalBalanceLastMonth = totalIncomesLastMonth - totalExpensesLastMonth;
 
-  const monthlykpipercentage =
+  const monthlyKPIPercentage =
     ((totalBalanceThisMonth * 100) / totalBalanceLastMonth - 100) / 100;
 
   return (
@@ -201,26 +219,26 @@ export default async function Home() {
                 </h2>
                 <div
                   className={`flex items-center text-xs font-bold mt-1 ${
-                    monthlykpipercentage >= 0
+                    totalBalanceThisMonth >= 0
                       ? "text-emerald-600"
                       : "text-rose-600"
                   }`}
                 >
-                  {monthlykpipercentage >= 0 ? (
+                  {totalBalanceThisMonth >= 0 ? (
                     <TrendingUp size={14} className="mr-1" />
                   ) : (
                     <TrendingDown size={14} className="mr-1" />
                   )}
                   <span>
-                    {monthlykpipercentage >= 0 ? "+" : ""}
-                    {monthlykpipercentage.toFixed(2)}%
+                    {totalBalanceThisMonth >= 0 ? "+" : ""}
+                    {totalBalanceThisMonth.toFixed(2)}%
                   </span>
                 </div>
               </div>
               <div className="shrink-0">
                 <BalanceChart
                   transactions={transactions}
-                  isPositive={monthlykpipercentage >= 0}
+                  isPositive={totalBalanceThisMonth >= 0}
                 />
               </div>
             </div>
