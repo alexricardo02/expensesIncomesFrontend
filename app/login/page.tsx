@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Lock, User, AlertCircle } from "lucide-react";
@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -30,6 +31,8 @@ export default function LoginPage() {
 
       const data = await res.json();
 
+      
+
       console.log("¿Qué me envió el servidor?", data);
 
       // GUARDAMOS LA MAGIA: 
@@ -37,6 +40,8 @@ export default function LoginPage() {
       Cookies.set("auth_token", data.token, { expires: 1 }); // Expira en 1 día
       // 2. El Perfil para mostrar el nombre en el Dashboard
       Cookies.set("user_profile", JSON.stringify(data.profile), { expires: 1 });
+      
+      
 
       // Redirigimos al Dashboard
       router.push("/");
@@ -50,6 +55,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Welcome</h1>
@@ -72,7 +78,7 @@ export default function LoginPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
                 placeholder="Your username"
                 required
               />
@@ -87,7 +93,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
                 placeholder="••••••••"
                 required
               />

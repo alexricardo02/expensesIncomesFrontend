@@ -16,12 +16,22 @@ import {
 import Link from "next/link";
 import TransactionTable from "../components/TransactionTable";
 import { formatCurrency } from "@/lib/utils";
+import { cookies } from "next/headers";
 
 async function getTransactions() {
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
   try {
     const [incomesRes, expensesRes] = await Promise.all([
-      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { cache: "no-store" }),
-      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { cache: "no-store" }),
+      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { headers: {
+          "Authorization": `Bearer ${token}`, // <--- AQUÍ ENVIAMOS LA LLAVE
+          "Content-Type": "application/json",
+        }, cache: "no-store" }),
+      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { headers: {
+          "Authorization": `Bearer ${token}`, // <--- Y AQUÍ TAMBIÉN
+          "Content-Type": "application/json",
+        }, cache: "no-store" })
     ]);
 
     if (!incomesRes.ok || !expensesRes.ok)

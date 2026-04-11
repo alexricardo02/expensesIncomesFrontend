@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import LogoutButton from "./components/LogoutButton"; // Ajusta la ruta si es necesario
 import {
   ArrowUpCircle,
   ArrowDownCircle,
@@ -15,10 +16,13 @@ import TransactionList from "./components/TransactionList";
 import BalanceChart from "./components/BalanceChart";
 import { cookies } from "next/headers";
 
+
 async function getTransactions() {
 
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
+
+  console.log(token);
 
   if (!token) return [];
 
@@ -112,6 +116,19 @@ const formatCurrency = (value: number, currency: string) => {
 export default async function Home() {
   const transactions = await getTransactions();
 
+  const cookieStore = await cookies();
+  const userProfileCookie = cookieStore.get("user_profile")?.value;
+  let usernameToShow = "Guest";
+
+  if (userProfileCookie) {
+    try {
+      const profile = JSON.parse(userProfileCookie);
+      usernameToShow = profile.username;
+    } catch (e) {
+      console.error("Error al parsear el perfil", e);
+    }
+  }
+
   const now = new Date();
   const currentMonthStr = `${now.getFullYear()}-${String(
     now.getMonth() + 1
@@ -166,6 +183,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
+      
       <div className="max-w-6xl mx-auto space-y-8">
         {/* HEADER SECTION */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -174,12 +192,13 @@ export default async function Home() {
               Financial Dashboard
             </h1>
             <p className="text-slate-500 text-sm">
-              Real-time tracking of your finances
+              Welcome, <span className="text-blue-600">{usernameToShow}</span>! Here's today's summary
             </p>
           </div>
 
           <div className="flex gap-3">
             {/* NEW STATISTICS BUTTON */}
+            <LogoutButton></LogoutButton>
             <Link href="/statistics">
               <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
                 <BarChart3 size={20} />
