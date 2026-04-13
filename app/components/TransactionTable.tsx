@@ -5,6 +5,7 @@ import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle, Eraser, DollarSign,
 import { formatCurrency } from "@/lib/utils";
 import router from "next/dist/shared/lib/router/router";
 import toast, { Toaster } from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const INCOME_CATEGORIES = [
   "Salary",
@@ -118,7 +119,7 @@ export default function TransactionTable({
       const response = await fetch(endpoint, {
         method: "PUT", // Cambiamos a PUT para edición
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // <--- ¡ESTO ES VITAL!
+          Authorization: `Bearer ${Cookies.get("auth_token")}`, // <--- ¡ESTO ES VITAL!
         },
         body: JSON.stringify(transactionData),
       });
@@ -154,7 +155,7 @@ export default function TransactionTable({
       const response = await fetch(`${baseUrl}/${realId}`, {
         method: "DELETE",
         headers: {
-    'Authorization': `Bearer ${localStorage.getItem('token')}` // <--- ¡ESTO ES VITAL!
+    'Authorization': `Bearer ${Cookies.get('auth_token')}` // <--- ¡ESTO ES VITAL!
   }
       });
 

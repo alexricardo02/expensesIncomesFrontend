@@ -38,8 +38,8 @@ export default function LoginPage() {
       // GUARDAMOS LA MAGIA: 
       // 1. El Token para las peticiones
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user_profile", JSON.stringify(data.profile));
+      Cookies.set("auth_token", data.token, { expires: 1 });
+      Cookies.set("user_profile", JSON.stringify(data.profile), { expires: 1 });  
       
       
 
