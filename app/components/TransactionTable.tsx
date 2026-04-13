@@ -117,7 +117,9 @@ export default function TransactionTable({
 
       const response = await fetch(endpoint, {
         method: "PUT", // Cambiamos a PUT para edición
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // <--- ¡ESTO ES VITAL!
+        },
         body: JSON.stringify(transactionData),
       });
 
@@ -138,12 +140,23 @@ export default function TransactionTable({
   };
 
   const confirmDelete = async () => {
-    const realId = selectedTransaction.incomeId || selectedTransaction.expenseId || selectedTransaction.id;
+    const realId =
+      selectedTransaction.incomeId ||
+      selectedTransaction.expenseId ||
+      selectedTransaction.id;
     const loadingToast = toast.loading("Deleting...");
 
     try {
-      const baseUrl = selectedTransaction.kind === "income" ? process.env.NEXT_PUBLIC_API_URL_INCOMES : process.env.NEXT_PUBLIC_API_URL_EXPENSES;
-      const response = await fetch(`${baseUrl}/${realId}`, { method: "DELETE" });
+      const baseUrl =
+        selectedTransaction.kind === "income"
+          ? process.env.NEXT_PUBLIC_API_URL_INCOMES
+          : process.env.NEXT_PUBLIC_API_URL_EXPENSES;
+      const response = await fetch(`${baseUrl}/${realId}`, {
+        method: "DELETE",
+        headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}` // <--- ¡ESTO ES VITAL!
+  }
+      });
 
       if (response.ok) {
         toast.success("Deleted successfully!", { id: loadingToast });
@@ -157,19 +170,17 @@ export default function TransactionTable({
     }
   };
 
-
   return (
     <>
-
-    <Toaster position="top-right" />
-    {/* --- SECCIÓN DE FILTROS --- */}
+      <Toaster position="top-right" />
+      {/* --- SECCIÓN DE FILTROS --- */}
       <div className="bg-slate-50 p-6 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
         {/* Filtro Tipo */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <Filter size={14} /> Type
           </label>
-          <select 
+          <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
             className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -185,13 +196,17 @@ export default function TransactionTable({
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <Tag size={14} /> Category
           </label>
-          <select 
+          <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
             className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           >
             <option value="all">All Categories</option>
-            {ALL_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+            {ALL_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -200,7 +215,7 @@ export default function TransactionTable({
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <Calendar size={14} /> Date
           </label>
-          <input 
+          <input
             type="date"
             value={filterDate}
             onChange={(e) => setFilterDate(e.target.value)}
@@ -213,7 +228,7 @@ export default function TransactionTable({
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <DollarSign size={14} /> Min Amount
           </label>
-          <input 
+          <input
             type="number"
             placeholder="0.00"
             value={filterMinAmount}
@@ -223,7 +238,7 @@ export default function TransactionTable({
         </div>
 
         {/* Botón Limpiar */}
-        <button 
+        <button
           onClick={() => {
             setFilterType("all");
             setFilterCategory("all");
@@ -235,7 +250,6 @@ export default function TransactionTable({
           <Eraser size={16} /> Clear
         </button>
       </div>
-
 
       {/* --- VISTA DESKTOP (TABLA) --- */}
       <div className="hidden md:block overflow-x-auto">
@@ -251,25 +265,41 @@ export default function TransactionTable({
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-700">
             {filteredTransactions.map((t) => (
-              <tr key={t.displayId} className="hover:bg-slate-50/50 transition-colors group">
+              <tr
+                key={t.displayId}
+                className="hover:bg-slate-50/50 transition-colors group"
+              >
                 <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${t.kind === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${t.kind === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
+                  >
                     {t.kind}
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="font-medium text-slate-900">{t.typeName || t.type || "Uncategorized"}</span>
+                  <span className="font-medium text-slate-900">
+                    {t.typeName || t.type || "Uncategorized"}
+                  </span>
                 </td>
                 <td className="px-6 py-4 text-slate-500">{t.date}</td>
-                <td className={`px-6 py-4 text-right font-semibold ${t.kind === "income" ? "text-emerald-600" : "text-rose-600"}`}>
-                  {t.kind === "income" ? "+" : "-"} {formatCurrency(t.amount, t.currency)}
+                <td
+                  className={`px-6 py-4 text-right font-semibold ${t.kind === "income" ? "text-emerald-600" : "text-rose-600"}`}
+                >
+                  {t.kind === "income" ? "+" : "-"}{" "}
+                  {formatCurrency(t.amount, t.currency)}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button onClick={() => openEditModal(t)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg cursor-pointer">
+                    <button
+                      onClick={() => openEditModal(t)}
+                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg cursor-pointer"
+                    >
                       <Pencil size={18} />
                     </button>
-                    <button onClick={() => openDeleteModal(t)} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer">
+                    <button
+                      onClick={() => openDeleteModal(t)}
+                      className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer"
+                    >
                       <Trash2 size={18} />
                     </button>
                   </div>
@@ -285,41 +315,54 @@ export default function TransactionTable({
         {filteredTransactions.map((t) => {
           const isExpanded = expandedId === t.displayId;
           const isIncome = t.kind === "income";
-          
+
           return (
             <div key={t.displayId} className="bg-white">
               {/* Parte Visible */}
-              <div 
+              <div
                 onClick={() => toggleAccordion(t.displayId)}
                 className="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50"
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${isIncome ? "bg-emerald-500" : "bg-rose-500"}`} />
+                  <div
+                    className={`w-2 h-2 rounded-full ${isIncome ? "bg-emerald-500" : "bg-rose-500"}`}
+                  />
                   <div>
-                    <p className="font-bold text-slate-900">{t.typeName || t.type}</p>
+                    <p className="font-bold text-slate-900">
+                      {t.typeName || t.type}
+                    </p>
                     <p className="text-xs text-slate-500">{t.date}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`font-bold ${isIncome ? "text-emerald-600" : "text-rose-600"}`}>
-                    {isIncome ? "+" : "-"} {formatCurrency(t.amount, t.currency)}
+                  <span
+                    className={`font-bold ${isIncome ? "text-emerald-600" : "text-rose-600"}`}
+                  >
+                    {isIncome ? "+" : "-"}{" "}
+                    {formatCurrency(t.amount, t.currency)}
                   </span>
-                  {isExpanded ? <ChevronUp size={20} className="text-slate-400" /> : <ChevronDown size={20} className="text-slate-400" />}
+                  {isExpanded ? (
+                    <ChevronUp size={20} className="text-slate-400" />
+                  ) : (
+                    <ChevronDown size={20} className="text-slate-400" />
+                  )}
                 </div>
               </div>
 
               {/* Parte Expandible (Acciones) */}
               {isExpanded && (
                 <div className="px-4 pb-4 pt-2 bg-slate-50/50 border-t border-slate-50 animate-in slide-in-from-top-2 duration-200">
-                  <p className="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">Actions</p>
+                  <p className="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">
+                    Actions
+                  </p>
                   <div className="grid grid-cols-2 gap-3">
-                    <button 
+                    <button
                       onClick={() => openEditModal(t)}
                       className="flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-indigo-600 font-bold shadow-sm active:scale-95 transition-transform"
                     >
                       <Pencil size={18} /> Edit
                     </button>
-                    <button 
+                    <button
                       onClick={() => openDeleteModal(t)}
                       className="flex items-center justify-center gap-2 py-3 bg-white border border-rose-100 rounded-xl text-rose-600 font-bold shadow-sm active:scale-95 transition-transform"
                     >
@@ -455,16 +498,25 @@ export default function TransactionTable({
               <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 text-rose-600 mb-4">
                 <AlertTriangle size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Are you sure?</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">
+                Are you sure?
+              </h3>
               <p className="text-slate-500">
-                You are about to delete this {selectedTransaction?.kind}. This action cannot be undone.
+                You are about to delete this {selectedTransaction?.kind}. This
+                action cannot be undone.
               </p>
             </div>
             <div className="bg-slate-50 p-4 flex gap-3">
-              <button onClick={closeModal} className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer">
+              <button
+                onClick={closeModal}
+                className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
                 Cancel
               </button>
-              <button onClick={confirmDelete} className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 transition-colors cursor-pointer">
+              <button
+                onClick={confirmDelete}
+                className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 transition-colors cursor-pointer"
+              >
                 Delete
               </button>
             </div>
