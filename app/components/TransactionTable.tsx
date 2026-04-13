@@ -119,7 +119,8 @@ export default function TransactionTable({
       const response = await fetch(endpoint, {
         method: "PUT", // Cambiamos a PUT para edición
         headers: {
-          Authorization: `Bearer ${Cookies.get("auth_token")}`, // <--- ¡ESTO ES VITAL!
+          Authorization: `Bearer ${Cookies.get("auth_token")}`,
+          "Content-Type": "application/json" // <--- ¡ESTO ES VITAL!
         },
         body: JSON.stringify(transactionData),
       });
