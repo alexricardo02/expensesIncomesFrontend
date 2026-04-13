@@ -37,9 +37,9 @@ export default function LoginPage() {
 
       // GUARDAMOS LA MAGIA: 
       // 1. El Token para las peticiones
-      Cookies.set("auth_token", data.token, { expires: 1 }); // Expira en 1 día
-      // 2. El Perfil para mostrar el nombre en el Dashboard
-      Cookies.set("user_profile", JSON.stringify(data.profile), { expires: 1 });
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user_profile", JSON.stringify(data.profile));
       
       
 
