@@ -85,6 +85,16 @@ export default function TransactionTable({
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const token = Cookies.get("auth_token");
+    if (!token) {
+      alert("Expired session. Please, try again.");
+      return;
+    }
+
+    const profileStr = Cookies.get("user_profile");
+    const userProfile = profileStr ? JSON.parse(profileStr) : null;
+    const realUserId = userProfile?.id || 1;
+
     // 1. Capturamos los datos directamente del formulario
     const formData = new FormData(e.currentTarget);
     const kind = selectedTransaction.kind;
@@ -101,7 +111,7 @@ export default function TransactionTable({
       currency: formData.get("currency"),
       date: formData.get("date"),
       description: formData.get("description"),
-      userId: 1,
+      userId: realUserId,
     };
 
     // 2. Mapeo de categoría según lo que espera tu DTO de Spring
