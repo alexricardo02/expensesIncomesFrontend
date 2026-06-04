@@ -38,8 +38,10 @@ export default function LoginPage() {
       // GUARDAMOS LA MAGIA: 
       // 1. El Token para las peticiones
 
-      Cookies.set("auth_token", data.token, { expires: 1 });
-      Cookies.set("user_profile", JSON.stringify(data.profile), { expires: 1 });        
+      const fourteenMinutes = 14 / (24 * 60);
+      Cookies.set("auth_token", data.token, { expires: fourteenMinutes });
+      Cookies.set("refresh_token", data.refreshToken, { expires: 7 });
+      Cookies.set("user_profile", JSON.stringify(data.profile), { expires: 7 });        
 
       // Redirigimos al Dashboard
       router.push("/");
