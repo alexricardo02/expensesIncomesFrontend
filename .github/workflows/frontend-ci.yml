@@ -1,0 +1,58 @@
+name: Frontend Security & Build Pipeline
+
+# The pipeline will run on every push or pull request to the "main" branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  security-and-build:
+    name: Security, License and Build Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Change to '20' if you are using Node 20
+          cache: 'npm'
+
+      - name: 🔒 Install Dependencies (Safe Mode)
+        # --ignore-scripts prevents malicious or tracking scripts from running automatically during install
+        run: npm ci --ignore-scripts
+
+      - name: 🛑 Disable Next.js Telemetry (Privacy)
+        # Next.js sends usage data to Vercel by default. This explicitly blocks it for privacy compliance.
+        run: npx next telemetry disable
+
+      - name: ⚖️ License Check (Anti-GPL)
+        # Scans the dependency tree. Fails the build if any GPL/AGPL libraries are found.
+        run: npx license-checker-rseidelsohn --summary --failOn "GPL; GPL-1.0; GPL-2.0; GPL-3.0; AGPL; AGPL-3.0"
+
+      - name: 🕵️‍♂️ Privacy Scanner (Datenschutz Check)
+        # Checks package.json for known third-party tracking and analytics tools
+        run: |
+          BANNED_PACKAGES=("react-ga" "react-ga4" "mixpanel-browser" "hotjar-react" "posthog-js" "facebook-pixel")
+          for pkg in "${BANNED_PACKAGES[@]}"; do
+            if grep -q "\"$pkg\"" package.json; then
+              echo "🚨 PRIVACY VIOLATION: Banned tracking package detected ($pkg)"
+              exit 1
+            fi
+          done
+          echo "✅ No known tracking packages detected."
+
+      - name: 🛡️ Security Audit (Vulnerabilities)
+        # Checks if any installed library has high or critical security issues
+        run: npm audit --audit-level=high
+
+      - name: 🧹 Code Linter
+        run: npm run lint
+
+      - name: 🏗️ Build Project
+        # Builds the Next.js frontend only if all previous security and privacy checks pass
+        run: npm run build

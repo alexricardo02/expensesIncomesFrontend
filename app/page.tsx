@@ -46,8 +46,11 @@ async function getTransactions() {
     }
       
 
-    const incomes = await incomesRes.json();
-    const expenses = await expensesRes.json();
+    const incomesData = await incomesRes.json();
+    const expensesData = await expensesRes.json();
+
+    const incomes = incomesData.content ? incomesData.content : [];
+    const expenses = expensesData.content ? expensesData.content : [];
 
     const combined = [
       ...incomes.map((i: any) => ({

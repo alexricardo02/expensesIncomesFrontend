@@ -19,8 +19,11 @@ async function getStats() {
       }),
     ]);
 
-    const incomes = await incRes.json();
-    const expenses = await expRes.json();
+    const incomesData = await incRes.json();
+    const expensesData = await expRes.json();
+
+    const incomes = incomesData.content ? incomesData.content : [];
+    const expenses = expensesData.content ? expensesData.content : [];
 
     const totalIn = incomes.reduce((acc: number, curr: any) => acc + curr.amount, 0);
     const totalOut = expenses.reduce((acc: number, curr: any) => acc + curr.amount, 0);
