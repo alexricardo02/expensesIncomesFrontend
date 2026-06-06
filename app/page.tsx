@@ -49,8 +49,17 @@ async function getTransactions() {
     const incomesData = await incomesRes.json();
     const expensesData = await expensesRes.json();
 
+    console.log("\n====== INICIO DIAGNÓSTICO ======");
+    console.log("1. ¿Qué URL de Incomes se llamó?:", process.env.NEXT_PUBLIC_API_URL_INCOMES);
+    console.log("2. Respuesta CRUDA Incomes:", JSON.stringify(incomesData, null, 2).substring(0, 500)); 
+    console.log("3. Respuesta CRUDA Expenses:", JSON.stringify(expensesData, null, 2).substring(0, 500));
+
     const incomes = incomesData.content ? incomesData.content : [];
     const expenses = expensesData.content ? expensesData.content : [];
+
+
+    console.log("4. ¿Cuántos Incomes entraron a la lista?:", incomes.length);
+    console.log("5. ¿Cuántos Expenses entraron a la lista?:", expenses.length);
 
     const combined = [
       ...incomes.map((i: any) => ({
@@ -74,6 +83,13 @@ async function getTransactions() {
         displayId: `ex-${e.id}`, // Clave única para React
       })),
     ];
+
+    console.log("6. Total combinados:", combined.length);
+
+    if (combined.length > 0) {
+       console.log("7. Muestra del primer elemento mapeado:", combined[0]);
+    }
+    console.log("====== FIN DIAGNÓSTICO ======\n");
 
     return combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
