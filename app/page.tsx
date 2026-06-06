@@ -54,24 +54,24 @@ async function getTransactions() {
 
     const combined = [
       ...incomes.map((i: any) => ({
-        id: i.incomeId || i.id,
-        amount: i.amount,
-        date: i.date,
-        description: i.description,
-        type: i.type,
-        currency: i.currency,
+        id: i.incomeId, // Java: getIncomeId()
+        amount: i.amount, // Java: getAmount()
+        date: i.date, // Java: getDate()
+        description: i.description, // Java: getDescription()
+        type: i.type, // Java: getType()
+        currency: i.currency, // Java: getCurrency()
         kind: "income",
-        displayId: `in-${i.incomeId || i.id}`,
+        displayId: `in-${i.incomeId}`, // Clave única para React
       })),
       ...expenses.map((e: any) => ({
-        id: e.expenseID || e.expenseId || e.id,
-        amount: e.expenseAmount || e.amount,         // <-- Mapea 'expenseAmount' al genérico 'amount'
-        date: e.expenseDate || e.date,               // <-- Mapea 'expenseDate' al genérico 'date'
-        description: e.expenseDescription || e.description, // <-- Mapea al genérico 'description'
-        type: e.expenseType || e.type,               // <-- Mapea al genérico 'type'
-        currency: e.currency,
+        id: e.id, // Java: getId()
+        amount: e.amount, // Java: getAmount()
+        date: e.date, // Java: getDate()
+        description: e.description, // Java: getDescription()
+        type: e.typeName, // ¡AQUÍ ESTABA EL ERROR! Java: getTypeName()
+        currency: e.currency, // Java: getCurrency()
         kind: "expense",
-        displayId: `ex-${e.expenseID || e.expenseId || e.id}`,
+        displayId: `ex-${e.id}`, // Clave única para React
       })),
     ];
 
@@ -360,7 +360,7 @@ export default async function Home() {
                       </span>
                     </td>
                     <td className="px-6 py-4 font-medium text-slate-900">
-                      {t.typeName || t.type}
+                      {t.type}
                     </td>
                     <td className="px-6 py-4 text-slate-500">{t.date}</td>
                     <td
