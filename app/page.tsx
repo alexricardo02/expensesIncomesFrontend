@@ -54,21 +54,28 @@ async function getTransactions() {
 
     const combined = [
       ...incomes.map((i: any) => ({
-        ...i,
+        id: i.incomeId || i.id,
+        amount: i.amount,
+        date: i.date,
+        description: i.description,
+        type: i.type,
+        currency: i.currency,
         kind: "income",
-        // Usamos i.id o i.incomeId según devuelva tu ResponseDTO
-        displayId: `in-${i.id || i.incomeId}`,
+        displayId: `in-${i.incomeId || i.id}`,
       })),
       ...expenses.map((e: any) => ({
-        ...e,
+        id: e.expenseID || e.expenseId || e.id,
+        amount: e.expenseAmount || e.amount,         // <-- Mapea 'expenseAmount' al genérico 'amount'
+        date: e.expenseDate || e.date,               // <-- Mapea 'expenseDate' al genérico 'date'
+        description: e.expenseDescription || e.description, // <-- Mapea al genérico 'description'
+        type: e.expenseType || e.type,               // <-- Mapea al genérico 'type'
+        currency: e.currency,
         kind: "expense",
-        displayId: `ex-${e.id || e.expenseId}`,
+        displayId: `ex-${e.expenseID || e.expenseId || e.id}`,
       })),
     ];
 
-    return combined.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    return combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
     console.error("Fetch error:", error);
     return [];

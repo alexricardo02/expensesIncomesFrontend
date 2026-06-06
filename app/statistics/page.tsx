@@ -22,13 +22,44 @@ async function getStats() {
     const incomesData = await incRes.json();
     const expensesData = await expRes.json();
 
-    const incomes = incomesData.content ? incomesData.content : [];
-    const expenses = expensesData.content ? expensesData.content : [];
+    const rawIncomes = incomesData.content ? incomesData.content : [];
+    const rawExpenses = expensesData.content ? expensesData.content : [];
 
-    const totalIn = incomes.reduce((acc: number, curr: any) => acc + curr.amount, 0);
-    const totalOut = expenses.reduce((acc: number, curr: any) => acc + curr.amount, 0);
+    // 1. Normalizamos los ingresos
+    const normalizedIncomes = rawIncomes.map((i: any) => ({
+      id: i.incomeId || i.id,
+      amount: i.amount,
+      date: i.date,
+      description: i.description,
+      type: i.type,
+      currency: i.currency,
+      kind: "income",
+      displayId: `in-${i.incomeId || i.id}`,
+    }));
 
-    return { totalIn, totalOut, incomes, expenses };
+    // 2. Normalizamos los gastos
+    const normalizedExpenses = rawExpenses.map((e: any) => ({
+      id: e.expenseID || e.expenseId || e.id,
+      amount: e.expenseAmount || e.amount,         // <-- Propiedad homologada
+      date: e.expenseDate || e.date,               // <-- Propiedad homologada
+      description: e.expenseDescription || e.description, 
+      type: e.expenseType || e.type,               
+      currency: e.currency,
+      kind: "expense",
+      displayId: `ex-${e.expenseID || e.expenseId || e.id}`,
+    }));
+
+    const totalIn = normalizedIncomes.reduce((acc: number, curr: any) => acc + curr.amount, 0);
+    const totalOut = normalizedExpenses.reduce((acc: number, curr: any) => acc + curr.amount, 0);
+
+    // 4. Retornamos las listas limpias al frontend
+    return { 
+      totalIn, 
+      totalOut, 
+      incomes: normalizedIncomes, 
+      expenses: normalizedExpenses 
+    };
+
   } catch (error) {
     console.error(error);
     return { totalIn: 0, totalOut: 0, incomes: [], expenses: [] };
