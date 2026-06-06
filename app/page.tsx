@@ -186,7 +186,6 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
-      
       <div className="max-w-6xl mx-auto space-y-8">
         {/* HEADER SECTION */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -195,7 +194,8 @@ export default async function Home() {
               Financial Dashboard
             </h1>
             <p className="text-slate-500 text-sm">
-              Welcome, <span className="text-blue-600">{usernameToShow}</span>! Here's today's summary
+              Welcome, <span className="text-blue-600">{usernameToShow}</span>!
+              Here&apos;s today&apos;s summary
             </p>
           </div>
 

@@ -28,12 +28,16 @@ export default function BalanceChart({ transactions, isPositive }: { transaction
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(-10); // Tomamos los últimos 10 puntos para el gráfico
 
-  let currentBalance = 0;
+  const currentBalance = 0;
   const labels = sortedData.map((t) => t.date);
-  const dataPoints = sortedData.map((t) => {
-    currentBalance += t.kind === "income" ? t.amount : -t.amount;
-    return currentBalance;
-  });
+
+  const dataPoints = sortedData.reduce((acc, t, index) => {
+    const previousBalance = index === 0 ? currentBalance : acc[index - 1];
+    
+    const newBalance = previousBalance + (t.kind === "income" ? t.amount : -t.amount);
+
+    return [...acc, newBalance];
+  }, [] as number[]);
 
   const data = {
     labels,
