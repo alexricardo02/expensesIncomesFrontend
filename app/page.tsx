@@ -49,49 +49,39 @@ async function getTransactions() {
     const incomesData = await incomesRes.json();
     const expensesData = await expensesRes.json();
 
-    console.log("\n====== INICIO DIAGNÓSTICO ======");
-    console.log("1. ¿Qué URL de Incomes se llamó?:", process.env.NEXT_PUBLIC_API_URL_INCOMES);
-    console.log("2. Respuesta CRUDA Incomes:", JSON.stringify(incomesData, null, 2).substring(0, 500)); 
-    console.log("3. Respuesta CRUDA Expenses:", JSON.stringify(expensesData, null, 2).substring(0, 500));
+    const rawIncomes = Array.isArray(incomesData?.content) ? incomesData.content : [];
+    const rawExpenses = Array.isArray(expensesData?.content) ? expensesData.content : [];
 
-    const incomes = incomesData.content ? incomesData.content : [];
-    const expenses = expensesData.content ? expensesData.content : [];
+    const normalizedIncomes = rawIncomes.map((i: any) => ({
+      // Buscamos 'incomeId' o 'id' para cubrirnos las espaldas
+      id: i.incomeId || i.id || Math.random(), 
+      amount: Number(i.amount) || 0, // Forzamos a que sea un número
+      date: i.date || "1970-01-01",
+      description: i.description || "",
+      type: i.type || i.typeName || "Unknown",
+      currency: i.currency || "USD",
+      kind: "income",
+      // displayId DEBE ser único para React
+      displayId: `in-${i.incomeId || i.id || Math.random()}`, 
+    }));
 
+    const normalizedExpenses = rawExpenses.map((e: any) => ({
+      // ExpenseResponseDTO usa 'id'
+      id: e.id || e.expenseId || Math.random(),
+      amount: Number(e.amount) || 0, // Forzamos a que sea un número
+      date: e.date || "1970-01-01",
+      description: e.description || "",
+      // ExpenseResponseDTO usa 'typeName'
+      type: e.typeName || e.type || "Unknown", 
+      currency: e.currency || "USD",
+      kind: "expense",
+      displayId: `ex-${e.id || e.expenseId || Math.random()}`,
+    }));
+    const combined = [...normalizedIncomes, ...normalizedExpenses];
 
-    console.log("4. ¿Cuántos Incomes entraron a la lista?:", incomes.length);
-    console.log("5. ¿Cuántos Expenses entraron a la lista?:", expenses.length);
-
-    const combined = [
-      ...incomes.map((i: any) => ({
-        id: i.incomeId, // Java: getIncomeId()
-        amount: i.amount, // Java: getAmount()
-        date: i.date, // Java: getDate()
-        description: i.description, // Java: getDescription()
-        type: i.type, // Java: getType()
-        currency: i.currency, // Java: getCurrency()
-        kind: "income",
-        displayId: `in-${i.incomeId}`, // Clave única para React
-      })),
-      ...expenses.map((e: any) => ({
-        id: e.id, // Java: getId()
-        amount: e.amount, // Java: getAmount()
-        date: e.date, // Java: getDate()
-        description: e.description, // Java: getDescription()
-        type: e.typeName, // ¡AQUÍ ESTABA EL ERROR! Java: getTypeName()
-        currency: e.currency, // Java: getCurrency()
-        kind: "expense",
-        displayId: `ex-${e.id}`, // Clave única para React
-      })),
-    ];
-
-    console.log("6. Total combinados:", combined.length);
-
-    if (combined.length > 0) {
-       console.log("7. Muestra del primer elemento mapeado:", combined[0]);
-    }
-    console.log("====== FIN DIAGNÓSTICO ======\n");
-
-    return combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    return combined.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
   } catch (error) {
     console.error("Fetch error:", error);
     return [];
