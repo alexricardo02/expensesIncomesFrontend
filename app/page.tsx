@@ -79,6 +79,8 @@ async function getTransactions() {
       })),
     ];
 
+    console.log(combined);
+
     // 4. Ordenamos por fecha (del más reciente al más antiguo)
     return combined.sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()

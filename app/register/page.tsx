@@ -17,11 +17,14 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
 
+    const cleanUsername = username.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ cleanUsername, email, cleanPassword }),
       });
 
       if (!res.ok) {

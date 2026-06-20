@@ -93,7 +93,7 @@ export default function TransactionTable({
 
     const profileStr = Cookies.get("user_profile");
     const userProfile = profileStr ? JSON.parse(profileStr) : null;
-    const realUserId = userProfile?.id || 1;
+    const realUserId = userProfile?.userId || 1;
 
     // 1. Capturamos los datos directamente del formulario
     const formData = new FormData(e.currentTarget);
