@@ -17,19 +17,33 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
 
-    const cleanUsername = username.trim().toLowerCase();
-    const cleanPassword = password.trim();
+    // 1. Limpiamos con seguridad (agregué email que faltaba limpiar)
+    const cleanUsername = username ? username.trim().toLowerCase() : "";
+    const cleanEmail = email ? email.trim().toLowerCase() : "";
+    const cleanPassword = password ? password.trim() : "";
+
+    if (!cleanUsername || !cleanEmail || !cleanPassword) {
+      setError("Por favor, completa todos los campos.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cleanUsername, email, cleanPassword }),
+        // 2. ¡EL ARREGLO ESTÁ AQUÍ! 
+        body: JSON.stringify({ 
+          username: cleanUsername, 
+          email: cleanEmail, 
+          password: cleanPassword 
+        }),
       });
 
       if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || "Error creating account");
+        // Capturamos el error JSON de Java si existe, si no, como texto
+        const data = await res.json().catch(() => null); 
+        throw new Error(data?.message || "Error al crear la cuenta");
       }
 
       // Si todo sale bien, lo mandamos al login

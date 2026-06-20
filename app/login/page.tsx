@@ -18,37 +18,49 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const cleanUsername = username.trim().toLowerCase();
-    const cleanPassword = password.trim();
+    // 1. Limpiamos con seguridad
+    const cleanUsername = username ? username.trim().toLowerCase() : "";
+    const cleanPassword = password ? password.trim() : "";
+
+    if (!cleanUsername || !cleanPassword) {
+      setError("Por favor, llena ambos campos.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cleanUsername, cleanPassword }),
-        });
-
-      if (!res.ok) {
-        throw new Error("Usuario o contraseña incorrectos");
-      }
+        // 2. ¡EL ARREGLO ESTÁ AQUÍ! Forzamos los nombres que Java espera
+        body: JSON.stringify({ 
+          username: cleanUsername, 
+          password: cleanPassword 
+        }),
+      });
 
       const data = await res.json();
 
+      if (!res.ok) {
+        throw new Error(data.message || "Usuario o contraseña incorrectos");
+      }
+
+      // 3. GUARDAMOS LA MAGIA (Sin duplicados)
+      const fourteenMinutes = 14 / (24 * 60); // 14 minutos en formato días para js-cookie
       
-
-      console.log("¿Qué me envió el servidor?", data);
-
-      // GUARDAMOS LA MAGIA: 
-      // 1. El Token para las peticiones
-
-      const fourteenMinutes = 14 / (24 * 60);
-      Cookies.set("auth_token", data.token, { expires: fourteenMinutes });
-      Cookies.set("refresh_token", data.refreshToken, { expires: 7 });
-      Cookies.set("user_profile", JSON.stringify(data.profile), { expires: 7 });        
+      Cookies.set("auth_token", data.token, { expires: fourteenMinutes, path: '/' });
+      
+      if (data.refreshToken) {
+        Cookies.set("refresh_token", data.refreshToken, { expires: 7, path: '/' });
+      }
+      
+      if (data.profile) {
+        Cookies.set("user_profile", JSON.stringify(data.profile), { expires: 7, path: '/' });
+      }
 
       // Redirigimos al Dashboard
+      router.refresh(); // Refrescamos cache primero
       router.push("/");
-      router.refresh(); // Forzamos recarga para que el layout detecte el cambio
     } catch (err: any) {
       setError(err.message);
     } finally {
