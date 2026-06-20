@@ -19,6 +19,10 @@ async function getStats() {
       }),
     ]);
 
+    if (!incRes.ok || !expRes.ok) {
+      return { totalIn: 0, totalOut: 0, incomes: [], expenses: [] };
+    }
+
     const incomesData = await incRes.json();
     const expensesData = await expRes.json();
 

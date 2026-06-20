@@ -105,14 +105,21 @@ export default function TransactionTable({
       selectedTransaction.expenseId ||
       selectedTransaction.id;
 
+    const typeValue = formData.get("typeName") as string;
+
     const transactionData: any = {
       amount: parseFloat(formData.get("amount") as string),
-      typeName: formData.get("typeName"),
       currency: formData.get("currency"),
       date: formData.get("date"),
       description: formData.get("description"),
       userId: realUserId,
     };
+
+    if (kind === "income") {
+      transactionData.type = typeValue;
+    } else {
+      transactionData.typeName = typeValue;
+    }
 
     // 2. Mapeo de categoría según lo que espera tu DTO de Spring
     const categoryValue = formData.get("typeName");
@@ -446,7 +453,7 @@ export default function TransactionTable({
                 </label>
                 <select
                   name="typeName" // IMPORTANTE
-                  defaultValue={selectedTransaction?.typeName}
+                  defaultValue={selectedTransaction?.type || selectedTransaction?.typeName}
                   className="..."
                 >
                   {currentCategories.map((cat) => (
