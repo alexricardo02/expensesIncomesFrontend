@@ -24,7 +24,6 @@ async function getTransactions() {
   if (!token) return [];
 
   try {
-    // 1. Usamos EXACTAMENTE tus variables de entorno validadas
     const [incomesRes, expensesRes] = await Promise.all([
       fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { 
         headers: {
@@ -42,52 +41,43 @@ async function getTransactions() {
       }),
     ]);
 
-    // Si el backend da un error (ej. 500), lo capturamos
-    if (!incomesRes.ok || !expensesRes.ok) {
-      console.error("Error del servidor:", incomesRes.status, expensesRes.status);
-      return [];
-    }
+    if (!incomesRes.ok || !expensesRes.ok) return [];
 
     const incomesData = await incomesRes.json();
     const expensesData = await expensesRes.json();
 
-    // 2. Extraemos la caja "content" de la Paginación de Spring Boot
-    const rawIncomes = Array.isArray(incomesData?.content) ? incomesData.content : [];
-    const rawExpenses = Array.isArray(expensesData?.content) ? expensesData.content : [];
+    // 🔥 EL ARREGLO ESTÁ AQUÍ: Le enseñamos a React a leer la lista directa O la caja "content"
+    const rawIncomes = Array.isArray(incomesData) ? incomesData : (Array.isArray(incomesData?.content) ? incomesData.content : []);
+    const rawExpenses = Array.isArray(expensesData) ? expensesData : (Array.isArray(expensesData?.content) ? expensesData.content : []);
 
-    // 3. MAPEO A PRUEBA DE BALAS (Arregla el bug matemático y los nombres de Java)
     const combined = [
       ...rawIncomes.map((i: any) => ({
         id: i.incomeId || i.id,
-        amount: Number(i.amount) || 0, // <-- CRÍTICO: Obliga a que sea un Número, no un String
+        amount: Number(i.amount) || 0,
         date: i.date || "1970-01-01",
         description: i.description || "",
-        type: i.type || i.typeName || "Unknown",
+        type: i.type || i.typeName || i.incomeType || "Unknown",
         currency: i.currency || "USD",
         kind: "income",
         displayId: `in-${i.incomeId || i.id || Math.random()}`,
       })),
       ...rawExpenses.map((e: any) => ({
         id: e.id || e.expenseId,
-        amount: Number(e.amount) || 0, // <-- CRÍTICO: Evita el error NaN
+        amount: Number(e.amount) || 0,
         date: e.date || "1970-01-01",
         description: e.description || "",
-        type: e.typeName || e.type || "Unknown", // <-- CRÍTICO: Captura el typeName de Java
+        type: e.typeName || e.type || e.expenseType || "Unknown", 
         currency: e.currency || "USD",
         kind: "expense",
         displayId: `ex-${e.id || e.expenseId || Math.random()}`,
       })),
     ];
 
-    console.log(combined);
-
-    // 4. Ordenamos por fecha (del más reciente al más antiguo)
     return combined.sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-
   } catch (error) {
-    console.error("Error crítico al fetchear:", error);
+    console.error("Error al obtener transacciones:", error);
     return [];
   }
 }
