@@ -37,8 +37,11 @@ async function getTransactions() {
     if (!incomesRes.ok || !expensesRes.ok)
       throw new Error("Failed to fetch data");
 
-    const incomes = await incomesRes.json();
-    const expenses = await expensesRes.json();
+    const incomesData = await incomesRes.json();
+    const expensesData = await expensesRes.json();
+
+    const incomes = incomesData.content || [];
+    const expenses = expensesData.content || [];
 
     const combined = [
       ...incomes.map((i: any) => ({
