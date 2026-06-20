@@ -18,72 +18,72 @@ import { cookies } from "next/headers";
 
 
 async function getTransactions() {
-
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
-
-  console.log(token);
 
   if (!token) return [];
 
   try {
+    // 1. USAMOS LA VARIABLE BASE QUE SÍ EXISTE EN VERCEL
     const [incomesRes, expensesRes] = await Promise.all([
-      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { headers: {
-          "Authorization": `Bearer ${token}`, // <--- AQUÍ ENVIAMOS LA LLAVE
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/incomes`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
-        }, cache: "no-store" }),
-      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { headers: {
-          "Authorization": `Bearer ${token}`, // <--- Y AQUÍ TAMBIÉN
+        },
+        cache: "no-store",
+      }),
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/expenses`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
-        }, cache: "no-store" }),
+        },
+        cache: "no-store",
+      }),
     ]);
 
     if (!incomesRes.ok || !expensesRes.ok) {
-      const text = await incomesRes.text(); 
-      console.log("Status:", incomesRes.status);
-      console.log("Body del error:", text);
-      throw new Error(`Error ${incomesRes.status}`);
+      return []; // Si el backend rechaza el token o hay error, devolvemos vacío
     }
-      
 
     const incomesData = await incomesRes.json();
     const expensesData = await expensesRes.json();
 
+    // 2. EXTRAEMOS LA PAGINACIÓN DE FORMA SEGURA
     const rawIncomes = Array.isArray(incomesData?.content) ? incomesData.content : [];
     const rawExpenses = Array.isArray(expensesData?.content) ? expensesData.content : [];
 
-    const normalizedIncomes = rawIncomes.map((i: any) => ({
-      // Buscamos 'incomeId' o 'id' para cubrirnos las espaldas
-      id: i.incomeId || i.id || Math.random(), 
-      amount: Number(i.amount) || 0, // Forzamos a que sea un número
-      date: i.date || "1970-01-01",
-      description: i.description || "",
-      type: i.type || i.typeName || "Unknown",
-      currency: i.currency || "USD",
-      kind: "income",
-      // displayId DEBE ser único para React
-      displayId: `in-${i.incomeId || i.id || Math.random()}`, 
-    }));
+    // 3. MAPEO BASADO EN TUS ARCHIVOS JAVA EXACTOS
+    const combined = [
+      ...rawIncomes.map((i: any) => ({
+        id: i.incomeId || i.id,               // Java IncomeResponseDTO usa incomeId
+        amount: Number(i.amount) || 0,
+        date: i.date,
+        description: i.description,
+        type: i.type || i.typeName || "Unknown", // Cubrimos cualquier variante
+        currency: i.currency,
+        kind: "income",
+        displayId: `in-${i.incomeId || i.id}`,
+      })),
+      ...rawExpenses.map((e: any) => ({
+        id: e.id || e.expenseId,              // Java ExpenseResponseDTO usa id
+        amount: Number(e.amount) || 0,
+        date: e.date,
+        description: e.description,
+        type: e.typeName || e.type || "Unknown", // Java ExpenseResponseDTO usa typeName
+        currency: e.currency,
+        kind: "expense",
+        displayId: `ex-${e.id || e.expenseId}`,
+      })),
+    ];
 
-    const normalizedExpenses = rawExpenses.map((e: any) => ({
-      // ExpenseResponseDTO usa 'id'
-      id: e.id || e.expenseId || Math.random(),
-      amount: Number(e.amount) || 0, // Forzamos a que sea un número
-      date: e.date || "1970-01-01",
-      description: e.description || "",
-      // ExpenseResponseDTO usa 'typeName'
-      type: e.typeName || e.type || "Unknown", 
-      currency: e.currency || "USD",
-      kind: "expense",
-      displayId: `ex-${e.id || e.expenseId || Math.random()}`,
-    }));
-    const combined = [...normalizedIncomes, ...normalizedExpenses];
-
+    // 4. ORDENAMOS POR FECHA
     return combined.sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
+
   } catch (error) {
-    console.error("Fetch error:", error);
+    // Si algo falla catastróficamente, devolvemos array vacío para no romper la app
     return [];
   }
 }
