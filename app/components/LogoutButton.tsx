@@ -9,8 +9,9 @@ export default function LogoutButton() {
 
   const handleLogout = () => {
     // 1. Borramos las "llaves" del navegador
-    Cookies.remove("auth_token");
     Cookies.remove("user_profile");
+    Cookies.remove("auth_token", { path: '/' });
+    Cookies.remove("refresh_token", { path: '/' });
 
     // 2. Redirigimos al usuario al Login inmediatamente
     router.push("/login");
