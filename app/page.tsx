@@ -25,19 +25,19 @@ async function getTransactions() {
 
   try {
     const [incomesRes, expensesRes] = await Promise.all([
-      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { 
+      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
-        }, 
-        cache: "no-store" 
+        },
+        cache: "no-store"
       }),
-      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { 
+      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
-        }, 
-        cache: "no-store" 
+        },
+        cache: "no-store"
       }),
     ]);
 
@@ -65,7 +65,7 @@ async function getTransactions() {
         amount: Number(e.amount) || 0,
         date: e.date || "1970-01-01",
         description: e.description || "",
-        type: e.typeName || e.type || e.expenseType || "Unknown", 
+        type: e.typeName || e.type || e.expenseType || "Unknown",
         currency: e.currency || "USD",
         kind: "expense",
         displayId: `ex-${e.id || e.expenseId || Math.random()}`,
@@ -159,20 +159,20 @@ export default async function Home() {
     .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalIncomesThisMonth = transactions
-  .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
-  .reduce((acc, curr) => acc + curr.amount, 0);
+    .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
+    .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalExpensesThisMonth = transactions
-  .filter((t) => t.date.startsWith(currentMonthStr) && t.kind === "expense")
-  .reduce((acc, curr) => acc + curr.amount, 0);
+    .filter((t) => t.date.startsWith(currentMonthStr) && t.kind === "expense")
+    .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalIncomesLastMonth = transactions
-  .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
-  .reduce((acc, curr) => acc + curr.amount, 0);
+    .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
+    .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalExpensesLastMonth = transactions
-  .filter((t) => t.date.startsWith(lastMonthStr) && t.kind === "expense")
-  .reduce((acc, curr) => acc + curr.amount, 0);
+    .filter((t) => t.date.startsWith(lastMonthStr) && t.kind === "expense")
+    .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalBalance = totalIncomes - totalExpenses;
 
@@ -246,11 +246,10 @@ export default async function Home() {
                   {formatCurrency(totalBalance, "USD")}
                 </h2>
                 <div
-                  className={`flex items-center text-xs font-bold mt-1 ${
-                    totalBalanceThisMonth >= 0
+                  className={`flex items-center text-xs font-bold mt-1 ${totalBalanceThisMonth >= 0
                       ? "text-emerald-600"
                       : "text-rose-600"
-                  }`}
+                    }`}
                 >
                   {totalBalanceThisMonth >= 0 ? (
                     <TrendingUp size={14} className="mr-1" />
@@ -305,6 +304,32 @@ export default async function Home() {
           </div>
         </div>
 
+        {/* MOBILE income/expense row — only shows on mobile */}
+        <div className="grid grid-cols-2 gap-4 md:hidden">
+          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg">
+                <ArrowUpCircle size={16} />
+              </div>
+              <span className="text-xs font-bold text-slate-400 uppercase">Income</span>
+            </div>
+            <h2 className="text-xl font-bold text-emerald-600 truncate">
+              {formatCurrency(totalIncomes, "USD")}
+            </h2>
+          </div>
+          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="p-1.5 bg-rose-50 text-rose-600 rounded-lg">
+                <ArrowDownCircle size={16} />
+              </div>
+              <span className="text-xs font-bold text-slate-400 uppercase">Expenses</span>
+            </div>
+            <h2 className="text-xl font-bold text-rose-600 truncate">
+              {formatCurrency(totalExpenses, "USD")}
+            </h2>
+          </div>
+        </div>
+
         {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           <div className="p-6 border-b border-slate-50 flex items-center justify-between">
@@ -349,11 +374,10 @@ export default async function Home() {
                   >
                     <td className="px-6 py-4">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${
-                          t.kind === "income"
+                        className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${t.kind === "income"
                             ? "bg-emerald-100 text-emerald-700"
                             : "bg-rose-100 text-rose-700"
-                        }`}
+                          }`}
                       >
                         {t.kind}
                       </span>
@@ -363,11 +387,10 @@ export default async function Home() {
                     </td>
                     <td className="px-6 py-4 text-slate-500">{t.date}</td>
                     <td
-                      className={`px-6 py-4 text-right font-semibold ${
-                        t.kind === "income"
+                      className={`px-6 py-4 text-right font-semibold ${t.kind === "income"
                           ? "text-emerald-600"
                           : "text-rose-600"
-                      }`}
+                        }`}
                     >
                       {t.kind === "income" ? "+" : "-"}{" "}
                       {formatCurrency(t.amount, t.currency)}

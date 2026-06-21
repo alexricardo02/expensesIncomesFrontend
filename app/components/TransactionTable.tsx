@@ -143,18 +143,18 @@ export default function TransactionTable({
       });
 
       if (response.ok) {
-        alert("Transaction updated successfully!");
+        toast.success("Transaction updated successfully!");
         closeModal();
         // Esto refresca los datos del Server Component sin recargar la página completa
         window.location.reload();
       } else {
         const errorBody = await response.json();
         console.error("Error desde el servidor:", errorBody);
-        alert(`Error: ${errorBody.message || "Could not update transaction"}`);
+        toast.error(errorBody.message || "Could not update transaction");
       }
     } catch (error) {
       console.error("Connection error:", error);
-      alert("Backend is offline or unreachable.");
+      toast.error("Backend is offline or unreachable.");
     }
   };
 
@@ -173,8 +173,8 @@ export default function TransactionTable({
       const response = await fetch(`${baseUrl}/${realId}`, {
         method: "DELETE",
         headers: {
-    'Authorization': `Bearer ${Cookies.get('auth_token')}` // <--- ¡ESTO ES VITAL!
-  }
+          'Authorization': `Bearer ${Cookies.get('auth_token')}` // <--- ¡ESTO ES VITAL!
+        }
       });
 
       if (response.ok) {
@@ -413,34 +413,28 @@ export default function TransactionTable({
 
             <form onSubmit={handleSave} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                {/* AMOUNT */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    Amount
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Amount</label>
                   <input
-                    name="amount" // IMPORTANTE
+                    name="amount"
                     type="number"
                     step="0.01"
                     defaultValue={selectedTransaction?.amount}
-                    className="..."
+                    required
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900"
                   />
                 </div>
-
-                {/* CURRENCY */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                     <Globe size={14} /> Currency
                   </label>
                   <select
-                    name="currency" // IMPORTANTE
+                    name="currency"
                     defaultValue={selectedTransaction?.currency}
-                    className="..."
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900"
                   >
                     {CURRENCIES.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
+                      <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 </div>
@@ -452,41 +446,37 @@ export default function TransactionTable({
                   <Tag size={14} /> Category
                 </label>
                 <select
-                  name="typeName" // IMPORTANTE
-                  defaultValue={selectedTransaction?.type || selectedTransaction?.typeName}
-                  className="..."
+                  name="typeName"
+                  defaultValue={selectedTransaction?.type || selectedTransaction?.typeName || ""}
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900"
                 >
+                  <option value="" disabled>Select a category</option>
                   {currentCategories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
+                    <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
               </div>
 
               {/* DATE (Añadido para que la fecha no se pierda al editar) */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">
-                  Date
-                </label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Date</label>
                 <input
-                  name="date" // IMPORTANTE
+                  name="date"
                   type="date"
                   defaultValue={selectedTransaction?.date}
-                  className="..."
+                  required
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900"
                 />
               </div>
 
-              {/* DESCRIPTION */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">
-                  Description
-                </label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Description</label>
                 <textarea
-                  name="description" // IMPORTANTE
+                  name="description"
                   rows={2}
                   defaultValue={selectedTransaction?.description}
-                  className="..."
+                  placeholder="Optional note..."
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900 resize-none"
                 />
               </div>
 
