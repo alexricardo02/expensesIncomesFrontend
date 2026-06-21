@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, User, Mail, AlertCircle, ArrowLeft } from "lucide-react";
+import { Lock, User, Mail, AlertCircle, ArrowLeft, Eye, EyeOff, Check } from "lucide-react";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -10,6 +10,14 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordRules = [
+    { label: "At least 8 characters", test: (p: string) => p.length >= 8 },
+    { label: "At least one uppercase letter", test: (p: string) => /[A-Z]/.test(p) },
+    { label: "At least one number", test: (p: string) => /\d/.test(p) },
+    { label: "At least one special character", test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+  ];
+
   const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -33,16 +41,16 @@ export default function RegisterPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // 2. ¡EL ARREGLO ESTÁ AQUÍ! 
-        body: JSON.stringify({ 
-          username: cleanUsername, 
-          email: cleanEmail, 
-          password: cleanPassword 
+        body: JSON.stringify({
+          username: cleanUsername,
+          email: cleanEmail,
+          password: cleanPassword
         }),
       });
 
       if (!res.ok) {
         // Capturamos el error JSON de Java si existe, si no, como texto
-        const data = await res.json().catch(() => null); 
+        const data = await res.json().catch(() => null);
         throw new Error(data?.message || "Error al crear la cuenta");
       }
 
@@ -58,7 +66,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-        <button 
+        <button
           onClick={() => router.push("/login")}
           className="flex items-center text-slate-400 hover:text-slate-600 mb-6 text-sm transition-colors cursor-pointer"
         >
@@ -113,14 +121,47 @@ export default function RegisterPage() {
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-slate-400" size={20} />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                className="text-slate-900 w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
                 placeholder="••••••••"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
+
+            {/* Password requirements */}
+            {password.length > 0 && (
+              <ul className="mt-3 space-y-1.5">
+                {passwordRules.map((rule) => {
+                  const met = rule.test(password);
+                  return (
+                    <li
+                      key={rule.label}
+                      className={`flex items-center gap-2 text-xs font-medium transition-colors ${met ? "text-emerald-600" : "text-slate-400"
+                        }`}
+                    >
+                      <span
+                        className={`flex items-center justify-center w-4 h-4 rounded-full border transition-colors ${met
+                            ? "bg-emerald-500 border-emerald-500"
+                            : "border-slate-300"
+                          }`}
+                      >
+                        {met && <Check size={10} strokeWidth={3} className="text-white" />}
+                      </span>
+                      {rule.label}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
 
           <button

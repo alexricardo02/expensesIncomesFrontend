@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { Lock, User, AlertCircle } from "lucide-react";
+import { Lock, User, AlertCircle, Eye, EyeOff } from "lucide-react";
+
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
+  const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -33,9 +35,9 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // 2. ¡EL ARREGLO ESTÁ AQUÍ! Forzamos los nombres que Java espera
-        body: JSON.stringify({ 
-          username: cleanUsername, 
-          password: cleanPassword 
+        body: JSON.stringify({
+          username: cleanUsername,
+          password: cleanPassword
         }),
       });
 
@@ -47,13 +49,13 @@ export default function LoginPage() {
 
       // 3. GUARDAMOS LA MAGIA (Sin duplicados)
       const fourteenMinutes = 14 / (24 * 60); // 14 minutos en formato días para js-cookie
-      
+
       Cookies.set("auth_token", data.token, { expires: fourteenMinutes, path: '/' });
-      
+
       if (data.refreshToken) {
         Cookies.set("refresh_token", data.refreshToken, { expires: 7, path: '/' });
       }
-      
+
       if (data.profile) {
         Cookies.set("user_profile", JSON.stringify(data.profile), { expires: 7, path: '/' });
       }
@@ -105,13 +107,20 @@ export default function LoginPage() {
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-slate-400" size={20} />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                className="text-slate-900 w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
                 placeholder="••••••••"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
 
@@ -125,13 +134,13 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-slate-500 mt-6">
             ¿Not a member?{" "}
-            <button 
-                onClick={() => router.push("/register")}
-                className="text-indigo-600 font-semibold hover:underline cursor-pointer" 
+            <button
+              onClick={() => router.push("/register")}
+              className="text-indigo-600 font-semibold hover:underline cursor-pointer"
             >
-                Register
+              Register
             </button>
-            </p>
+          </p>
         </form>
       </div>
     </div>
