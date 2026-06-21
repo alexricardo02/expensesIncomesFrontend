@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle, Eraser, DollarSign, Calendar, Filter, ChevronUp, ChevronDown } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import router from "next/dist/shared/lib/router/router";
+import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 
@@ -40,6 +40,7 @@ export default function TransactionTable({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const router = useRouter();
 
   // --- ESTADOS PARA FILTROS ---
   const [filterType, setFilterType] = useState<string>("all");
@@ -146,7 +147,7 @@ export default function TransactionTable({
         toast.success("Transaction updated successfully!");
         closeModal();
         // Esto refresca los datos del Server Component sin recargar la página completa
-        window.location.reload();
+        router.refresh();
       } else {
         const errorBody = await response.json();
         console.error("Error desde el servidor:", errorBody);
@@ -180,7 +181,7 @@ export default function TransactionTable({
       if (response.ok) {
         toast.success("Deleted successfully!", { id: loadingToast });
         closeModal();
-        setTimeout(() => window.location.reload(), 1000);
+        setTimeout(() => router.refresh(), 1000);
       } else {
         toast.error("Could not delete", { id: loadingToast });
       }

@@ -15,6 +15,7 @@ import Link from "next/link";
 import TransactionList from "./components/TransactionList";
 import BalanceChart from "./components/BalanceChart";
 import { cookies } from "next/headers";
+import { formatCurrency } from "@/lib/utils";
 
 
 async function getTransactions() {
@@ -81,42 +82,6 @@ async function getTransactions() {
   }
 }
 
-const formatCurrency = (value: number, currency: string) => {
-  switch (currency) {
-    case "EUR":
-      return new Intl.NumberFormat("de-DE", {
-        style: "currency",
-        currency: "EUR",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(value);
-    case "USD":
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(value);
-
-    case "GBP":
-      return new Intl.NumberFormat("en-GB", {
-        style: "currency",
-        currency: "GBP",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(value);
-
-    case "JPY":
-      return new Intl.NumberFormat("ja-JP", {
-        style: "currency",
-        currency: "JPY",
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(value);
-    default:
-      break;
-  }
-};
 
 /**
  * The Home component renders the main dashboard page, showing the user's total balance,
@@ -167,7 +132,7 @@ export default async function Home() {
     .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalIncomesLastMonth = transactions
-    .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
+    .filter((t) => typeof t.date === 'string' && t.date.startsWith(lastMonthStr) && t.kind === "income")
     .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalExpensesLastMonth = transactions
@@ -187,8 +152,9 @@ export default async function Home() {
   const totalBalanceThisMonth = totalIncomesThisMonth - totalExpensesThisMonth;
   const totalBalanceLastMonth = totalIncomesLastMonth - totalExpensesLastMonth;
 
-  const monthlyKPIPercentage =
-    ((totalBalanceThisMonth * 100) / totalBalanceLastMonth - 100) / 100;
+  const monthlyKPIPercentage = totalBalanceLastMonth === 0 
+    ? 0 
+    : ((totalBalanceThisMonth * 100) / totalBalanceLastMonth - 100) / 100;
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">

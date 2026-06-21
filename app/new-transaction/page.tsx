@@ -51,14 +51,17 @@ export default function NewTransactionPage() {
 
     const loadingToast = toast.loading("Creating transaction...");
 
-    const token = Cookies.get("auth_token")
+    const token = Cookies.get("auth_token");
+    const profileStr = Cookies.get("user_profile");
+    const userProfile = profileStr ? JSON.parse(profileStr) : null;
+    const realUserId = userProfile?.userId || 1; // Fallback por seguridad
 
     const transactionData: any = {
       amount: parseFloat(formData.amount),
       currency: formData.currency,
       date: formData.date,
       description: formData.description,
-      userId: 1, // <--- ESTO ES VITAL: Spring lo exige por el @NotNull
+      userId: realUserId, 
     };
 
     // 2. Ajustamos el nombre del campo de categoría según el DTO
