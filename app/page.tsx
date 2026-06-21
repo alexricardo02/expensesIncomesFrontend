@@ -41,10 +41,9 @@ async function getTransactions() {
       }),
     ]);
 
-    if (!incomesRes.ok || !expensesRes.ok) return [];
 
-    const incomesData = await incomesRes.json();
-    const expensesData = await expensesRes.json();
+    const incomesData = incomesRes.ok ? await incomesRes.json() : { content: [] };
+    const expensesData = expensesRes.ok ? await expensesRes.json() : { content: [] };
 
     // 🔥 EL ARREGLO ESTÁ AQUÍ: Le enseñamos a React a leer la lista directa O la caja "content"
     const rawIncomes = Array.isArray(incomesData) ? incomesData : (Array.isArray(incomesData?.content) ? incomesData.content : []);
@@ -160,7 +159,7 @@ export default async function Home() {
     .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalIncomesThisMonth = transactions
-  .filter((t) => t.date.startsWith(currentMonthStr) && t.kind === "income")
+  .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
   .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalExpensesThisMonth = transactions
@@ -168,7 +167,7 @@ export default async function Home() {
   .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalIncomesLastMonth = transactions
-  .filter((t) => t.date.startsWith(lastMonthStr) && t.kind === "income")
+  .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
   .reduce((acc, curr) => acc + curr.amount, 0);
 
   const totalExpensesLastMonth = transactions
