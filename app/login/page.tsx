@@ -61,7 +61,6 @@ export default function LoginPage() {
       }
 
       // Redirigimos al Dashboard
-      router.refresh(); // Refrescamos cache primero
       router.push("/");
     } catch (err: any) {
       setError(err.message);
