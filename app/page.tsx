@@ -1,5 +1,3 @@
-import Image from "next/image";
-import React from "react";
 import LogoutButton from "./components/LogoutButton"; // Ajusta la ruta si es necesario
 import {
   ArrowUpCircle,
@@ -10,6 +8,7 @@ import {
   TrendingUp,
   TrendingDown,
   BarChart3,
+  Tag,
 } from "lucide-react";
 import Link from "next/link";
 import TransactionList from "./components/TransactionList";
@@ -174,6 +173,15 @@ export default async function Home() {
           <div className="flex gap-3">
             {/* NEW STATISTICS BUTTON */}
             <LogoutButton></LogoutButton>
+
+            <Link
+              href="/categories"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium"
+            >
+              <Tag size={20} />
+              Categories
+            </Link>
+
             <Link href="/statistics">
               <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
                 <BarChart3 size={20} />

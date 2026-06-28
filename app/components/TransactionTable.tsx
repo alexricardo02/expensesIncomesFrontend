@@ -1,36 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle, Eraser, DollarSign, Calendar, Filter, ChevronUp, ChevronDown } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 
-const INCOME_CATEGORIES = [
-  "Salary",
-  "Freelance",
-  "Gift",
-  "Investment",
-  "Other",
-];
 
-const EXPENSE_CATEGORIES = [
-  "Food",
-  "Rent",
-  "Transport",
-  "Entertainment",
-  "Health",
-  "Bills",
-  "Shopping",
-];
-const ALL_CATEGORIES = [...INCOME_CATEGORIES, ...EXPENSE_CATEGORIES];
-const CURRENCIES = ["USD", "EUR", "GBP", "JPY"];
+interface Category {
+  categoryId: number;
+  name: string;
+  type: string;
+}
 
 interface TransactionTableProps {
   initialTransactions: any[];
 }
 
+const CURRENCIES = ["USD", "EUR", "GBP", "JPY"];
 
 export default function TransactionTable({
   initialTransactions,
@@ -40,6 +28,7 @@ export default function TransactionTable({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const router = useRouter();
 
   // --- ESTADOS PARA FILTROS ---
@@ -47,6 +36,34 @@ export default function TransactionTable({
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterDate, setFilterDate] = useState<string>("");
   const [filterMinAmount, setFilterMinAmount] = useState<string>("");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const token = Cookies.get("auth_token");
+      if (!token) return;
+
+      try {
+        // Usamos la URL de incomes pero reemplazamos la ruta para apuntar a categories
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') || 'http://localhost:8080/api/categories';
+
+        const response = await fetch(baseUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
 
   const filteredTransactions = initialTransactions.filter((t) => {
     const matchesType = filterType === "all" || t.kind === filterType;
@@ -78,10 +95,11 @@ export default function TransactionTable({
     setSelectedTransaction(null);
   };
 
-  const currentCategories =
-    selectedTransaction?.kind === "income"
-      ? INCOME_CATEGORIES
-      : EXPENSE_CATEGORIES;
+  const currentCategories = categories.filter(c => c.type === selectedTransaction?.kind);
+
+  const defaultCategoryId = currentCategories.find(
+    c => c.name === (selectedTransaction?.type || selectedTransaction?.typeName)
+  )?.categoryId;
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -106,27 +124,16 @@ export default function TransactionTable({
       selectedTransaction.expenseId ||
       selectedTransaction.id;
 
-    const typeValue = formData.get("typeName") as string;
-
     const transactionData: any = {
       amount: parseFloat(formData.get("amount") as string),
       currency: formData.get("currency"),
       date: formData.get("date"),
       description: formData.get("description"),
+      categoryId: parseInt(formData.get("categoryId") as string, 10), // <-- ¡ID DINÁMICO!
       userId: realUserId,
     };
 
-    if (kind === "income") {
-      transactionData.type = typeValue;
-    } else {
-      transactionData.typeName = typeValue;
-    }
-
-    // 2. Mapeo de categoría según lo que espera tu DTO de Spring
-    const categoryValue = formData.get("typeName");
-
     try {
-      // 3. Construimos el endpoint dinámico para PUT
       const baseUrl =
         kind === "income"
           ? process.env.NEXT_PUBLIC_API_URL_INCOMES
@@ -135,10 +142,10 @@ export default function TransactionTable({
       const endpoint = `${baseUrl}/${realId}`;
 
       const response = await fetch(endpoint, {
-        method: "PUT", // Cambiamos a PUT para edición
+        method: "PUT",
         headers: {
-          Authorization: `Bearer ${Cookies.get("auth_token")}`,
-          "Content-Type": "application/json" // <--- ¡ESTO ES VITAL!
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(transactionData),
       });
@@ -146,15 +153,12 @@ export default function TransactionTable({
       if (response.ok) {
         toast.success("Transaction updated successfully!");
         closeModal();
-        // Esto refresca los datos del Server Component sin recargar la página completa
-        router.refresh();
+        setTimeout(() => window.location.reload(), 1000);
       } else {
         const errorBody = await response.json();
-        console.error("Error desde el servidor:", errorBody);
-        toast.error(errorBody.message || "Could not update transaction");
+        toast.error(`Error: ${errorBody.message || "Could not update transaction"}`);
       }
     } catch (error) {
-      console.error("Connection error:", error);
       toast.error("Backend is offline or unreachable.");
     }
   };
@@ -190,6 +194,8 @@ export default function TransactionTable({
     }
   };
 
+  const uniqueCategoryNames = Array.from(new Set(categories.map(c => c.name)));
+
   return (
     <>
       <Toaster position="top-right" />
@@ -211,7 +217,7 @@ export default function TransactionTable({
           </select>
         </div>
 
-        {/* Filtro Categoría */}
+        {/* Filtro Categoría (Ahora Dinámico) */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <Tag size={14} /> Category
@@ -222,9 +228,9 @@ export default function TransactionTable({
             className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           >
             <option value="all">All Categories</option>
-            {ALL_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+            {uniqueCategoryNames.map((catName) => (
+              <option key={catName} value={catName}>
+                {catName}
               </option>
             ))}
           </select>
@@ -414,17 +420,22 @@ export default function TransactionTable({
 
             <form onSubmit={handleSave} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
+                {/* AMOUNT */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">Amount</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">
+                    Amount
+                  </label>
                   <input
                     name="amount"
                     type="number"
                     step="0.01"
                     defaultValue={selectedTransaction?.amount}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                     required
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900"
                   />
                 </div>
+
+                {/* CURRENCY */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                     <Globe size={14} /> Currency
@@ -432,52 +443,61 @@ export default function TransactionTable({
                   <select
                     name="currency"
                     defaultValue={selectedTransaction?.currency}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
                     {CURRENCIES.map((c) => (
-                      <option key={c} value={c}>{c}</option>
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
                     ))}
                   </select>
                 </div>
               </div>
 
-              {/* CATEGORY */}
+              {/* CATEGORY DINÁMICO */}
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                   <Tag size={14} /> Category
                 </label>
                 <select
-                  name="typeName"
-                  defaultValue={selectedTransaction?.type || selectedTransaction?.typeName || ""}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900"
+                  name="categoryId" // IMPORTANTE: Ahora mapeamos a 'categoryId'
+                  defaultValue={defaultCategoryId}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  required
                 >
                   <option value="" disabled>Select a category</option>
                   {currentCategories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
+                    <option key={cat.categoryId} value={cat.categoryId}>
+                      {cat.name}
+                    </option>
                   ))}
                 </select>
               </div>
 
-              {/* DATE (Añadido para que la fecha no se pierda al editar) */}
+              {/* DATE */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Date</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Date
+                </label>
                 <input
                   name="date"
                   type="date"
                   defaultValue={selectedTransaction?.date}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900"
                 />
               </div>
 
+              {/* DESCRIPTION */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Description</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Description
+                </label>
                 <textarea
                   name="description"
                   rows={2}
                   defaultValue={selectedTransaction?.description}
-                  placeholder="Optional note..."
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-slate-900 resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                 />
               </div>
 
@@ -500,7 +520,8 @@ export default function TransactionTable({
           </div>
         </div>
       )}
-      {/* --- NUEVO: MODAL DE CONFIRMACIÓN DE BORRADO --- */}
+
+      {/* MODAL DE CONFIRMACIÓN DE BORRADO */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
