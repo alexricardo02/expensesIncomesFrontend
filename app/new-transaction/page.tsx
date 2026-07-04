@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -16,27 +16,44 @@ import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import Cookies from "js-cookie";
 
-// Define the available categories (Types)
-const INCOME_CATEGORIES = [
-  "Salary",
-  "Freelance",
-  "Gift",
-  "Investment",
-  "Other",
-];
-const EXPENSE_CATEGORIES = [
-  "Food",
-  "Rent",
-  "Transport",
-  "Entertainment",
-  "Health",
-  "Bills",
-  "Shopping",
-];
+
+interface Category {
+  categoryId: number;
+  name: string;
+  type: string;
+}
 
 export default function NewTransactionPage() {
   const router = useRouter();
   const [type, setType] = useState<"income" | "expense">("expense");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const token = Cookies.get("auth_token");
+      if (!token) return;
+
+      try {
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_API_URL_CATEGORIES || "http://localhost:8080/api/categories",
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const [formData, setFormData] = useState({
     amount: "",
@@ -61,7 +78,7 @@ export default function NewTransactionPage() {
       currency: formData.currency,
       date: formData.date,
       description: formData.description,
-      userId: realUserId, 
+      userId: realUserId,
     };
 
     // 2. Ajustamos el nombre del campo de categoría según el DTO
@@ -80,9 +97,9 @@ export default function NewTransactionPage() {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}` // <--- ¡ESTO ES LO QUE FALTA!
-      },
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // <--- ¡ESTO ES LO QUE FALTA!
+        },
         body: JSON.stringify(transactionData),
       });
 
@@ -112,8 +129,7 @@ export default function NewTransactionPage() {
   };
 
   // Select which categories to show based on the toggle
-  const currentCategories =
-    type === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+  const filteredCategories = categories.filter(cat => cat.type === type);
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -152,11 +168,10 @@ export default function NewTransactionPage() {
                     setType(t);
                     setFormData({ ...formData, typeName: "" }); // Reset category when switching type
                   }}
-                  className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${
-                    type === t
+                  className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === t
                       ? "bg-white text-indigo-600 shadow-sm"
                       : "text-slate-500 hover:text-slate-700"
-                  }`}
+                    }`}
                 >
                   {t}
                 </button>
@@ -225,9 +240,9 @@ export default function NewTransactionPage() {
                     <option value="" disabled>
                       Select a category
                     </option>
-                    {currentCategories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
+                    {filteredCategories.map((cat) => (
+                      <option key={cat.categoryId} value={cat.name}>
+                        {cat.name}
                       </option>
                     ))}
                   </select>
