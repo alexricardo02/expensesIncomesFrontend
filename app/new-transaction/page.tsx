@@ -100,9 +100,9 @@ export default function NewTransactionPage() {
 
     // 2. Ajustamos el nombre del campo de categoría según el DTO
     if (type === "income") {
-      transactionData.type = formData.typeName; // IncomeRequestDTO usa 'type'
+      transactionData.type = formData.typeName; // IncomeRequestDTO espera 'type'
     } else {
-      transactionData.typeName = formData.typeName; // ExpenseRequestDTO usa 'typeName'
+      transactionData.typeName = formData.typeName; // ExpenseRequestDTO espera 'typeName'
     }
 
     try {
@@ -184,7 +184,8 @@ export default function NewTransactionPage() {
                   type="button"
                   onClick={() => {
                     setType(t);
-                    setFormData({ ...formData, typeName: "" }); // Reset category when switching type
+                    const newDefaultCategories = t === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+                    setFormData({ ...formData, typeName: newDefaultCategories[0] });
                   }}
                   className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === t
                     ? "bg-white text-indigo-600 shadow-sm"
