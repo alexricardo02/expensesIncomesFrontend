@@ -96,8 +96,13 @@ export default function NewTransactionPage() {
       date: formData.date,
       description: formData.description,
       userId: realUserId,
-      type: formData.typeName
     };
+
+    if (type === "income") {
+      transactionData.type = formData.typeName;
+    } else {
+      transactionData.typeName = formData.typeName;
+    }
 
 
     try {
