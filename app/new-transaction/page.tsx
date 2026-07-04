@@ -23,6 +23,23 @@ interface Category {
   type: string;
 }
 
+const INCOME_CATEGORIES = [
+  "Salary",
+  "Freelance",
+  "Gift",
+  "Investment",
+  "Other",
+];
+const EXPENSE_CATEGORIES = [
+  "Food",
+  "Rent",
+  "Transport",
+  "Entertainment",
+  "Health",
+  "Bills",
+  "Shopping",
+];
+
 export default function NewTransactionPage() {
   const router = useRouter();
   const [type, setType] = useState<"income" | "expense">("expense");
@@ -129,7 +146,8 @@ export default function NewTransactionPage() {
   };
 
   // Select which categories to show based on the toggle
-  const filteredCategories = categories.filter(cat => cat.type === type);
+  const defaultCategories = type === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+  const dynamicCategories = categories.filter(cat => cat.type === type);
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -169,8 +187,8 @@ export default function NewTransactionPage() {
                     setFormData({ ...formData, typeName: "" }); // Reset category when switching type
                   }}
                   className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === t
-                      ? "bg-white text-indigo-600 shadow-sm"
-                      : "text-slate-500 hover:text-slate-700"
+                    ? "bg-white text-indigo-600 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
                     }`}
                 >
                   {t}
@@ -238,10 +256,17 @@ export default function NewTransactionPage() {
                     }
                   >
                     <option value="" disabled>
-                      Select a category
+                      {isLoadingCategories ? "Loading..." : "Select a category"}
                     </option>
-                    {filteredCategories.map((cat) => (
-                      <option key={cat.categoryId} value={cat.name}>
+
+                    {defaultCategories.map((cat) => (
+                      <option key={`default-${cat}`} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+
+                    {dynamicCategories.map((cat) => (
+                      <option key={`custom-${cat.categoryId}`} value={cat.name}>
                         {cat.name}
                       </option>
                     ))}
