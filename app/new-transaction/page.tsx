@@ -76,7 +76,7 @@ export default function NewTransactionPage() {
     amount: "",
     currency: "USD",
     date: new Date().toISOString().split("T")[0],
-    typeName: "", // This will be sent as 'typeName' to your DTO
+    typeName: EXPENSE_CATEGORIES[0], // This will be sent as 'typeName' to your DTO
     description: "",
   });
 
