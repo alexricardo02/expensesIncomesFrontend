@@ -76,7 +76,7 @@ export default function NewTransactionPage() {
     amount: "",
     currency: "USD",
     date: new Date().toISOString().split("T")[0],
-    typeName: EXPENSE_CATEGORIES[0], // This will be sent as 'typeName' to your DTO
+    categoryId: "", // <-- AHORA GUARDAMOS EL ID
     description: "",
   });
 
@@ -89,6 +89,8 @@ export default function NewTransactionPage() {
     const profileStr = Cookies.get("user_profile");
     const userProfile = profileStr ? JSON.parse(profileStr) : null;
     const realUserId = userProfile?.userId || 1; // Fallback por seguridad
+    const selectedCategory = dynamicCategories.find(c => c.categoryId.toString() === formData.categoryId);
+    const categoryNameString = selectedCategory ? selectedCategory.name : "";
 
     const transactionData: any = {
       amount: parseFloat(formData.amount),
@@ -96,12 +98,13 @@ export default function NewTransactionPage() {
       date: formData.date,
       description: formData.description,
       userId: realUserId,
+      categoryId: parseInt(formData.categoryId) // <-- EL NUEVO REQUISITO DE TU DB
     };
 
     if (type === "income") {
-      transactionData.type = formData.typeName;
+      transactionData.type = categoryNameString; 
     } else {
-      transactionData.typeName = formData.typeName;
+      transactionData.typeName = categoryNameString; 
     }
 
 
@@ -184,8 +187,7 @@ export default function NewTransactionPage() {
                   type="button"
                   onClick={() => {
                     setType(t);
-                    const newDefaultCategories = t === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
-                    setFormData({ ...formData, typeName: newDefaultCategories[0] });
+                    setFormData({ ...formData, categoryId: "" }); // Resetear la selección
                   }}
                   className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === t
                     ? "bg-white text-indigo-600 shadow-sm"
@@ -251,23 +253,17 @@ export default function NewTransactionPage() {
                   <select
                     required
                     className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
-                    value={formData.typeName}
+                    value={formData.categoryId}
                     onChange={(e) =>
-                      setFormData({ ...formData, typeName: e.target.value })
+                      setFormData({ ...formData, categoryId: e.target.value })
                     }
                   >
                     <option value="" disabled>
                       {isLoadingCategories ? "Loading..." : "Select a category"}
                     </option>
 
-                    {defaultCategories.map((cat) => (
-                      <option key={`default-${cat}`} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-
                     {dynamicCategories.map((cat) => (
-                      <option key={`custom-${cat.categoryId}`} value={cat.name}>
+                      <option key={`custom-${cat.categoryId}`} value={cat.categoryId.toString()}>
                         {cat.name}
                       </option>
                     ))}
