@@ -96,14 +96,9 @@ export default function NewTransactionPage() {
       date: formData.date,
       description: formData.description,
       userId: realUserId,
+      type: formData.typeName
     };
 
-    // 2. Ajustamos el nombre del campo de categoría según el DTO
-    if (type === "income") {
-      transactionData.type = formData.typeName; // IncomeRequestDTO espera 'type'
-    } else {
-      transactionData.typeName = formData.typeName; // ExpenseRequestDTO espera 'typeName'
-    }
 
     try {
       const endpoint =
