@@ -23,23 +23,6 @@ interface Category {
   type: string;
 }
 
-const INCOME_CATEGORIES = [
-  "Salary",
-  "Freelance",
-  "Gift",
-  "Investment",
-  "Other",
-];
-const EXPENSE_CATEGORIES = [
-  "Food",
-  "Rent",
-  "Transport",
-  "Entertainment",
-  "Health",
-  "Bills",
-  "Shopping",
-];
-
 export default function NewTransactionPage() {
   const router = useRouter();
   const [type, setType] = useState<"income" | "expense">("expense");
@@ -149,7 +132,6 @@ export default function NewTransactionPage() {
   };
 
   // Select which categories to show based on the toggle
-  const defaultCategories = type === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
   const dynamicCategories = categories.filter(cat => cat.type === type);
 
   return (
@@ -187,7 +169,7 @@ export default function NewTransactionPage() {
                   type="button"
                   onClick={() => {
                     setType(t);
-                    setFormData({ ...formData, categoryId: "" }); // Resetear la selección
+                    setFormData({ ...formData, categoryId: "" }); // Reseteamos al cambiar de pestaña
                   }}
                   className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === t
                     ? "bg-white text-indigo-600 shadow-sm"
@@ -262,8 +244,9 @@ export default function NewTransactionPage() {
                       {isLoadingCategories ? "Loading..." : "Select a category"}
                     </option>
 
+                    {/* ¡Ahora TODO viene de la base de datos! */}
                     {dynamicCategories.map((cat) => (
-                      <option key={`custom-${cat.categoryId}`} value={cat.categoryId.toString()}>
+                      <option key={cat.categoryId} value={cat.categoryId.toString()}>
                         {cat.name}
                       </option>
                     ))}
