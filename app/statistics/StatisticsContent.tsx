@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft, PieChart as PieIcon } from "lucide-react";
+import { ArrowLeft, PieChart as PieIcon, CreditCard } from "lucide-react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
@@ -18,6 +18,17 @@ export default function StatisticsContent({ data }: { data: any }) {
       {
         data: [data.totalIn, data.totalOut],
         backgroundColor: ["#10b981", "#f43f5e"],
+        borderWidth: 0,
+      },
+    ],
+  };
+
+  const methodData = {
+    labels: data.expensesByMethod ? Object.keys(data.expensesByMethod) : [],
+    datasets: [
+      {
+        data: data.expensesByMethod ? Object.values(data.expensesByMethod) : [],
+        backgroundColor: ["#6366f1", "#14b8a6", "#f59e0b", "#ec4899", "#8b5cf6"],
         borderWidth: 0,
       },
     ],
@@ -43,11 +54,14 @@ export default function StatisticsContent({ data }: { data: any }) {
           {/* PIE CHART CARD */}
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-              <PieIcon size={20} className="text-indigo-500" /> Income vs
-              Expenses
+              <CreditCard size={20} className="text-indigo-500" /> Expenses by Method
             </h3>
             <div className="w-full max-w-75">
-              <Pie data={pieData} options={{ maintainAspectRatio: true }} />
+              {methodData.labels.length > 0 ? (
+                <Pie data={methodData} options={{ maintainAspectRatio: true }} />
+              ) : (
+                <p className="text-slate-400 text-center mt-10">No data available</p>
+              )}
             </div>
           </div>
 

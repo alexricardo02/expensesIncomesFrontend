@@ -49,9 +49,16 @@ async function getStats() {
       description: e.expenseDescription || e.description, 
       type: e.expenseType || e.type,               
       currency: e.currency,
+      paymentMethod: e.paymentMethod || "OTHER",
       kind: "expense",
       displayId: `ex-${e.expenseID || e.expenseId || e.id}`,
     }));
+
+    const expensesByMethod = normalizedExpenses.reduce((acc: any, curr: any) => {
+      const method = curr.paymentMethod.replace('_', ' '); 
+      acc[method] = (acc[method] || 0) + curr.amount;
+      return acc;
+    }, {});
 
     const totalIn = normalizedIncomes.reduce((acc: number, curr: any) => acc + curr.amount, 0);
     const totalOut = normalizedExpenses.reduce((acc: number, curr: any) => acc + curr.amount, 0);
@@ -61,7 +68,8 @@ async function getStats() {
       totalIn, 
       totalOut, 
       incomes: normalizedIncomes, 
-      expenses: normalizedExpenses 
+      expenses: normalizedExpenses,
+      expensesByMethod
     };
 
   } catch (error) {

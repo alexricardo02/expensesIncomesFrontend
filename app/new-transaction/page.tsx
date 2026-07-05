@@ -2,16 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  Save,
-  DollarSign,
-  Calendar,
-  Tag,
-  FileText,
-  Globe,
-  ChevronDown,
-} from "lucide-react";
+import { ArrowLeft, Save, DollarSign, Calendar, Tag, FileText, Globe, ChevronDown, CreditCard } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -61,6 +52,7 @@ export default function NewTransactionPage() {
     date: new Date().toISOString().split("T")[0],
     categoryId: "", // <-- AHORA GUARDAMOS EL ID
     description: "",
+    paymentMethod: "DEBIT_CARD"
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,7 +73,8 @@ export default function NewTransactionPage() {
       date: formData.date,
       description: formData.description,
       userId: realUserId,
-      categoryId: parseInt(formData.categoryId, 10)
+      categoryId: parseInt(formData.categoryId, 10),
+      paymentMethod: formData.paymentMethod
     };
 
     try {
@@ -215,6 +208,28 @@ export default function NewTransactionPage() {
                     size={18}
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* PAYMENT METHOD */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                <CreditCard size={16} className="text-indigo-500" /> Payment Method
+              </label>
+              <div className="relative">
+                <select
+                  required
+                  className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                  value={formData.paymentMethod}
+                  onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
+                >
+                  <option value="CASH">Cash</option>
+                  <option value="CREDIT_CARD">Credit Card</option>
+                  <option value="DEBIT_CARD">Debit Card</option>
+                  <option value="BANK_TRANSFER">Bank Transfer</option>
+                  <option value="OTHER">Other</option>
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-900" size={18} />
               </div>
             </div>
 

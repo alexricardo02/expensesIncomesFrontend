@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle, Eraser, DollarSign, Calendar, Filter, ChevronUp, ChevronDown } from "lucide-react";
+import { Pencil, Trash2, X, Save, Tag, Globe, AlertTriangle, Eraser, DollarSign, Calendar, Filter, ChevronUp, ChevronDown, CreditCard } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
@@ -129,8 +129,9 @@ export default function TransactionTable({
       currency: formData.get("currency"),
       date: formData.get("date"),
       description: formData.get("description"),
-      categoryId: parseInt(formData.get("categoryId") as string, 10), // <-- ¡ID DINÁMICO!
+      categoryId: parseInt(formData.get("categoryId") as string, 10),
       userId: realUserId,
+      paymentMethod: formData.get("paymentMethod"),
     };
 
     try {
@@ -284,6 +285,7 @@ export default function TransactionTable({
             <tr>
               <th className="px-6 py-4 font-medium">Type</th>
               <th className="px-6 py-4 font-medium">Category</th>
+              <th className="px-6 py-4 font-medium">Method</th>
               <th className="px-6 py-4 font-medium">Date</th>
               <th className="px-6 py-4 font-medium text-right">Amount</th>
               <th className="px-6 py-4 font-medium text-right">Actions</th>
@@ -306,6 +308,9 @@ export default function TransactionTable({
                   <span className="font-medium text-slate-900">
                     {t.typeName || t.type || "Uncategorized"}
                   </span>
+                </td>
+                <td className="px-6 py-4 text-slate-500 text-xs">
+                  {t.paymentMethod?.replace('_', ' ') || 'N/A'}
                 </td>
                 <td className="px-6 py-4 text-slate-500">{t.date}</td>
                 <td
@@ -450,6 +455,24 @@ export default function TransactionTable({
                         {c}
                       </option>
                     ))}
+                  </select>
+                </div>
+
+                {/* PAYMENT METHOD */}
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
+                    <CreditCard size={14} /> Payment Method
+                  </label>
+                  <select
+                    name="paymentMethod"
+                    defaultValue={selectedTransaction?.paymentMethod || "CASH"}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  >
+                    <option value="CASH">Cash</option>
+                    <option value="CREDIT_CARD">Credit Card</option>
+                    <option value="DEBIT_CARD">Debit Card</option>
+                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                    <option value="OTHER">Other</option>
                   </select>
                 </div>
               </div>
