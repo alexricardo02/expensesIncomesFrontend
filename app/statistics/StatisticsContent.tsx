@@ -1,92 +1,160 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { ArrowLeft, PieChart as PieIcon, CreditCard } from "lucide-react";
-import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, PieChart as PieIcon, CreditCard, TrendingUp, Calendar, Filter, Activity } from "lucide-react";
+import { Pie, Doughnut, Line } from "react-chartjs-2";
+import { 
+  Chart as ChartJS, ArcElement, Tooltip, Legend, 
+  CategoryScale, LinearScale, PointElement, LineElement, Title, Filler 
+} from "chart.js";
 
-// Registramos los componentes de Chart.js
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, Filler);
 
 export default function StatisticsContent({ data }: { data: any }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // Preparamos los datos del gráfico con lo que viene del servidor
-  const pieData = {
-    labels: ["Incomes", "Expenses"],
-    datasets: [
-      {
-        data: [data.totalIn, data.totalOut],
-        backgroundColor: ["#10b981", "#f43f5e"],
-        borderWidth: 0,
-      },
-    ],
+  if (!data) return <div className="p-8 text-center text-slate-500">No data available or error loading stats.</div>;
+
+  const updateFilter = (updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) params.set(key, value);
+      else params.delete(key);
+    });
+    router.push(`/statistics?${params.toString()}`);
   };
 
-  const methodData = {
-    labels: data.expensesByMethod ? Object.keys(data.expensesByMethod) : [],
-    datasets: [
-      {
-        data: data.expensesByMethod ? Object.values(data.expensesByMethod) : [],
-        backgroundColor: ["#6366f1", "#14b8a6", "#f59e0b", "#ec4899", "#8b5cf6"],
-        borderWidth: 0,
-      },
-    ],
+  const handlePillClick = (range: string) => {
+    const today = new Date();
+    let start = "";
+    let end = today.toISOString().split("T")[0];
+
+    if (range === "thisMonth") {
+      start = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split("T")[0];
+    } else if (range === "lastMonth") {
+      start = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split("T")[0];
+      end = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split("T")[0];
+    } else if (range === "last3Months") {
+      start = new Date(today.getFullYear(), today.getMonth() - 3, 1).toISOString().split("T")[0];
+    } else if (range === "thisYear") {
+      start = new Date(today.getFullYear(), 0, 1).toISOString().split("T")[0];
+    }
+
+    updateFilter({ startDate: start || null, endDate: end || null });
+  };
+
+  const colors = ["#6366f1", "#14b8a6", "#f59e0b", "#ec4899", "#8b5cf6", "#10b981", "#f43f5e"];
+
+  const buildChartData = (sourceData: any) => ({
+    labels: sourceData ? Object.keys(sourceData) : [],
+    datasets: [{
+      data: sourceData ? Object.values(sourceData) : [],
+      backgroundColor: colors,
+      borderWidth: 0,
+    }],
+  });
+
+  const lineChartData = {
+    labels: data.balanceOverTime?.map((b: any) => b.date) || [],
+    datasets: [{
+      label: "Accumulated Balance",
+      data: data.balanceOverTime?.map((b: any) => b.balance) || [],
+      borderColor: "#6366f1",
+      backgroundColor: "rgba(99, 102, 241, 0.1)",
+      fill: true,
+      tension: 0.4,
+    }]
   };
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8 text-slate-900">
-      <div className="max-w-4xl mx-auto">
-        <button
-          onClick={() => router.push("/")}
-          className="flex items-center text-slate-500 hover:text-indigo-600 mb-8 transition-colors cursor-pointer group"
-        >
-          <ArrowLeft
-            size={20}
-            className="mr-2 group-hover:-translate-x-1 transition-transform"
-          />
+      <div className="max-w-6xl mx-auto space-y-8">
+        
+        <button onClick={() => router.push("/")} className="flex items-center text-slate-500 hover:text-indigo-600 transition-colors group">
+          <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
           Back to Dashboard
         </button>
 
-        <h1 className="text-3xl font-bold mb-8">Financial Analysis</h1>
+        {/* CONTROLES Y FILTROS */}
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6">
+          <div className="flex flex-wrap gap-2 items-center">
+            <Filter size={16} className="text-slate-400 mr-2" />
+            <button onClick={() => handlePillClick("thisMonth")} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full text-xs font-semibold">This Month</button>
+            <button onClick={() => handlePillClick("lastMonth")} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full text-xs font-semibold">Last Month</button>
+            <button onClick={() => handlePillClick("last3Months")} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full text-xs font-semibold">Last 3 Months</button>
+            <button onClick={() => handlePillClick("thisYear")} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full text-xs font-semibold">This Year</button>
+            <button onClick={() => updateFilter({ startDate: null, endDate: null })} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full text-xs font-semibold">All Time</button>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* PIE CHART CARD */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <input type="date" value={data.currentParams.startDate || ""} onChange={(e) => updateFilter({ startDate: e.target.value })} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm" />
+            <input type="date" value={data.currentParams.endDate || ""} onChange={(e) => updateFilter({ endDate: e.target.value })} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm" />
+            
+            <select value={data.currentParams.type || "ALL"} onChange={(e) => updateFilter({ type: e.target.value })} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm">
+              <option value="ALL">All Types</option>
+              <option value="INCOME">Only Incomes</option>
+              <option value="EXPENSE">Only Expenses</option>
+            </select>
+
+            <select value={data.currentParams.categoryId || ""} onChange={(e) => updateFilter({ categoryId: e.target.value })} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm">
+              <option value="">All Categories</option>
+              {data.categories?.map((c: any) => (
+                <option key={c.categoryId} value={c.categoryId}>{c.name}</option>
+              ))}
+            </select>
+
+            <select value={data.currentParams.paymentMethod || ""} onChange={(e) => updateFilter({ paymentMethod: e.target.value })} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm">
+              <option value="">All Methods</option>
+              <option value="CASH">Cash</option>
+              <option value="CREDIT_CARD">Credit Card</option>
+              <option value="DEBIT_CARD">Debit Card</option>
+              <option value="BANK_TRANSFER">Bank Transfer</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+        </div>
+
+        {/* KPIs */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-emerald-50 p-6 rounded-3xl">
+            <p className="text-emerald-700 font-semibold text-sm">Total Incomes</p>
+            <h2 className="text-3xl font-bold text-emerald-600 mt-2">${data.totalIn.toFixed(2)}</h2>
+          </div>
+          <div className="bg-rose-50 p-6 rounded-3xl">
+            <p className="text-rose-700 font-semibold text-sm">Total Expenses</p>
+            <h2 className="text-3xl font-bold text-rose-600 mt-2">${data.totalOut.toFixed(2)}</h2>
+          </div>
+          <div className="bg-indigo-50 p-6 rounded-3xl">
+            <p className="text-indigo-700 font-semibold text-sm flex items-center gap-2"><Activity size={16} /> Daily Avg. Expense</p>
+            <h2 className="text-3xl font-bold text-indigo-600 mt-2">${data.dailyAverage.toFixed(2)}</h2>
+          </div>
+        </div>
+
+        {/* CHARTS GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 lg:col-span-2">
+            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2"><TrendingUp size={20} className="text-indigo-500"/> Accumulated Balance</h3>
+            <div className="w-full h-72">
+              <Line data={lineChartData} options={{ maintainAspectRatio: false }} />
+            </div>
+          </div>
+
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
-            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-              <CreditCard size={20} className="text-indigo-500" /> Expenses by Method
-            </h3>
-            <div className="w-full max-w-75">
-              {methodData.labels.length > 0 ? (
-                <Pie data={methodData} options={{ maintainAspectRatio: true }} />
-              ) : (
-                <p className="text-slate-400 text-center mt-10">No data available</p>
-              )}
+            <h3 className="text-lg font-semibold mb-6">Expenses by Category</h3>
+            <div className="w-full max-w-72">
+              <Doughnut data={buildChartData(data.expensesByCategory)} />
             </div>
           </div>
 
-          {/* SUMMARY INFO CARD */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 justify-center flex flex-col">
-            <h3 className="text-lg font-semibold mb-4">Summary</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between p-4 bg-emerald-50 rounded-2xl">
-                <span className="text-emerald-700 font-medium">
-                  Total Incomes
-                </span>
-                <span className="font-bold text-emerald-600">
-                  ${data?.totalIn.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between p-4 bg-rose-50 rounded-2xl">
-                <span className="text-rose-700 font-medium">
-                  Total Expenses
-                </span>
-                <span className="font-bold text-rose-600">
-                  ${data?.totalOut.toFixed(2)}
-                </span>
-              </div>
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
+            <h3 className="text-lg font-semibold mb-6">Incomes by Category</h3>
+            <div className="w-full max-w-72">
+              <Pie data={buildChartData(data.incomesByCategory)} />
             </div>
           </div>
+
         </div>
       </div>
     </main>
