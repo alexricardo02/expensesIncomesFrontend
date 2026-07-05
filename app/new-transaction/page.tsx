@@ -81,15 +81,8 @@ export default function NewTransactionPage() {
       date: formData.date,
       description: formData.description,
       userId: realUserId,
-      categoryId: parseInt(formData.categoryId) // <-- EL NUEVO REQUISITO DE TU DB
+      categoryId: parseInt(formData.categoryId, 10)
     };
-
-    if (type === "income") {
-      transactionData.type = categoryNameString; 
-    } else {
-      transactionData.typeName = categoryNameString; 
-    }
-
 
     try {
       const endpoint =
