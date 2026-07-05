@@ -2,14 +2,13 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, PieChart as PieIcon, CreditCard, TrendingUp, Calendar, Filter, Activity } from "lucide-react";
-import { Pie, Doughnut, Line } from "react-chartjs-2";
-import { 
-  Chart as ChartJS, ArcElement, Tooltip, Legend, 
-  CategoryScale, LinearScale, PointElement, LineElement, Title, Filler 
+import { Pie, Doughnut, Line, Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS, ArcElement, Tooltip, Legend,
+  CategoryScale, LinearScale, PointElement, LineElement, Title, Filler, BarElement
 } from "chart.js";
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, Filler);
-
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, Filler, BarElement);
 export default function StatisticsContent({ data }: { data: any }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -67,10 +66,20 @@ export default function StatisticsContent({ data }: { data: any }) {
     }]
   };
 
+  const barChartData = {
+    labels: data.expensesByCategory ? Object.keys(data.expensesByCategory) : [],
+    datasets: [{
+      label: "Expenses",
+      data: data.expensesByCategory ? Object.values(data.expensesByCategory) : [],
+      backgroundColor: "#6366f1",
+      borderRadius: 4,
+    }]
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8 text-slate-900">
       <div className="max-w-6xl mx-auto space-y-8">
-        
+
         <button onClick={() => router.push("/")} className="flex items-center text-slate-500 hover:text-indigo-600 transition-colors group">
           <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
           Back to Dashboard
@@ -90,7 +99,7 @@ export default function StatisticsContent({ data }: { data: any }) {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <input type="date" value={data.currentParams.startDate || ""} onChange={(e) => updateFilter({ startDate: e.target.value })} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm" />
             <input type="date" value={data.currentParams.endDate || ""} onChange={(e) => updateFilter({ endDate: e.target.value })} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm" />
-            
+
             <select value={data.currentParams.type || "ALL"} onChange={(e) => updateFilter({ type: e.target.value })} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm">
               <option value="ALL">All Types</option>
               <option value="INCOME">Only Incomes</option>
@@ -133,9 +142,9 @@ export default function StatisticsContent({ data }: { data: any }) {
 
         {/* CHARTS GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
+
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 lg:col-span-2">
-            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2"><TrendingUp size={20} className="text-indigo-500"/> Accumulated Balance</h3>
+            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2"><TrendingUp size={20} className="text-indigo-500" /> Accumulated Balance</h3>
             <div className="w-full h-72">
               <Line data={lineChartData} options={{ maintainAspectRatio: false }} />
             </div>
@@ -155,7 +164,55 @@ export default function StatisticsContent({ data }: { data: any }) {
             </div>
           </div>
 
+          {/* FIX: Nuevo Gráfico de Barras */}
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 lg:col-span-2 flex flex-col items-center">
+            <h3 className="text-lg font-semibold mb-6">Comparativa de Gastos</h3>
+            <div className="w-full h-72">
+              <Bar data={barChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+            </div>
+          </div>
+
         </div>
+        {/* FIX: Vista de Libro Mayor (Ledger) solicitada por el usuario */}
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 mt-8">
+          <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
+            <Calendar size={20} className="text-indigo-500" /> Detalle de Movimientos (Libro Mayor)
+          </h3>
+
+          {data.transactions && data.transactions.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 text-sm text-slate-500">
+                    <th className="pb-3 pr-4 font-medium">Fecha</th>
+                    <th className="pb-3 pr-4 font-medium">Descripción</th>
+                    <th className="pb-3 pr-4 font-medium">Categoría</th>
+                    <th className="pb-3 pr-4 font-medium">Método</th>
+                    <th className="pb-3 font-medium text-right">Monto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.transactions.map((tx: any, idx: number) => (
+                    <tr key={idx} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+                      <td className="py-3 pr-4 text-sm whitespace-nowrap">{tx.date}</td>
+                      <td className="py-3 pr-4 text-sm font-medium text-slate-700">{tx.description || "N/A"}</td>
+                      <td className="py-3 pr-4 text-sm text-slate-500">
+                        <span className="bg-slate-100 px-2 py-1 rounded-md text-xs">{tx.categoryName}</span>
+                      </td>
+                      <td className="py-3 pr-4 text-sm text-slate-500">{tx.paymentMethod?.replace('_', ' ')}</td>
+                      <td className={`py-3 text-sm font-semibold text-right whitespace-nowrap ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-slate-700'}`}>
+                        {tx.type === 'INCOME' ? '+' : '-'}${tx.amount.toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-slate-500 text-sm text-center py-4">No se encontraron movimientos para el periodo seleccionado.</p>
+          )}
+        </div>
+
       </div>
     </main>
   );

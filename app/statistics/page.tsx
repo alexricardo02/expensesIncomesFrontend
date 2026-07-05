@@ -44,9 +44,9 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     const rawExpenses = expensesData.content || [];
 
     const txType = params.type || "ALL";
-    const processIncomes = txType === "ALL" || txType === "INCOME" ? rawIncomes : [];
-    const processExpenses = txType === "ALL" || txType === "EXPENSE" ? rawExpenses : [];
-
+    const processIncomes = txType === "ALL" || txType === "INCOME" ? rawIncomes.map((t: any) => ({...t, type: 'INCOME'})) : [];
+    const processExpenses = txType === "ALL" || txType === "EXPENSE" ? rawExpenses.map((t: any) => ({...t, type: 'EXPENSE'})) : [];
+    const allTransactions = [...processIncomes, ...processExpenses].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     const totalIn = processIncomes.reduce((acc: number, curr: any) => acc + (curr.amount || 0), 0);
     const totalOut = processExpenses.reduce((acc: number, curr: any) => acc + (curr.amount || 0), 0);
 
@@ -96,13 +96,11 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
 
     statsData = { 
       totalIn, totalOut, expensesByCategory, incomesByCategory, 
-      expensesByMethod, balanceOverTime, dailyAverage: totalOut / daysDiff, categories, currentParams: params 
+      expensesByMethod, balanceOverTime, dailyAverage: totalOut / daysDiff, categories, currentParams: params,
+      transactions: allTransactions
     };
 
-    return <StatisticsContent data={{ 
-      totalIn, totalOut, expensesByCategory, incomesByCategory, 
-      expensesByMethod, balanceOverTime, dailyAverage: totalOut / daysDiff, categories, currentParams: params 
-    }} />;
+    return <StatisticsContent data={statsData} />;
     
 
   } catch (error) {
