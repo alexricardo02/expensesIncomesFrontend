@@ -243,9 +243,9 @@ export default function NewTransactionPage() {
                   <select
                     required
                     className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
-                    value={formData.paymentMethod}
+                    value={formData.categoryId}
                     onChange={(e) =>
-                      setFormData({ ...formData, paymentMethod: e.target.value })
+                      setFormData({ ...formData, categoryId: e.target.value })
                     }
                   >
                     <option value="CASH">Cash</option>
