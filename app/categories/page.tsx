@@ -18,7 +18,7 @@ export default function CategoriesPage() {
   const [type, setType] = useState("expense");
   const [isLoading, setIsLoading] = useState(true);
 
-  // URL inteligente: Intenta usar una variable de entorno, si no existe, adapta la de incomes
+  // Smart URL: Tries to use the specific environment variable; if not found, adapts the incomes URL
   const API_URL = 
     process.env.NEXT_PUBLIC_API_URL_CATEGORIES || 
     process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') || 
@@ -37,7 +37,7 @@ export default function CategoriesPage() {
         setCategories(data);
       }
     } catch (error) {
-      toast.error("Error al cargar categorías");
+      toast.error("Error loading categories");
     } finally {
       setIsLoading(false);
     }
@@ -52,11 +52,11 @@ export default function CategoriesPage() {
     const token = Cookies.get("auth_token");
     
     if (!name.trim()) {
-      toast.error("Por favor ingresa un nombre");
+      toast.error("Please enter a name");
       return;
     }
 
-    const toastId = toast.loading("Creando categoría...");
+    const toastId = toast.loading("Creating category...");
     try {
       const res = await fetch(API_URL, {
         method: "POST",
@@ -68,21 +68,21 @@ export default function CategoriesPage() {
       });
 
       if (res.ok) {
-        toast.success("¡Categoría creada!", { id: toastId });
-        setName(""); // Limpiamos el input
-        fetchCategories(); // Recargamos la lista
+        toast.success("Category created!", { id: toastId });
+        setName(""); // Clear the input field
+        fetchCategories(); // Reload the category list
       } else {
         const err = await res.json();
-        toast.error(err.message || "No se pudo crear", { id: toastId });
+        toast.error(err.message || "Failed to create category", { id: toastId });
       }
     } catch (error) {
-      toast.error("Error de conexión", { id: toastId });
+      toast.error("Connection error", { id: toastId });
     }
   };
 
   const handleDelete = async (id: number) => {
     const token = Cookies.get("auth_token");
-    const toastId = toast.loading("Eliminando...");
+    const toastId = toast.loading("Deleting...");
     
     try {
       const res = await fetch(`${API_URL}/${id}`, {
@@ -91,13 +91,13 @@ export default function CategoriesPage() {
       });
 
       if (res.ok) {
-        toast.success("Categoría eliminada", { id: toastId });
-        fetchCategories(); // Recargamos la lista
+        toast.success("Category deleted", { id: toastId });
+        fetchCategories(); // Reload the category list
       } else {
-        toast.error("No se pudo eliminar", { id: toastId });
+        toast.error("Failed to delete category", { id: toastId });
       }
     } catch (error) {
-      toast.error("Error de conexión", { id: toastId });
+      toast.error("Connection error", { id: toastId });
     }
   };
 
@@ -106,7 +106,7 @@ export default function CategoriesPage() {
       <Toaster position="top-right" />
       
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Cabecera y Botón de Volver */}
+        {/* Header and Back Button */}
         <div className="flex items-center gap-4 mb-8">
           <Link 
             href="/" 
@@ -116,63 +116,63 @@ export default function CategoriesPage() {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <LayoutGrid className="text-indigo-600" /> Mis Categorías
+              <LayoutGrid className="text-indigo-600" /> My Categories
             </h1>
-            <p className="text-slate-500 text-sm">Gestiona tus clases de ingresos y gastos</p>
+            <p className="text-slate-500 text-sm">Manage your income and expense categories</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* PANEL IZQUIERDO: FORMULARIO */}
+          {/* LEFT PANEL: CREATION FORM */}
           <div className="md:col-span-1">
             <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
               <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <PlusCircle size={18} className="text-indigo-500" /> Nueva
+                <PlusCircle size={18} className="text-indigo-500" /> New
               </h2>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Name</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Ej. Comida, Salario..."
+                    placeholder="E.g. Food, Salary..."
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                     maxLength={30}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Tipo</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Type</label>
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
-                    <option value="expense">Gasto</option>
-                    <option value="income">Ingreso</option>
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
                   </select>
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm active:scale-95"
+                  className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm active:scale-95 cursor-pointer"
                 >
-                  Guardar Categoría
+                  Save Category
                 </button>
               </form>
             </div>
           </div>
 
-          {/* PANEL DERECHO: LISTA DE CATEGORÍAS */}
+          {/* RIGHT PANEL: CATEGORY LIST */}
           <div className="md:col-span-2">
             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
               {isLoading ? (
-                <div className="p-8 text-center text-slate-400">Cargando categorías...</div>
+                <div className="p-8 text-center text-slate-400">Loading categories...</div>
               ) : categories.length === 0 ? (
                 <div className="p-8 text-center text-slate-400">
                   <Tag size={32} className="mx-auto mb-3 opacity-50" />
-                  No tienes categorías personalizadas.
+                  You don't have any categories yet.
                 </div>
               ) : (
                 <ul className="divide-y divide-slate-100">
@@ -187,8 +187,8 @@ export default function CategoriesPage() {
                       </div>
                       <button
                         onClick={() => handleDelete(cat.categoryId)}
-                        className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
-                        title="Eliminar categoría"
+                        className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 cursor-pointer"
+                        title="Delete category"
                       >
                         <Trash2 size={18} />
                       </button>
