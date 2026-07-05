@@ -51,7 +51,7 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     const totalOut = processExpenses.reduce((acc: number, curr: any) => acc + (curr.amount || 0), 0);
 
     const expensesByCategory = processExpenses.reduce((acc: any, curr: any) => {
-      const cat = curr.typeName || "Other"; 
+      const cat = curr.categoryName || "Other";
       acc[cat] = (acc[cat] || 0) + curr.amount;
       return acc;
     }, {});
