@@ -175,70 +175,47 @@ export default async function Home() {
               Financial Dashboard
             </h1>
             <p className="text-slate-500 text-sm">
-              Welcome, <span className="text-blue-600">{usernameToShow}</span>!
-              Here&apos;s today&apos;s summary
-            </p>
-          </div>
+                Welcome, <span className="text-blue-600">{usernameToShow}</span>!
+                Here&apos;s today&apos;s summary
+              </p>
+            </div>
 
-          <div className="flex gap-3">
+            <div className="flex gap-3">
 
-            <div className="flex flex-col md:flex-row gap-3 md:items-center">
-            
-            <ExchangeRateBar />
-            
-            <LogoutButton />
+              <div className="flex flex-col md:flex-row gap-3 md:items-center">
 
-            <Link
-              href="/categories"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold"
-            >
-              <Tag size={20} />
-              Categories
-            </Link>
+                <ExchangeRateBar />
 
-            <Link href="/statistics">
-              <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
-                <BarChart3 size={20} />
-                View Stats
-              </button>
-            </Link>
+                <LogoutButton />
 
-            <Link href="/new-transaction">
-              <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
-                <PlusCircle size={20} />
-                New Transaction
-              </button>
-            </Link>
-            
-          </div>
-            {/* NEW STATISTICS BUTTON */}
-            <LogoutButton></LogoutButton>
+                <Link
+                  href="/categories"
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold"
+                >
+                  <Tag size={20} />
+                  Categories
+                </Link>
 
-            <Link
-              href="/categories"
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium"
-            >
-              <Tag size={20} />
-              Categories
-            </Link>
+                <Link href="/statistics">
+                  <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
+                    <BarChart3 size={20} />
+                    View Stats
+                  </button>
+                </Link>
 
-            <Link href="/statistics">
-              <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
-                <BarChart3 size={20} />
-                View Stats
-              </button>
-            </Link>
+                <Link href="/new-transaction">
+                  <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
+                    <PlusCircle size={20} />
+                    New Transaction
+                  </button>
+                </Link>
 
-            <Link href="/new-transaction">
-              <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
-                <PlusCircle size={20} />
-                New Transaction
-              </button>
-            </Link>
-          </div>
-        </header>
+              </div>
 
-        {/* SUMMARY CARDS */}
+            </div>
+          </header>
+
+          {/* SUMMARY CARDS */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {/* 1. Total Balance */}
           <div className="col-span-2 md:col-span-1 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100">
