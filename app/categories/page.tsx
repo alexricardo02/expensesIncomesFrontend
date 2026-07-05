@@ -18,7 +18,7 @@ export default function CategoriesPage() {
   const [type, setType] = useState("expense");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Smart URL: Tries to use the specific environment variable; if not found, adapts the incomes URL
+  // Smart URL: Tries to use an environment variable; if it doesn't exist, it adapts the incomes URL
   const API_URL = 
     process.env.NEXT_PUBLIC_API_URL_CATEGORIES || 
     process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') || 
@@ -69,11 +69,11 @@ export default function CategoriesPage() {
 
       if (res.ok) {
         toast.success("Category created!", { id: toastId });
-        setName(""); // Clear the input field
-        fetchCategories(); // Reload the category list
+        setName(""); // Clear the input
+        fetchCategories(); // Reload the list
       } else {
         const err = await res.json();
-        toast.error(err.message || "Failed to create category", { id: toastId });
+        toast.error(err.message || "Could not create", { id: toastId });
       }
     } catch (error) {
       toast.error("Connection error", { id: toastId });
@@ -92,9 +92,9 @@ export default function CategoriesPage() {
 
       if (res.ok) {
         toast.success("Category deleted", { id: toastId });
-        fetchCategories(); // Reload the category list
+        fetchCategories(); // Reload the list
       } else {
-        toast.error("Failed to delete category", { id: toastId });
+        toast.error("Could not delete", { id: toastId });
       }
     } catch (error) {
       toast.error("Connection error", { id: toastId });
@@ -118,13 +118,13 @@ export default function CategoriesPage() {
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
               <LayoutGrid className="text-indigo-600" /> My Categories
             </h1>
-            <p className="text-slate-500 text-sm">Manage your income and expense categories</p>
+            <p className="text-slate-500 text-sm">Manage your income and expense classes</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* LEFT PANEL: CREATION FORM */}
+          {/* LEFT PANEL: FORM */}
           <div className="md:col-span-1">
             <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
               <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
@@ -156,7 +156,7 @@ export default function CategoriesPage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm active:scale-95 cursor-pointer"
+                  className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm active:scale-95"
                 >
                   Save Category
                 </button>
@@ -164,7 +164,7 @@ export default function CategoriesPage() {
             </div>
           </div>
 
-          {/* RIGHT PANEL: CATEGORY LIST */}
+          {/* RIGHT PANEL: CATEGORIES LIST */}
           <div className="md:col-span-2">
             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
               {isLoading ? (
@@ -172,7 +172,7 @@ export default function CategoriesPage() {
               ) : categories.length === 0 ? (
                 <div className="p-8 text-center text-slate-400">
                   <Tag size={32} className="mx-auto mb-3 opacity-50" />
-                  You don't have any categories yet.
+                  You have no custom categories.
                 </div>
               ) : (
                 <ul className="divide-y divide-slate-100">
@@ -187,7 +187,7 @@ export default function CategoriesPage() {
                       </div>
                       <button
                         onClick={() => handleDelete(cat.categoryId)}
-                        className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 cursor-pointer"
+                        className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
                         title="Delete category"
                       >
                         <Trash2 size={18} />
