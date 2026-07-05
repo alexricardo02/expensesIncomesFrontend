@@ -1,92 +1,16 @@
 import { cookies } from "next/headers";
 import StatisticsContent from "./StatisticsContent";
 
-async function getStats() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
-
-  if (!token) return { totalIn: 0, totalOut: 0, incomes: [], expenses: [] };
-
-  try {
-    const [incRes, expRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/incomes`, {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store",
-      }),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/expenses`, {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store",
-      }),
-    ]);
-
-    if (!incRes.ok || !expRes.ok) {
-      return { totalIn: 0, totalOut: 0, incomes: [], expenses: [] };
-    }
-
-    const incomesData = await incRes.json();
-    const expensesData = await expRes.json();
-
-    const rawIncomes = incomesData.content ? incomesData.content : [];
-    const rawExpenses = expensesData.content ? expensesData.content : [];
-
-    // 1. Normalizamos los ingresos
-    const normalizedIncomes = rawIncomes.map((i: any) => ({
-      id: i.incomeId || i.id,
-      amount: i.amount,
-      date: i.date,
-      description: i.description,
-      type: i.type,
-      currency: i.currency,
-      kind: "income",
-      displayId: `in-${i.incomeId || i.id}`,
-    }));
-
-    // 2. Normalizamos los gastos
-    const normalizedExpenses = rawExpenses.map((e: any) => ({
-      id: e.expenseID || e.expenseId || e.id,
-      amount: e.expenseAmount || e.amount,         // <-- Propiedad homologada
-      date: e.expenseDate || e.date,               // <-- Propiedad homologada
-      description: e.expenseDescription || e.description, 
-      type: e.expenseType || e.type,               
-      currency: e.currency,
-      paymentMethod: e.paymentMethod || "OTHER",
-      kind: "expense",
-      displayId: `ex-${e.expenseID || e.expenseId || e.id}`,
-    }));
-
-    const expensesByMethod = normalizedExpenses.reduce((acc: any, curr: any) => {
-      const method = curr.paymentMethod.replace('_', ' '); 
-      acc[method] = (acc[method] || 0) + curr.amount;
-      return acc;
-    }, {});
-
-    const totalIn = normalizedIncomes.reduce((acc: number, curr: any) => acc + curr.amount, 0);
-    const totalOut = normalizedExpenses.reduce((acc: number, curr: any) => acc + curr.amount, 0);
-
-    // 4. Retornamos las listas limpias al frontend
-    return { 
-      totalIn, 
-      totalOut, 
-      incomes: normalizedIncomes, 
-      expenses: normalizedExpenses,
-      expensesByMethod
-    };
-
-  } catch (error) {
-    console.error(error);
-    return { totalIn: 0, totalOut: 0, incomes: [], expenses: [] };
-  }
-}
-
+// WHY: searchParams is used directly in the Page component, removing the need for a separate getStats() function.
 export default async function Page({ searchParams }: { searchParams: { [key: string]: string | undefined } }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
+  
   if (!token) return <StatisticsContent data={null} />;
 
   // Await searchParams in Next.js 15+
   const params = await searchParams;
   
-  // WHY: Build query string dynamically matching Spring Boot @RequestParam names
   const queryArgs = new URLSearchParams({ size: '1000' }); 
   if (params.startDate) queryArgs.append('startDate', params.startDate);
   if (params.endDate) queryArgs.append('endDate', params.endDate);
@@ -115,7 +39,6 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     const rawIncomes = incomesData.content || [];
     const rawExpenses = expensesData.content || [];
 
-    // Filter by transaction type if specified in UI
     const txType = params.type || "ALL";
     const processIncomes = txType === "ALL" || txType === "INCOME" ? rawIncomes : [];
     const processExpenses = txType === "ALL" || txType === "EXPENSE" ? rawExpenses : [];
@@ -123,7 +46,6 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     const totalIn = processIncomes.reduce((acc: number, curr: any) => acc + (curr.amount || 0), 0);
     const totalOut = processExpenses.reduce((acc: number, curr: any) => acc + (curr.amount || 0), 0);
 
-    // WHY: Data aggregation performed server-side reduces client-side JS payload and battery usage.
     const expensesByCategory = processExpenses.reduce((acc: any, curr: any) => {
       const cat = curr.type || "Other";
       acc[cat] = (acc[cat] || 0) + curr.amount;
@@ -149,13 +71,18 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
         balanceMap.set(t.date, (balanceMap.get(t.date) || 0) + t.amount);
       });
 
-    let runningTotal = 0;
+    // WHY: Using .reduce() instead of .map() with an external variable avoids React immutability 
+    // linter errors and adheres to purely functional programming standards.
     const balanceOverTime = Array.from(balanceMap.entries())
       .sort(([dateA], [dateB]) => new Date(dateA as string).getTime() - new Date(dateB as string).getTime())
-      .map(([date, dailyNet]) => {
-        runningTotal += dailyNet as number;
-        return { date, balance: runningTotal };
-      });
+      .reduce((acc: { date: string, balance: number }[], [date, dailyNet]) => {
+        const previousBalance = acc.length > 0 ? acc[acc.length - 1].balance : 0;
+        acc.push({ 
+          date: date as string, 
+          balance: previousBalance + (dailyNet as number) 
+        });
+        return acc;
+      }, []);
 
     // Daily Average Calculation
     const dates = [...processIncomes, ...processExpenses].map(t => new Date(t.date).getTime());
@@ -169,6 +96,9 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     }} />;
 
   } catch (error) {
+    // WHY: Printing the error to the console resolves the "unused variable" ESLint warning 
+    // and is a good practice for debugging server-side failures in production.
+    console.error("Failed to fetch aggregate statistics:", error);
     return <StatisticsContent data={null} />;
   }
 }
