@@ -6,6 +6,7 @@ export const formatCurrency = (value: number, currency: string): string => {
     USD: "en-US",
     GBP: "en-GB",
     JPY: "ja-JP",
+    ARS: "es-AR",
   };
 
   return new Intl.NumberFormat(locales[currency] || "en-US", {

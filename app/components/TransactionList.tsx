@@ -1,8 +1,9 @@
-"use client"; // Importante para usar useState
+"use client"; 
 
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useCurrencyDisplay } from "../context/CurrencyDisplayContext";
 
 interface TransactionListProps {
   transactions: any[];
@@ -11,6 +12,7 @@ interface TransactionListProps {
 
 export default function TransactionList({ transactions }: { transactions: any[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const { convert } = useCurrencyDisplay();
 
   const toggleRow = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -54,8 +56,11 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                 <div className={`text-right text-[13px] font-bold whitespace-nowrap ${
                   isIncome ? "text-emerald-600" : "text-rose-600"
                 }`}>
-                  {/* El signo y el monto ahora están obligados a estar en la misma línea */}
-                  {isIncome ? "+ " : "- "} {formatCurrency(t.amount, t.currency)}
+                  {/* FIX: Se evalúa la moneda seleccionada y se hace la conversión en vivo */}
+                  {isIncome ? "+ " : "- "} {(() => {
+                    const conv = convert(t.amount, t.currency);
+                    return formatCurrency(conv.amount, conv.currency);
+                  })()}
                 </div>
                 {isExpanded ? (
                   <ChevronUp size={16} className="text-slate-400 shrink-0" />

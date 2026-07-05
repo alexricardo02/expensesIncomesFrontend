@@ -1,4 +1,4 @@
-import LogoutButton from "./components/LogoutButton"; // Ajusta la ruta si es necesario
+import LogoutButton from "./components/LogoutButton";
 import {
   ArrowUpCircle,
   ArrowDownCircle,
@@ -15,6 +15,9 @@ import TransactionList from "./components/TransactionList";
 import BalanceChart from "./components/BalanceChart";
 import { cookies } from "next/headers";
 import { formatCurrency } from "@/lib/utils";
+import { getUsdArsRate } from "@/lib/exchangeRate";
+import { CurrencyDisplayProvider } from "./context/CurrencyDisplayContext";
+import ExchangeRateBar from "./components/ExchangeRateBar";
 
 
 async function getTransactions() {
@@ -88,6 +91,7 @@ async function getTransactions() {
  */
 export default async function Home() {
   const transactions = await getTransactions();
+  const rate = await getUsdArsRate();
 
   const cookieStore = await cookies();
   const userProfileCookie = cookieStore.get("user_profile")?.value;
@@ -102,6 +106,11 @@ export default async function Home() {
     }
   }
 
+  const toUsdEquivalent = (amount: number, currency: string) => {
+  if (currency === "ARS" && rate) return amount / rate.venta;
+  return amount;
+};
+
   const now = new Date();
   const currentMonthStr = `${now.getFullYear()}-${String(
     now.getMonth() + 1
@@ -115,12 +124,12 @@ export default async function Home() {
   const recentTransactions = transactions.slice(0, 10);
 
   const totalIncomes = transactions
-    .filter((t) => t.kind === "income")
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  .filter((t) => t.kind === "income")
+  .reduce((acc, curr) => acc + toUsdEquivalent(curr.amount, curr.currency), 0);
 
   const totalExpenses = transactions
-    .filter((t) => t.kind === "expense")
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  .filter((t) => t.kind === "expense")
+  .reduce((acc, curr) => acc + toUsdEquivalent(curr.amount, curr.currency), 0);
 
   const totalIncomesThisMonth = transactions
     .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
@@ -156,6 +165,7 @@ export default async function Home() {
     : ((totalBalanceThisMonth * 100) / totalBalanceLastMonth - 100) / 100;
 
   return (
+    <CurrencyDisplayProvider rate={rate}>
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* HEADER SECTION */}
@@ -171,6 +181,25 @@ export default async function Home() {
           </div>
 
           <div className="flex gap-3">
+
+            <div className="flex flex-col md:flex-row gap-3 md:items-center">
+              <ExchangeRateBar />
+              <div className="flex gap-3">
+                <LogoutButton></LogoutButton>
+                <Link href="/statistics">
+                  <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
+                    <BarChart3 size={20} />
+                    View Stats
+                  </button>
+                </Link>
+                <Link href="/new-transaction">
+                  <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
+                    <PlusCircle size={20} />
+                    New Transaction
+                  </button>
+                </Link>
+              </div>
+            </div>
             {/* NEW STATISTICS BUTTON */}
             <LogoutButton></LogoutButton>
 
@@ -377,5 +406,6 @@ export default async function Home() {
         </section>
       </div>
     </main>
+    </CurrencyDisplayProvider>
   );
 }

@@ -6,6 +6,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import { useCurrencyDisplay } from "../context/CurrencyDisplayContext";
 
 
 interface Category {
@@ -18,7 +19,7 @@ interface TransactionTableProps {
   initialTransactions: any[];
 }
 
-const CURRENCIES = ["USD", "EUR", "GBP", "JPY"];
+const CURRENCIES = ["USD", "EUR", "GBP", "JPY", "ARS"];
 
 export default function TransactionTable({
   initialTransactions,
@@ -30,6 +31,7 @@ export default function TransactionTable({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const router = useRouter();
+  const { convert } = useCurrencyDisplay();
 
   // --- ESTADOS PARA FILTROS ---
   const [filterType, setFilterType] = useState<string>("all");
@@ -317,7 +319,10 @@ export default function TransactionTable({
                   className={`px-6 py-4 text-right font-semibold ${t.kind === "income" ? "text-emerald-600" : "text-rose-600"}`}
                 >
                   {t.kind === "income" ? "+" : "-"}{" "}
-                  {formatCurrency(t.amount, t.currency)}
+                  {(() => { 
+                    const conv = convert(t.amount, t.currency); 
+                    return formatCurrency(conv.amount, conv.currency); 
+                  })()}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
@@ -370,7 +375,10 @@ export default function TransactionTable({
                     className={`font-bold ${isIncome ? "text-emerald-600" : "text-rose-600"}`}
                   >
                     {isIncome ? "+" : "-"}{" "}
-                    {formatCurrency(t.amount, t.currency)}
+                    {(() => { 
+                      const conv = convert(t.amount, t.currency); 
+                      return formatCurrency(conv.amount, conv.currency); 
+                    })()}
                   </span>
                   {isExpanded ? (
                     <ChevronUp size={20} className="text-slate-400" />
