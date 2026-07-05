@@ -1,16 +1,16 @@
 import { cookies } from "next/headers";
 import StatisticsContent from "./StatisticsContent";
 
-// WHY: searchParams is used directly in the Page component, removing the need for a separate getStats() function.
+// WHY: We extract searchParams injected by Next.js router to forward them to our Spring backend.
 export default async function Page({ searchParams }: { searchParams: { [key: string]: string | undefined } }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
-  
   if (!token) return <StatisticsContent data={null} />;
 
   // Await searchParams in Next.js 15+
   const params = await searchParams;
   
+  // WHY: Build query string dynamically matching Spring Boot @RequestParam names
   const queryArgs = new URLSearchParams({ size: '1000' }); 
   if (params.startDate) queryArgs.append('startDate', params.startDate);
   if (params.endDate) queryArgs.append('endDate', params.endDate);
@@ -39,6 +39,7 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     const rawIncomes = incomesData.content || [];
     const rawExpenses = expensesData.content || [];
 
+    // Filter by transaction type if specified in UI
     const txType = params.type || "ALL";
     const processIncomes = txType === "ALL" || txType === "INCOME" ? rawIncomes : [];
     const processExpenses = txType === "ALL" || txType === "EXPENSE" ? rawExpenses : [];
@@ -46,6 +47,7 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     const totalIn = processIncomes.reduce((acc: number, curr: any) => acc + (curr.amount || 0), 0);
     const totalOut = processExpenses.reduce((acc: number, curr: any) => acc + (curr.amount || 0), 0);
 
+    // WHY: Data aggregation performed server-side reduces client-side JS payload and battery usage.
     const expensesByCategory = processExpenses.reduce((acc: any, curr: any) => {
       const cat = curr.type || "Other";
       acc[cat] = (acc[cat] || 0) + curr.amount;
@@ -71,18 +73,13 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
         balanceMap.set(t.date, (balanceMap.get(t.date) || 0) + t.amount);
       });
 
-    // WHY: Using .reduce() instead of .map() with an external variable avoids React immutability 
-    // linter errors and adheres to purely functional programming standards.
+    let runningTotal = 0;
     const balanceOverTime = Array.from(balanceMap.entries())
       .sort(([dateA], [dateB]) => new Date(dateA as string).getTime() - new Date(dateB as string).getTime())
-      .reduce((acc: { date: string, balance: number }[], [date, dailyNet]) => {
-        const previousBalance = acc.length > 0 ? acc[acc.length - 1].balance : 0;
-        acc.push({ 
-          date: date as string, 
-          balance: previousBalance + (dailyNet as number) 
-        });
-        return acc;
-      }, []);
+      .map(([date, dailyNet]) => {
+        runningTotal += dailyNet as number;
+        return { date, balance: runningTotal };
+      });
 
     // Daily Average Calculation
     const dates = [...processIncomes, ...processExpenses].map(t => new Date(t.date).getTime());
@@ -96,9 +93,6 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     }} />;
 
   } catch (error) {
-    // WHY: Printing the error to the console resolves the "unused variable" ESLint warning 
-    // and is a good practice for debugging server-side failures in production.
-    console.error("Failed to fetch aggregate statistics:", error);
     return <StatisticsContent data={null} />;
   }
 }
