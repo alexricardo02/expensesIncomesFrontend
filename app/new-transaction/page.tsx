@@ -248,11 +248,16 @@ export default function NewTransactionPage() {
                       setFormData({ ...formData, categoryId: e.target.value })
                     }
                   >
-                    <option value="CASH">Cash</option>
-                    <option value="CREDIT_CARD">Credit Card</option>
-                    <option value="DEBIT_CARD">Debit Card</option>
-                    <option value="BANK_TRANSFER">Bank Transfer</option>
-                    <option value="OTHER">Other</option>
+                    {/* Sustituir las opciones estáticas por este bloque dinámico */}
+                    <option value="" disabled>
+                      {isLoadingCategories ? "Loading..." : "Select a category"}
+                    </option>
+                    {dynamicCategories.map((cat) => (
+                      <option key={cat.categoryId} value={cat.categoryId.toString()}>
+                        {cat.name}
+                      </option>
+                    ))}
+                    {/* Fin del bloque dinámico */}
                   </select>
                   <ChevronDown
                     className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-900"
