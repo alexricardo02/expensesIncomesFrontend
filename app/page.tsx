@@ -18,6 +18,7 @@ import { formatCurrency } from "@/lib/utils";
 import { getUsdArsRate } from "@/lib/exchangeRate";
 import { CurrencyDisplayProvider } from "./context/CurrencyDisplayContext";
 import ExchangeRateBar from "./components/ExchangeRateBar";
+import DashboardKPIs from "./components/DashboardKPIs";
 
 
 async function getTransactions() {
@@ -106,63 +107,7 @@ export default async function Home() {
     }
   }
 
-  const toUsdEquivalent = (amount: number, currency: string) => {
-  if (currency === "ARS" && rate) return amount / rate.venta;
-  return amount;
-};
-
-  const now = new Date();
-  const currentMonthStr = `${now.getFullYear()}-${String(
-    now.getMonth() + 1
-  ).padStart(2, "0")}`;
-
-  const lastMonthStr = `${now.getFullYear()}-${String(now.getMonth()).padStart(
-    2,
-    "0"
-  )}`;
-
   const recentTransactions = transactions.slice(0, 10);
-
-  const totalIncomes = transactions
-  .filter((t) => t.kind === "income")
-  .reduce((acc, curr) => acc + toUsdEquivalent(curr.amount, curr.currency), 0);
-
-  const totalExpenses = transactions
-  .filter((t) => t.kind === "expense")
-  .reduce((acc, curr) => acc + toUsdEquivalent(curr.amount, curr.currency), 0);
-
-  const totalIncomesThisMonth = transactions
-    .filter((t) => typeof t.date === 'string' && t.date.startsWith(currentMonthStr) && t.kind === "income")
-    .reduce((acc, curr) => acc + curr.amount, 0);
-
-  const totalExpensesThisMonth = transactions
-    .filter((t) => t.date.startsWith(currentMonthStr) && t.kind === "expense")
-    .reduce((acc, curr) => acc + curr.amount, 0);
-
-  const totalIncomesLastMonth = transactions
-    .filter((t) => typeof t.date === 'string' && t.date.startsWith(lastMonthStr) && t.kind === "income")
-    .reduce((acc, curr) => acc + curr.amount, 0);
-
-  const totalExpensesLastMonth = transactions
-    .filter((t) => t.date.startsWith(lastMonthStr) && t.kind === "expense")
-    .reduce((acc, curr) => acc + curr.amount, 0);
-
-  const totalBalance = totalIncomes - totalExpenses;
-
-  const monthlyIncomesCount = transactions.filter(
-    (t) => t.kind === "income" && t.date.startsWith(currentMonthStr)
-  ).length;
-
-  const monthlyExpensesCount = transactions.filter(
-    (t) => t.kind === "expense" && t.date.startsWith(currentMonthStr)
-  ).length;
-
-  const totalBalanceThisMonth = totalIncomesThisMonth - totalExpensesThisMonth;
-  const totalBalanceLastMonth = totalIncomesLastMonth - totalExpensesLastMonth;
-
-  const monthlyKPIPercentage = totalBalanceLastMonth === 0 
-    ? 0 
-    : ((totalBalanceThisMonth * 100) / totalBalanceLastMonth - 100) / 100;
 
   return (
     <CurrencyDisplayProvider rate={rate}>
@@ -183,8 +128,6 @@ export default async function Home() {
             <div className="flex gap-3">
 
               <div className="flex flex-col md:flex-row gap-3 md:items-center">
-
-                <ExchangeRateBar />
 
                 <LogoutButton />
 
@@ -215,111 +158,7 @@ export default async function Home() {
             </div>
           </header>
 
-          {/* SUMMARY CARDS */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {/* 1. Total Balance */}
-          <div className="col-span-2 md:col-span-1 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                  <Wallet size={18} />
-                </div>
-                <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
-                  Total Balance
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-end justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                {/* REDUCIDO: text-2xl en móvil, text-3xl en PC (antes era 4xl) */}
-                <h2 className="text-2xl md:text-2xl font-black text-slate-900 truncate tracking-tight">
-                  {formatCurrency(totalBalance, "USD")}
-                </h2>
-                <div
-                  className={`flex items-center text-xs font-bold mt-1 ${totalBalanceThisMonth >= 0
-                      ? "text-emerald-600"
-                      : "text-rose-600"
-                    }`}
-                >
-                  {totalBalanceThisMonth >= 0 ? (
-                    <TrendingUp size={14} className="mr-1" />
-                  ) : (
-                    <TrendingDown size={14} className="mr-1" />
-                  )}
-                  <span>
-                    {totalBalanceThisMonth >= 0 ? "+" : ""}
-                    {totalBalanceThisMonth.toFixed(2)}%
-                  </span>
-                </div>
-              </div>
-              <div className="shrink-0">
-                <BalanceChart
-                  transactions={transactions}
-                  isPositive={totalBalanceThisMonth >= 0}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* 2. Incomes (Solo PC) */}
-          <div className="hidden md:block bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                <ArrowUpCircle size={20} />
-              </div>
-              <span className="text-xs font-bold text-slate-400 uppercase">
-                Incomes
-              </span>
-            </div>
-            {/* REDUCIDO: text-2xl para que respire mejor */}
-            <h2 className="text-3xl font-bold text-emerald-600 truncate">
-              {formatCurrency(totalIncomes, "USD")}
-            </h2>
-          </div>
-
-          {/* 3. Expenses (Solo PC) */}
-          <div className="hidden md:block bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-rose-50 text-rose-600 rounded-lg">
-                <ArrowDownCircle size={20} />
-              </div>
-              <span className="text-xs font-bold text-slate-400 uppercase">
-                Expenses
-              </span>
-            </div>
-            {/* REDUCIDO: text-2xl para coherencia visual */}
-            <h2 className="text-3xl font-bold text-rose-600 truncate">
-              {formatCurrency(totalExpenses, "USD")}
-            </h2>
-          </div>
-        </div>
-
-        {/* MOBILE income/expense row — only shows on mobile */}
-        <div className="grid grid-cols-2 gap-4 md:hidden">
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg">
-                <ArrowUpCircle size={16} />
-              </div>
-              <span className="text-xs font-bold text-slate-400 uppercase">Income</span>
-            </div>
-            <h2 className="text-xl font-bold text-emerald-600 truncate">
-              {formatCurrency(totalIncomes, "USD")}
-            </h2>
-          </div>
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="p-1.5 bg-rose-50 text-rose-600 rounded-lg">
-                <ArrowDownCircle size={16} />
-              </div>
-              <span className="text-xs font-bold text-slate-400 uppercase">Expenses</span>
-            </div>
-            <h2 className="text-xl font-bold text-rose-600 truncate">
-              {formatCurrency(totalExpenses, "USD")}
-            </h2>
-          </div>
-        </div>
+          <DashboardKPIs transactions={transactions} />
 
         {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
