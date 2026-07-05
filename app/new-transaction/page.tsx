@@ -6,6 +6,7 @@ import { ArrowLeft, Save, DollarSign, Calendar, Tag, FileText, Globe, ChevronDow
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { v4 as uuidv4 } from "uuid"; // npm install uuid
 
 
 interface Category {
@@ -76,6 +77,8 @@ export default function NewTransactionPage() {
     const realUserId = userProfile?.userId || 1; // Fallback por seguridad
     const selectedCategory = dynamicCategories.find(c => c.categoryId.toString() === formData.categoryId);
     const categoryNameString = selectedCategory ? selectedCategory.name : "";
+    const idempotencyKeyRef = React.useRef(uuidv4());
+
 
     const transactionData: any = {
       amount: parseFloat(formData.amount),
@@ -87,6 +90,8 @@ export default function NewTransactionPage() {
       paymentMethod: formData.paymentMethod
     };
 
+
+
     try {
       const endpoint =
         type === "income"
@@ -97,7 +102,8 @@ export default function NewTransactionPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // <--- ¡ESTO ES LO QUE FALTA!
+          "Authorization": `Bearer ${token}`,
+          "Idempotency-Key": idempotencyKeyRef.current
         },
         body: JSON.stringify(transactionData),
       });
@@ -109,14 +115,12 @@ export default function NewTransactionPage() {
           router.push("/");
         }, 1200);
       } else {
-        // ESTO ES LO IMPORTANTE:
         const errorBody = await response.json();
         console.error("DETALLE DEL ERROR DESDE SPRING:", errorBody);
 
         const errorMessage = errorBody.message || "Check the fields and try again";
         toast.error(`Error: ${errorMessage}`, { id: loadingToast });
 
-        // Si tienes errores de validación (@NotBlank, etc), Spring los pone en una lista
         if (errorBody.errors) {
           console.table(errorBody.errors);
         }
