@@ -58,6 +58,16 @@ export default function NewTransactionPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData.categoryId || formData.categoryId === "") {
+      toast.error("Please select a valid category");
+      return;
+    }
+
+    if (isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
+      toast.error("Please enter a valid amount greater than 0");
+      return;
+    }
+
     const loadingToast = toast.loading("Creating transaction...");
 
     const token = Cookies.get("auth_token");
