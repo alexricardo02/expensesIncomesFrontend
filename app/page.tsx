@@ -183,23 +183,34 @@ export default async function Home() {
           <div className="flex gap-3">
 
             <div className="flex flex-col md:flex-row gap-3 md:items-center">
-              <ExchangeRateBar />
-              <div className="flex gap-3">
-                <LogoutButton></LogoutButton>
-                <Link href="/statistics">
-                  <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
-                    <BarChart3 size={20} />
-                    View Stats
-                  </button>
-                </Link>
-                <Link href="/new-transaction">
-                  <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
-                    <PlusCircle size={20} />
-                    New Transaction
-                  </button>
-                </Link>
-              </div>
-            </div>
+            
+            <ExchangeRateBar />
+            
+            <LogoutButton />
+
+            <Link
+              href="/categories"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold"
+            >
+              <Tag size={20} />
+              Categories
+            </Link>
+
+            <Link href="/statistics">
+              <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
+                <BarChart3 size={20} />
+                View Stats
+              </button>
+            </Link>
+
+            <Link href="/new-transaction">
+              <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
+                <PlusCircle size={20} />
+                New Transaction
+              </button>
+            </Link>
+            
+          </div>
             {/* NEW STATISTICS BUTTON */}
             <LogoutButton></LogoutButton>
 
