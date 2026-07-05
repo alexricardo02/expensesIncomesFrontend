@@ -243,21 +243,16 @@ export default function NewTransactionPage() {
                   <select
                     required
                     className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
-                    value={formData.categoryId}
+                    value={formData.paymentMethod}
                     onChange={(e) =>
-                      setFormData({ ...formData, categoryId: e.target.value })
+                      setFormData({ ...formData, paymentMethod: e.target.value })
                     }
                   >
-                    <option value="" disabled>
-                      {isLoadingCategories ? "Loading..." : "Select a category"}
-                    </option>
-
-                    {/* ¡Ahora TODO viene de la base de datos! */}
-                    {dynamicCategories.map((cat) => (
-                      <option key={cat.categoryId} value={cat.categoryId.toString()}>
-                        {cat.name}
-                      </option>
-                    ))}
+                    <option value="CASH">Cash</option>
+                    <option value="CREDIT_CARD">Credit Card</option>
+                    <option value="DEBIT_CARD">Debit Card</option>
+                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                    <option value="OTHER">Other</option>
                   </select>
                   <ChevronDown
                     className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-900"
