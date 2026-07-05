@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, DollarSign, Calendar, Tag, FileText, Globe, ChevronDown, CreditCard } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
-import Link from "next/link";
 import Cookies from "js-cookie";
 import { v4 as uuidv4 } from "uuid"; // npm install uuid
 
@@ -20,6 +19,7 @@ export default function NewTransactionPage() {
   const [type, setType] = useState<"income" | "expense">("expense");
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const idempotencyKeyRef = React.useRef(uuidv4());
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -76,9 +76,6 @@ export default function NewTransactionPage() {
     const userProfile = profileStr ? JSON.parse(profileStr) : null;
     const realUserId = userProfile?.userId || 1; // Fallback por seguridad
     const selectedCategory = dynamicCategories.find(c => c.categoryId.toString() === formData.categoryId);
-    const categoryNameString = selectedCategory ? selectedCategory.name : "";
-    const idempotencyKeyRef = React.useRef(uuidv4());
-
 
     const transactionData: any = {
       amount: parseFloat(formData.amount),
