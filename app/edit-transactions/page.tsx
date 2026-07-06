@@ -18,7 +18,6 @@ import TransactionTable from "../components/TransactionTable";
 import { formatCurrency } from "@/lib/utils";
 import { cookies } from "next/headers"
 import { getUsdArsRate } from "@/lib/exchangeRate";
-import { CurrencyDisplayProvider } from "../context/CurrencyDisplayContext";;
 
 async function getTransactions() {
 
@@ -78,7 +77,6 @@ export default async function EditTransactionsPage() {
   const rate = await getUsdArsRate();
   
   return (
-    <CurrencyDisplayProvider rate={rate}>
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         <Link
@@ -98,6 +96,5 @@ export default async function EditTransactionsPage() {
         </section>
       </div>
     </main>
-    </CurrencyDisplayProvider>
   );
 }
