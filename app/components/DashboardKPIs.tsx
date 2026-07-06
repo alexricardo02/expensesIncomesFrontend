@@ -9,7 +9,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
   // WHY: By computing aggregates in the client, the UI instantly reacts to Context changes (ARS/USD toggle) without a server roundtrip.
   const sumConverted = (txs: any[]) => txs.reduce((acc, t) => acc + (t.amountPrimary ?? t.amount), 0);
 
-  let targetCurrency = transactions[0]?.primaryCurrency || "USD";
+  const targetCurrency = transactions[0]?.primaryCurrency || "USD";
 
   const now = new Date();
   const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
