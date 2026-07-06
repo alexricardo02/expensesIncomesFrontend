@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -25,22 +25,21 @@ export default function TransactionList({ transactions }: { transactions: any[] 
         return (
           <div key={t.displayId} className="hover:bg-slate-50/50 transition-colors">
             {/* VISTA PRINCIPAL (3 COLUMNAS REPARTIDAS) */}
-            <div 
-              className="px-4 py-4 flex items-center cursor-pointer justify-between" 
+            <div
+              className="px-4 py-4 flex items-center cursor-pointer justify-between"
               onClick={() => toggleRow(t.displayId)}
             >
               {/* 1. Badge (Izquierda - Ancho fijo) */}
               <div className="w-14 shrink-0 mr-3">
-                <span className={`inline-block w-full text-center py-1 rounded-full text-[9px] font-bold uppercase ${
-                  isIncome ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
-                }`}>
+                <span className={`inline-block w-full text-center py-1 rounded-full text-[9px] font-bold uppercase ${isIncome ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
+                  }`}>
                   {t.kind}
                 </span>
               </div>
 
               {/* 2. Nombre (Centro - Ocupa el espacio restante y centra el texto) */}
-                {/* 2. Información Central: Nombre + FECHA (Nueva mejora) */}
-              <div className="flex-1 min-w-0 flex flex-col justify-center"> 
+              {/* 2. Información Central: Nombre + FECHA (Nueva mejora) */}
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <p className="font-semibold text-slate-800 text-[13px] text-left truncate leading-snug">
                   {t.typeName || t.type || "Uncategorized"}
                 </p>
@@ -51,9 +50,8 @@ export default function TransactionList({ transactions }: { transactions: any[] 
 
               {/* 3. Monto e Icono (Derecha - Alineado al final) */}
               <div className="flex items-center gap-2 ml-2 shrink-0">
-                <div className={`text-right text-[13px] font-bold whitespace-nowrap ${
-                  isIncome ? "text-emerald-600" : "text-rose-600"
-                }`}>
+                <div className={`text-right text-[13px] font-bold whitespace-nowrap ${isIncome ? "text-emerald-600" : "text-rose-600"
+                  }`}>
                   {isIncome ? "+ " : "- "} {(() => {
                     const safeAmount = t.amountPrimaryCurrency ?? t.amountPrimary ?? t.amount;
                     const safeCurrency = t.primaryCurrency ?? t.currency ?? "USD";
@@ -69,9 +67,8 @@ export default function TransactionList({ transactions }: { transactions: any[] 
             </div>
 
             {/* CONTENIDO EXPANDIBLE */}
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              isExpanded ? "max-height-40 opacity-100 pb-4" : "max-h-0 opacity-0"
-            }`}>
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? "max-height-40 opacity-100 pb-4" : "max-h-0 opacity-0"
+              }`}>
               <div className="px-6 pt-2 grid grid-cols-2 gap-y-3 text-xs border-t border-slate-50 mt-1">
                 <div>
                   <p className="text-slate-400 uppercase font-semibold">Date</p>
