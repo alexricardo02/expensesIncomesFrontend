@@ -16,7 +16,9 @@ import {
 import Link from "next/link";
 import TransactionTable from "../components/TransactionTable";
 import { formatCurrency } from "@/lib/utils";
-import { cookies } from "next/headers";
+import { cookies } from "next/headers"
+import { getUsdArsRate } from "@/lib/exchangeRate";
+import { CurrencyDisplayProvider } from "../context/CurrencyDisplayContext";;
 
 async function getTransactions() {
 
@@ -40,8 +42,8 @@ async function getTransactions() {
     const incomesData = await incomesRes.json();
     const expensesData = await expensesRes.json();
 
-    const incomes = incomesData.content || [];
-    const expenses = expensesData.content || [];
+    const incomes = Array.isArray(incomesData) ? incomesData : (Array.isArray(incomesData?.content) ? incomesData.content : []);
+    const expenses = Array.isArray(expensesData) ? expensesData : (Array.isArray(expensesData?.content) ? expensesData.content : []);
 
     const combined = [
       ...incomes.map((i: any) => ({
@@ -73,7 +75,10 @@ async function getTransactions() {
 export default async function EditTransactionsPage() {
   const transactions = await getTransactions();
 
+  const rate = await getUsdArsRate();
+  
   return (
+    <CurrencyDisplayProvider rate={rate}>
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         <Link
@@ -93,5 +98,6 @@ export default async function EditTransactionsPage() {
         </section>
       </div>
     </main>
+    </CurrencyDisplayProvider>
   );
 }
