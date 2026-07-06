@@ -7,13 +7,26 @@ import { LogOut } from "lucide-react";
 export default function LogoutButton() {
   const router = useRouter();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const refreshToken = Cookies.get("refresh_token");
+
+    if (refreshToken) {
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/logout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken }),
+        });
+      } catch (e) {
+        console.error("Logout request failed", e);
+      }
+    }
+
     Cookies.remove("user_profile");
     Cookies.remove("auth_token", { path: '/' });
     Cookies.remove("refresh_token", { path: '/' });
 
     router.push("/login");
-
     router.refresh();
   };
 

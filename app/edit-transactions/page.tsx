@@ -18,25 +18,27 @@ import TransactionTable from "../components/TransactionTable";
 import { formatCurrency } from "@/lib/utils";
 import { cookies } from "next/headers"
 import { getUsdArsRate } from "@/lib/exchangeRate";
+import { fetchWithRetry } from "@/lib/serverFetch";
+export const maxDuration = 60;
 
-async function getTransactions() {
+async function getTransactions(): Promise<any[] | { coldStart: boolean }> {
 
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
   try {
     const [incomesRes, expensesRes] = await Promise.all([
-      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { headers: {
-          "Authorization": `Bearer ${token}`, // <--- AQUÍ ENVIAMOS LA LLAVE
+      fetchWithRetry(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { headers: {
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
-        }, cache: "no-store" }),
-      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { headers: {
-          "Authorization": `Bearer ${token}`, // <--- Y AQUÍ TAMBIÉN
+        }}),
+      fetchWithRetry(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { headers: {
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
-        }, cache: "no-store" })
+        }})
     ]);
 
-    if (!incomesRes.ok || !expensesRes.ok)
-      throw new Error("Failed to fetch data");
+    if (!incomesRes || !expensesRes) return { coldStart: true };
+    if (!incomesRes.ok || !expensesRes.ok) throw new Error("Failed to fetch data");
 
     const incomesData = await incomesRes.json();
     const expensesData = await expensesRes.json();
@@ -72,7 +74,9 @@ async function getTransactions() {
  * their recent income and expenses, and a list of their recent transactions.
  */
 export default async function EditTransactionsPage() {
-  const transactions = await getTransactions();
+  const result = await getTransactions();
+  const isColdStart = !Array.isArray(result) && (result as any)?.coldStart;
+  const transactions = isColdStart ? [] : (result as any[]);
 
   const rate = await getUsdArsRate();
   
@@ -92,7 +96,13 @@ export default async function EditTransactionsPage() {
 
         {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-          <TransactionTable initialTransactions={transactions} />
+          {isColdStart ? (
+            <div className="p-10 text-center text-amber-700 bg-amber-50 font-medium">
+              El servidor se está despertando. Recarga la página en 20 segundos.
+            </div>
+          ) : (
+            <TransactionTable initialTransactions={transactions} />
+          )}
         </section>
       </div>
     </main>

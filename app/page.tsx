@@ -17,32 +17,23 @@ import { cookies } from "next/headers";
 import { formatCurrency } from "@/lib/utils";
 import { getUsdArsRate } from "@/lib/exchangeRate";
 import DashboardKPIs from "./components/DashboardKPIs";
+import { fetchWithRetry } from "@/lib/serverFetch";
+export const maxDuration = 60;
 
 
-async function getTransactions() {
+async function getTransactions(): Promise<any[] | { transactions: any[]; coldStart: boolean }> {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
 
   if (!token) return [];
 
   try {
-    const [incomesRes, expensesRes] = await Promise.all([
-      fetch(process.env.NEXT_PUBLIC_API_URL_INCOMES!, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store"
-      }),
-      fetch(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store"
-      }),
+        const [incomesRes, expensesRes] = await Promise.all([
+      fetchWithRetry(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { headers: { Authorization: `Bearer ${token}` } }),
+      fetchWithRetry(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { headers: { Authorization: `Bearer ${token}` } }),
     ]);
 
+    if (!incomesRes || !expensesRes) return { transactions: [], coldStart: true };
 
     const incomesData = incomesRes.ok ? await incomesRes.json() : { content: [] };
     const expensesData = expensesRes.ok ? await expensesRes.json() : { content: [] };
@@ -95,7 +86,10 @@ async function getTransactions() {
  * their recent income and expenses, and a list of their recent transactions.
  */
 export default async function Home() {
-  const transactions = await getTransactions();
+  const result = await getTransactions();
+
+  const isColdStart = !Array.isArray(result) && (result as any)?.coldStart;
+  const transactions = isColdStart ? [] : (result as any[]);
 
   const cookieStore = await cookies();
   const userProfileCookie = cookieStore.get("user_profile")?.value;
@@ -165,6 +159,12 @@ export default async function Home() {
           </header>
 
           <DashboardKPIs transactions={transactions} />
+
+          {isColdStart && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 mt-6 rounded-xl text-center font-medium shadow-sm">
+              El servidor se está despertando (Cold Start). Por favor, recarga la página en 20 segundos.
+            </div>
+          )}
 
         {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">

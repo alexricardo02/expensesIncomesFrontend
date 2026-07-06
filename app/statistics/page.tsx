@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import StatisticsContent from "./StatisticsContent";
 import { getUsdArsRate } from "@/lib/exchangeRate";
+import { fetchWithRetry } from "@/lib/serverFetch";
+export const maxDuration = 60;
 
 // WHY: searchParams is used directly in the Page component, removing the need for a separate getStats() function.
 export default async function Page({ searchParams }: { searchParams: { [key: string]: string | undefined } }) {
@@ -24,16 +26,24 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
 
   try {
     const [incRes, expRes, catRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/incomes?${queryStr}`, {
-        headers: { Authorization: `Bearer ${token}` }, cache: "no-store"
+      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/incomes?${queryStr}`, {
+        headers: { Authorization: `Bearer ${token}` }
       }),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/expenses?${queryStr}`, {
-        headers: { Authorization: `Bearer ${token}` }, cache: "no-store"
+      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/expenses?${queryStr}`, {
+        headers: { Authorization: `Bearer ${token}` }
       }),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
-        headers: { Authorization: `Bearer ${token}` }, cache: "no-store"
+      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+        headers: { Authorization: `Bearer ${token}` }
       })
     ]);
+
+    if (!incRes || !expRes || !catRes) {
+      return (
+        <div className="p-8 mt-10 text-center text-amber-700 bg-amber-50 max-w-2xl mx-auto rounded-xl font-medium border border-amber-200">
+           El servidor se está despertando. Recarga la página en 20 segundos.
+        </div>
+      );
+    }
 
     const incomesData = incRes.ok ? await incRes.json() : { content: [] };
     const expensesData = expRes.ok ? await expRes.json() : { content: [] };

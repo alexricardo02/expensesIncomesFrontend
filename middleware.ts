@@ -17,19 +17,25 @@ export async function middleware(request: NextRequest) {
 
   if (!authToken && refreshToken) {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken: refreshToken }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/refresh`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken: refreshToken }),
+        },
+      );
 
       if (res.ok) {
         const data = await res.json();
-        const newAuthToken = data.token; 
+        const newAuthToken = data.token;
+        const newRefreshToken = data.refreshToken;
 
-        // 4. Preparamos la respuesta inyectando la nueva cookie en los headers
         const requestHeaders = new Headers(request.headers);
-        requestHeaders.set('Cookie', `auth_token=${newAuthToken}; refresh_token=${refreshToken}`);
+        requestHeaders.set(
+          "Cookie",
+          `auth_token=${newAuthToken}; refresh_token=${refreshToken}`,
+        );
 
         const response = NextResponse.next({
           request: {
@@ -38,10 +44,17 @@ export async function middleware(request: NextRequest) {
         });
 
         response.cookies.set({
-          name: 'auth_token',
+          name: "auth_token",
           value: newAuthToken,
-          maxAge: 14 * 60, 
-          path: '/',
+          maxAge: 14 * 60,
+          path: "/",
+        });
+
+        response.cookies.set({
+          name: "refresh_token",
+          value: newRefreshToken,
+          maxAge: 7 * 24 * 60 * 60,
+          path: "/",
         });
 
         return response;
