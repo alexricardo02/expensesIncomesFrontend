@@ -55,7 +55,9 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                   isIncome ? "text-emerald-600" : "text-rose-600"
                 }`}>
                   {isIncome ? "+ " : "- "} {(() => {
-                    return formatCurrency(t.amountPrimary, t.primaryCurrency, false, true);
+                    const safeAmount = t.amountPrimary !== undefined ? t.amountPrimary : t.amount;
+                    const safeCurrency = t.primaryCurrency || t.currency || "USD";
+                    return formatCurrency(safeAmount, safeCurrency, false, true);
                   })()}
                 </div>
                 {isExpanded ? (

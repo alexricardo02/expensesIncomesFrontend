@@ -333,7 +333,9 @@ export default function TransactionTable({
                 >
                   {t.kind === "income" ? "+" : "-"}{" "}
                   {(() => { 
-                    return formatCurrency(t.amountPrimary, t.primaryCurrency, false, true); 
+                    const safeAmount = t.amountPrimary !== undefined ? t.amountPrimary : t.amount;
+                    const safeCurrency = t.primaryCurrency || t.currency || "USD";
+                    return formatCurrency(safeAmount, safeCurrency, false, true); 
                   })()}
                 </td>
                 <td className="px-6 py-4 text-right">
@@ -388,7 +390,9 @@ export default function TransactionTable({
                   >
                     {isIncome ? "+" : "-"}{" "}
                     {(() => { 
-                      return formatCurrency(t.amountPrimary, t.primaryCurrency, false, true); 
+                      const safeAmount = t.amountPrimary !== undefined ? t.amountPrimary : t.amount;
+                      const safeCurrency = t.primaryCurrency || t.currency || "USD";
+                      return formatCurrency(safeAmount, safeCurrency, false, true); 
                     })()}
                   </span>
                   {isExpanded ? (
