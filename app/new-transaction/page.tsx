@@ -106,6 +106,7 @@ export default function NewTransactionPage() {
       });
 
       if (response.ok) {
+        idempotencyKeyRef.current = uuidv4();
         toast.success("Saved successfully!", { id: loadingToast });
         setTimeout(() => {
           router.refresh();
