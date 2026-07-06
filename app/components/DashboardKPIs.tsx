@@ -58,7 +58,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
           <div className="flex items-end justify-between gap-2">
             <div className="flex-1 min-w-0">
               <h2 className="text-2xl md:text-2xl font-black text-slate-900 truncate tracking-tight">
-                {formatCurrency(totalBalance, targetCurrency)}
+                {formatCurrency(totalBalance, targetCurrency, true)}
               </h2>
               <div className={`flex items-center text-xs font-bold mt-1 ${totalBalanceThisMonth >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
                 {totalBalanceThisMonth >= 0 ? <TrendingUp size={14} className="mr-1" /> : <TrendingDown size={14} className="mr-1" />}
@@ -76,7 +76,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><ArrowUpCircle size={20} /></div>
             <span className="text-xs font-bold text-slate-400 uppercase">Incomes</span>
           </div>
-          <h2 className="text-3xl font-bold text-emerald-600 truncate">{formatCurrency(totalIncomes, targetCurrency)}</h2>
+          <h2 className="text-3xl font-bold text-emerald-600 truncate">{formatCurrency(totalIncomes, targetCurrency, true)}</h2>
         </div>
 
         <div className="hidden md:block bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
@@ -84,7 +84,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
             <div className="p-2 bg-rose-50 text-rose-600 rounded-lg"><ArrowDownCircle size={20} /></div>
             <span className="text-xs font-bold text-slate-400 uppercase">Expenses</span>
           </div>
-          <h2 className="text-3xl font-bold text-rose-600 truncate">{formatCurrency(totalExpenses, targetCurrency)}</h2>
+          <h2 className="text-3xl font-bold text-rose-600 truncate">{formatCurrency(totalExpenses, targetCurrency, true)}</h2>
         </div>
       </div>
 
@@ -95,14 +95,14 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
             <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><ArrowUpCircle size={16} /></div>
             <span className="text-xs font-bold text-slate-400 uppercase">Income</span>
           </div>
-          <h2 className="text-xl font-bold text-emerald-600 truncate">{formatCurrency(totalIncomes, targetCurrency)}</h2>
+          <h2 className="text-xl font-bold text-emerald-600 truncate">{formatCurrency(totalIncomes, targetCurrency, true)}</h2>
         </div>
         <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
           <div className="flex items-center gap-2 mb-2">
             <div className="p-1.5 bg-rose-50 text-rose-600 rounded-lg"><ArrowDownCircle size={16} /></div>
             <span className="text-xs font-bold text-slate-400 uppercase">Expenses</span>
           </div>
-          <h2 className="text-xl font-bold text-rose-600 truncate">{formatCurrency(totalExpenses, targetCurrency)}</h2>
+          <h2 className="text-xl font-bold text-rose-600 truncate">{formatCurrency(totalExpenses, targetCurrency, true)}</h2>
         </div>
       </div>
     </>
