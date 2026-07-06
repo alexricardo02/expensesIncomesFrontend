@@ -125,30 +125,29 @@ export default async function Home() {
             </p>
           </div>
 
-            <div className="w-full lg:w-auto mt-2 md:mt-0">
-            <div className="flex flex-col lg:flex-row gap-3 lg:items-center w-full">
+            <div className="w-full md:w-auto mt-4 md:mt-0">
+              <div className="flex flex-col md:flex-row gap-3 md:items-center w-full">
 
                 <ExchangeRateBar />
 
                 <LogoutButton />
 
-                <Link
-                  href="/categories"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold"
-                >
-                  <Tag size={20} />
-                  Categories
+                <Link href="/categories" className="w-full md:w-auto">
+                  <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
+                    <Tag size={20} />
+                    Categories
+                  </button>
                 </Link>
 
-                <Link href="/statistics">
-                  <button className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
+                <Link href="/statistics" className="w-full md:w-auto">
+                  <button className="flex items-center justify-center w-full gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
                     <BarChart3 size={20} />
                     View Stats
                   </button>
                 </Link>
 
-                <Link href="/new-transaction">
-                  <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
+                <Link href="/new-transaction" className="w-full md:w-auto">
+                  <button className="flex items-center justify-center w-full gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
                     <PlusCircle size={20} />
                     New Transaction
                   </button>
