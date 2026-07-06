@@ -1,10 +1,13 @@
 import { cookies } from "next/headers";
 import StatisticsContent from "./StatisticsContent";
+import { getUsdArsRate } from "@/lib/exchangeRate";
+import { CurrencyDisplayProvider } from "../context/CurrencyDisplayContext";
 
 // WHY: searchParams is used directly in the Page component, removing the need for a separate getStats() function.
 export default async function Page({ searchParams }: { searchParams: { [key: string]: string | undefined } }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
+  const rate = await getUsdArsRate();
   
   if (!token) return <StatisticsContent data={null} />;
 
@@ -100,7 +103,11 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
       transactions: allTransactions
     };
 
-    return <StatisticsContent data={statsData} />;
+    return (
+      <CurrencyDisplayProvider rate={rate}>
+        <StatisticsContent data={statsData} />
+      </CurrencyDisplayProvider>
+    );
     
 
   } catch (error) {
@@ -109,5 +116,9 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     console.error("Failed to fetch aggregate statistics:", error);
   }
 
-  return <StatisticsContent data={statsData} />;
+  return (
+    <CurrencyDisplayProvider rate={rate}>
+      <StatisticsContent data={statsData} />
+    </CurrencyDisplayProvider>
+  );
 }
