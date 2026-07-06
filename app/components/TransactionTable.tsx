@@ -333,8 +333,8 @@ export default function TransactionTable({
                 >
                   {t.kind === "income" ? "+" : "-"}{" "}
                   {(() => { 
-                    const safeAmount = t.amountPrimary !== undefined ? t.amountPrimary : t.amount;
-                    const safeCurrency = t.primaryCurrency || t.currency || "USD";
+                    const safeAmount = t.amountPrimaryCurrency ?? t.amountPrimary ?? t.amount;
+                    const safeCurrency = t.primaryCurrency ?? t.currency ?? "USD";
                     return formatCurrency(safeAmount, safeCurrency, false, true); 
                   })()}
                 </td>
@@ -390,8 +390,8 @@ export default function TransactionTable({
                   >
                     {isIncome ? "+" : "-"}{" "}
                     {(() => { 
-                      const safeAmount = t.amountPrimary !== undefined ? t.amountPrimary : t.amount;
-                      const safeCurrency = t.primaryCurrency || t.currency || "USD";
+                      const safeAmount = t.amountPrimaryCurrency ?? t.amountPrimary ?? t.amount;
+                      const safeCurrency = t.primaryCurrency ?? t.currency ?? "USD";
                       return formatCurrency(safeAmount, safeCurrency, false, true); 
                     })()}
                   </span>
