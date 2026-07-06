@@ -52,11 +52,15 @@ async function getTransactions(): Promise<any[] | { coldStart: boolean }> {
         kind: "income",
         // Usamos i.id o i.incomeId según devuelva tu ResponseDTO
         displayId: `in-${i.id || i.incomeId}`,
+        typeName: i.categoryName || "Uncategorized", // ADD THIS
+        type: i.categoryName || "Uncategorized",
       })),
       ...expenses.map((e: any) => ({
         ...e,
         kind: "expense",
         displayId: `ex-${e.id || e.expenseId}`,
+        typeName: e.categoryName || "Uncategorized", // ADD THIS
+        type: e.categoryName || "Uncategorized",
       })),
     ];
 
@@ -75,8 +79,8 @@ async function getTransactions(): Promise<any[] | { coldStart: boolean }> {
  */
 export default async function EditTransactionsPage() {
   const result = await getTransactions();
-  const isColdStart = !Array.isArray(result) && (result as any)?.coldStart;
-  const transactions = isColdStart ? [] : (result as any[]);
+  const transactions = Array.isArray(result) ? result : [];
+  const isColdStart = !Array.isArray(result) && result?.coldStart;
 
   const rate = await getUsdArsRate();
   

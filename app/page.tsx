@@ -50,6 +50,7 @@ async function getTransactions(): Promise<any[] | { transactions: any[]; coldSta
         amount: Number(i.amount) || 0,
         date: i.date || "1970-01-01",
         description: i.description || "",
+        typeName: i.categoryName || "Uncategorized", 
         type: i.categoryName || "Uncategorized",
         currency: i.currency || "USD",
         kind: "income",
@@ -62,6 +63,7 @@ async function getTransactions(): Promise<any[] | { transactions: any[]; coldSta
         amount: Number(e.amount) || 0,
         date: e.date || "1970-01-01",
         description: e.description || "",
+        typeName: e.categoryName || "Uncategorized",
         type: e.categoryName || "Uncategorized",
         currency: e.currency || "USD",
         kind: "expense",
@@ -88,8 +90,12 @@ async function getTransactions(): Promise<any[] | { transactions: any[]; coldSta
 export default async function Home() {
   const result = await getTransactions();
 
+  const transactions = Array.isArray(result) 
+    ? result 
+    : (result?.transactions || []);
+
   const isColdStart = !Array.isArray(result) && (result as any)?.coldStart;
-  const transactions = isColdStart ? [] : (result as any[]);
+
 
   const cookieStore = await cookies();
   const userProfileCookie = cookieStore.get("user_profile")?.value;
