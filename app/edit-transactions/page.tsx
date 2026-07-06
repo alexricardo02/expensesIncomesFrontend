@@ -29,19 +29,22 @@ async function getTransactions(): Promise<any[] | { coldStart: boolean }> {
 
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
     
-    const [incomesData, expensesData] = await Promise.all([
+    const [incomesRes, expensesRes] = await Promise.all([
       fetchWithRetry(`${baseUrl}/incomes?size=1000`, { 
-        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
       }),
       fetchWithRetry(`${baseUrl}/expenses?size=1000`, { 
-        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
       })
     ]);
 
-    if (!incomesData || !expensesData) return { coldStart: true };
+if (incomesRes.coldStart || expensesRes.coldStart) return { coldStart: true };
 
-    const incomes = Array.isArray(incomesData) ? incomesData : (Array.isArray(incomesData?.content) ? incomesData.content : []);
-    const expenses = Array.isArray(expensesData) ? expensesData : (Array.isArray(expensesData?.content) ? expensesData.content : []);
+    const incomesData = incomesRes.ok ? incomesRes.data : { content: [] };
+    const expensesData = expensesRes.ok ? expensesRes.data : { content: [] };
+
+    const incomes = Array.isArray(incomesData) ? incomesData : (incomesData?.content || []);
+    const expenses = Array.isArray(expensesData) ? expensesData : (expensesData?.content || []);
 
     const combined = [
       ...incomes.map((i: any) => ({

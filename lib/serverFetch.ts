@@ -1,7 +1,5 @@
-// lib/serverFetch.ts
-
-export async function fetchWithRetry(url: string, options: RequestInit = {}): Promise<any | null> {
-  // WHY: 1st attempt fails fast if Render is sleeping. 2nd attempt gives Render 28s to wake up.
+export async function fetchWithRetry(url: string, options: RequestInit = {}) {
+  // WHY: 1er intento rápido (6s). 2do intento (28s) da tiempo a Render para despertar.
   const attempts = [6000, 28000]; 
   
   for (let i = 0; i < attempts.length; i++) {
@@ -9,33 +7,33 @@ export async function fetchWithRetry(url: string, options: RequestInit = {}): Pr
     const timeoutId = setTimeout(() => controller.abort(), attempts[i]);
     
     try {
-      const res = await fetch(url, { 
-        ...options, 
-        signal: controller.signal, 
-        cache: "no-store" 
-      });
-      
+      const res = await fetch(url, { ...options, signal: controller.signal, cache: "no-store" });
       clearTimeout(timeoutId);
-      
-      // WHY: If the response is not OK (e.g., 401 Unauthorized, 500 Internal Error), 
-      // we throw to trigger a retry or final failure, rather than parsing an HTML error page.
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+
+      // WHY: Si Render está reiniciando, a veces escupe un 502/503/504 en vez de timeout. 
+      // Lo tratamos como Cold Start y forzamos reintento.
+      if (res.status >= 500) {
+        if (i === attempts.length - 1) return { ok: false, coldStart: true, data: null };
+        continue; 
       }
-      
-      // WHY: Consume the JSON stream inside the try block while the connection is guaranteed open.
+
+      // WHY: Si es 401 (Token expirado) o 404 (URL mal), NO es un cold start. 
+      // Devolvemos el error limpiamente sin enmascararlo.
+      if (!res.ok) {
+        return { ok: false, coldStart: false, data: null };
+      }
+
+      // WHY: Parseamos el JSON internamente de forma segura mientras la conexión está viva.
       const data = await res.json();
-      return data;
+      return { ok: true, coldStart: false, data };
       
-    } catch (error) {
+    } catch (error: any) {
       clearTimeout(timeoutId);
-      console.error(`Attempt ${i + 1} failed for URL ${url}:`, error);
-      
-      // If it's the last attempt, return null to signal a complete failure (Cold start / offline)
+      // WHY: AbortError significa que el timeout cortó la petición. Es un Cold Start real.
       if (i === attempts.length - 1) {
-        return null;
+        return { ok: false, coldStart: true, data: null };
       }
     }
   }
-  return null;
+  return { ok: false, coldStart: true, data: null };
 }
