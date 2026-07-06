@@ -54,9 +54,8 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                 <div className={`text-right text-[13px] font-bold whitespace-nowrap ${
                   isIncome ? "text-emerald-600" : "text-rose-600"
                 }`}>
-                  {/* FIX: Se evalúa la moneda seleccionada y se hace la conversión en vivo */}
                   {isIncome ? "+ " : "- "} {(() => {
-                    return formatCurrency(t.amount, t.currency, false, true);
+                    return formatCurrency(t.amountPrimary, t.primaryCurrency, false, true);
                   })()}
                 </div>
                 {isExpanded ? (

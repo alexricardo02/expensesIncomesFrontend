@@ -333,7 +333,7 @@ export default function TransactionTable({
                 >
                   {t.kind === "income" ? "+" : "-"}{" "}
                   {(() => { 
-                    return formatCurrency(t.amount, t.currency, false, true); 
+                    return formatCurrency(t.amountPrimary, t.primaryCurrency, false, true); 
                   })()}
                 </td>
                 <td className="px-6 py-4 text-right">
@@ -388,7 +388,7 @@ export default function TransactionTable({
                   >
                     {isIncome ? "+" : "-"}{" "}
                     {(() => { 
-                      return formatCurrency(t.amount, t.currency, false, true); 
+                      return formatCurrency(t.amountPrimary, t.primaryCurrency, false, true); 
                     })()}
                   </span>
                   {isExpanded ? (
