@@ -26,12 +26,15 @@ async function getTransactions(): Promise<any[] | { coldStart: boolean }> {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
   try {
+
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
+    
     const [incomesRes, expensesRes] = await Promise.all([
-      fetchWithRetry(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { headers: {
+      fetchWithRetry(`${baseUrl}/incomes?size=1000`, { headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         }}),
-      fetchWithRetry(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { headers: {
+      fetchWithRetry(`${baseUrl}/expenses?size=1000`, { headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         }})

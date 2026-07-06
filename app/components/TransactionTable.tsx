@@ -134,12 +134,11 @@ export default function TransactionTable({
     };
 
     try {
-      const baseUrl =
-        kind === "income"
-          ? process.env.NEXT_PUBLIC_API_URL_INCOMES
-          : process.env.NEXT_PUBLIC_API_URL_EXPENSES;
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
 
-      const endpoint = `${baseUrl}/${realId}`;
+      const endpoint = kind === "income" 
+          ? `${baseUrl}/incomes/${realId}`
+          : `${baseUrl}/expenses/${realId}`;
 
       const response = await fetch(endpoint, {
         method: "PUT",
@@ -187,11 +186,11 @@ export default function TransactionTable({
     const loadingToast = toast.loading("Deleting...");
 
     try {
-      const baseUrl =
-        selectedTransaction.kind === "income"
-          ? process.env.NEXT_PUBLIC_API_URL_INCOMES
-          : process.env.NEXT_PUBLIC_API_URL_EXPENSES;
-      const response = await fetch(`${baseUrl}/${realId}`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
+      const endpoint = selectedTransaction.kind === "income"
+          ? `${baseUrl}/incomes/${realId}`
+          : `${baseUrl}/expenses/${realId}`;
+      const response = await fetch(endpoint, {
         method: "DELETE",
         headers: {
           'Authorization': `Bearer ${Cookies.get('auth_token')}` // <--- ¡ESTO ES VITAL!

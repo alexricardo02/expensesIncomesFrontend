@@ -28,9 +28,12 @@ async function getTransactions(): Promise<any[] | { transactions: any[]; coldSta
   if (!token) return [];
 
   try {
-        const [incomesRes, expensesRes] = await Promise.all([
-      fetchWithRetry(process.env.NEXT_PUBLIC_API_URL_INCOMES!, { headers: { Authorization: `Bearer ${token}` } }),
-      fetchWithRetry(process.env.NEXT_PUBLIC_API_URL_EXPENSES!, { headers: { Authorization: `Bearer ${token}` } }),
+
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
+
+    const [incomesRes, expensesRes] = await Promise.all([
+      fetchWithRetry(`${baseUrl}/incomes?size=100`, { headers: { Authorization: `Bearer ${token}` } }),
+      fetchWithRetry(`${baseUrl}/expenses?size=100`, { headers: { Authorization: `Bearer ${token}` } }),
     ]);
 
     if (!incomesRes || !expensesRes) return { transactions: [], coldStart: true };
@@ -42,7 +45,7 @@ async function getTransactions(): Promise<any[] | { transactions: any[]; coldSta
     const rawIncomes = Array.isArray(incomesData) ? incomesData : (Array.isArray(incomesData?.content) ? incomesData.content : []);
     const rawExpenses = Array.isArray(expensesData) ? expensesData : (Array.isArray(expensesData?.content) ? expensesData.content : []);
 
-    
+
 
     const combined = [
       ...rawIncomes.map((i: any) => ({
