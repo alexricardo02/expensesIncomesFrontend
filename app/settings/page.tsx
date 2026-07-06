@@ -50,11 +50,15 @@ export default function SettingsPage() {
     const toastId = toast.loading("Updating primary currency...");
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings/currency`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ primaryCurrency: selected }),
       });
+
+      clearTimeout(timeoutId);
 
       if (res.ok) {
         setCurrentCurrency(selected);
@@ -66,8 +70,12 @@ export default function SettingsPage() {
         const err = await res.json().catch(() => null);
         toast.error(err?.message || "Could not update currency", { id: toastId });
       }
-    } catch {
-      toast.error("Connection error", { id: toastId });
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+         toast.error("Server is waking up (cold start). Please try again in 30 seconds.", { id: toastId, duration: 6000 });
+      } else {
+         toast.error("Connection error. Server might be down.", { id: toastId });
+      }
     } finally {
       setSaving(false);
     }
