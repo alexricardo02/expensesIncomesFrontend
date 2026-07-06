@@ -114,7 +114,7 @@ export default async function Home() {
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* HEADER SECTION */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">
               Financial Dashboard
@@ -122,12 +122,11 @@ export default async function Home() {
             <p className="text-slate-500 text-sm">
                 Welcome, <span className="text-blue-600">{usernameToShow}</span>!
                 Here&apos;s today&apos;s summary
-              </p>
-            </div>
+            </p>
+          </div>
 
-            <div className="flex gap-3">
-
-              <div className="flex flex-col md:flex-row gap-3 md:items-center">
+            <div className="w-full lg:w-auto mt-2 md:mt-0">
+            <div className="flex flex-col lg:flex-row gap-3 lg:items-center w-full">
 
                 <ExchangeRateBar />
 
