@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { useCurrencyDisplay } from "../context/CurrencyDisplayContext";
 
 interface TransactionListProps {
   transactions: any[];
@@ -12,7 +11,6 @@ interface TransactionListProps {
 
 export default function TransactionList({ transactions }: { transactions: any[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const { convert } = useCurrencyDisplay();
 
   const toggleRow = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -58,8 +56,7 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                 }`}>
                   {/* FIX: Se evalúa la moneda seleccionada y se hace la conversión en vivo */}
                   {isIncome ? "+ " : "- "} {(() => {
-                    const conv = convert(t.amount, t.currency);
-                    return formatCurrency(conv.amount, conv.currency, false, true);
+                    return formatCurrency(t.amount, t.currency, false, true);
                   })()}
                 </div>
                 {isExpanded ? (

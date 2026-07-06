@@ -6,7 +6,6 @@ import { formatCurrency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
-import { useCurrencyDisplay } from "../context/CurrencyDisplayContext";
 
 
 interface Category {
@@ -31,7 +30,6 @@ export default function TransactionTable({
   const [categories, setCategories] = useState<Category[]>([]);
   const [transactions, setTransactions] = useState<any[]>(initialTransactions);
   const router = useRouter();
-  const { convert } = useCurrencyDisplay();
 
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
@@ -335,8 +333,7 @@ export default function TransactionTable({
                 >
                   {t.kind === "income" ? "+" : "-"}{" "}
                   {(() => { 
-                    const conv = convert(t.amount, t.currency); 
-                    return formatCurrency(conv.amount, conv.currency, false, true); 
+                    return formatCurrency(t.amount, t.currency, false, true); 
                   })()}
                 </td>
                 <td className="px-6 py-4 text-right">
@@ -391,8 +388,7 @@ export default function TransactionTable({
                   >
                     {isIncome ? "+" : "-"}{" "}
                     {(() => { 
-                      const conv = convert(t.amount, t.currency); 
-                      return formatCurrency(conv.amount, conv.currency, false, true); 
+                      return formatCurrency(t.amount, t.currency, false, true); 
                     })()}
                   </span>
                   {isExpanded ? (

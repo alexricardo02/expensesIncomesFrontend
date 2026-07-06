@@ -9,15 +9,13 @@ import {
   TrendingDown,
   BarChart3,
   Tag,
+  Settings
 } from "lucide-react";
 import Link from "next/link";
 import TransactionList from "./components/TransactionList";
-import BalanceChart from "./components/BalanceChart";
 import { cookies } from "next/headers";
 import { formatCurrency } from "@/lib/utils";
 import { getUsdArsRate } from "@/lib/exchangeRate";
-import { CurrencyDisplayProvider } from "./context/CurrencyDisplayContext";
-import ExchangeRateBar from "./components/ExchangeRateBar";
 import DashboardKPIs from "./components/DashboardKPIs";
 
 
@@ -53,6 +51,8 @@ async function getTransactions() {
     const rawIncomes = Array.isArray(incomesData) ? incomesData : (Array.isArray(incomesData?.content) ? incomesData.content : []);
     const rawExpenses = Array.isArray(expensesData) ? expensesData : (Array.isArray(expensesData?.content) ? expensesData.content : []);
 
+    
+
     const combined = [
       ...rawIncomes.map((i: any) => ({
         id: i.incomeId || i.id,
@@ -63,6 +63,8 @@ async function getTransactions() {
         currency: i.currency || "USD",
         kind: "income",
         displayId: `in-${i.incomeId || i.id || Math.random()}`,
+        amountPrimary: Number(i.amountPrimaryCurrency ?? i.amount) || 0,
+        primaryCurrency: i.primaryCurrency || "USD",
       })),
       ...rawExpenses.map((e: any) => ({
         id: e.id || e.expenseId,
@@ -73,6 +75,8 @@ async function getTransactions() {
         currency: e.currency || "USD",
         kind: "expense",
         displayId: `ex-${e.id || e.expenseId || Math.random()}`,
+        amountPrimary: Number(e.amountPrimaryCurrency ?? e.amount) || 0,
+        primaryCurrency: e.primaryCurrency || "USD",
       })),
     ];
 
@@ -92,7 +96,6 @@ async function getTransactions() {
  */
 export default async function Home() {
   const transactions = await getTransactions();
-  const rate = await getUsdArsRate();
 
   const cookieStore = await cookies();
   const userProfileCookie = cookieStore.get("user_profile")?.value;
@@ -110,7 +113,6 @@ export default async function Home() {
   const recentTransactions = transactions.slice(0, 10);
 
   return (
-    <CurrencyDisplayProvider rate={rate}>
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* HEADER SECTION */}
@@ -128,9 +130,13 @@ export default async function Home() {
             <div className="w-full md:w-auto mt-4 md:mt-0">
               <div className="flex flex-col md:flex-row gap-3 md:items-center w-full">
 
-                <ExchangeRateBar />
-
                 <LogoutButton />
+
+                <Link href="/settings" className="w-full md:w-auto">
+                  <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
+                    <Settings size={20} />
+                  </button>
+                </Link>
 
                 <Link href="/categories" className="w-full md:w-auto">
                   <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
@@ -233,6 +239,5 @@ export default async function Home() {
         </section>
       </div>
     </main>
-    </CurrencyDisplayProvider>
   );
 }
