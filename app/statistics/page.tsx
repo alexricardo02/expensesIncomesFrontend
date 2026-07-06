@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 import StatisticsContent from "./StatisticsContent";
-import { getUsdArsRate } from "@/lib/exchangeRate";
 import { fetchWithRetry } from "@/lib/serverFetch";
 export const maxDuration = 60;
 

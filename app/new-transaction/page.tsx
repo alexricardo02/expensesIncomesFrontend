@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, DollarSign, Calendar, Tag, FileText, Globe, ChevronDown, CreditCard } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
-import { v4 as uuidv4 } from "uuid"; // npm install uuid
+import { v4 as uuidv4 } from "uuid"; 
 
 
 interface Category {
@@ -23,14 +23,13 @@ export default function NewTransactionPage() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const token = Cookies.get("auth_token");
-      if (!token) return;
 
       try {
         const res = await fetch(
           process.env.NEXT_PUBLIC_API_URL_CATEGORIES || "http://localhost:8080/api/categories",
           {
-            headers: { Authorization: `Bearer ${token}` }
+            credentials: "include",
+            headers: { "Content-Type": "application/json" }
           }
         );
         if (res.ok) {
@@ -87,25 +86,23 @@ export default function NewTransactionPage() {
       paymentMethod: formData.paymentMethod
     };
 
-
-
     try {
       const endpoint =
         type === "income"
           ? `${process.env.NEXT_PUBLIC_API_URL_INCOMES}`
           : `${process.env.NEXT_PUBLIC_API_URL_EXPENSES}`;
 
-      const response = await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: "POST",
+        credentials: "include", // <-- Agrega esto
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-          "Idempotency-Key": idempotencyKeyRef.current
+          // Borra la línea de "Authorization: Bearer..."
         },
         body: JSON.stringify(transactionData),
       });
 
-      if (response.ok) {
+      if (res.ok) {
         idempotencyKeyRef.current = uuidv4();
         toast.success("Saved successfully!", { id: loadingToast });
         setTimeout(() => {
@@ -113,7 +110,7 @@ export default function NewTransactionPage() {
           router.push("/");
         }, 1200);
       } else {
-        const errorBody = await response.json();
+        const errorBody = await res.json();
         console.error("DETALLE DEL ERROR DESDE SPRING:", errorBody);
 
         const errorMessage = errorBody.message || "Check the fields and try again";

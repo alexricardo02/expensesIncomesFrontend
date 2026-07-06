@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { Trash2, ArrowLeft, Tag, PlusCircle, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
-import Cookies from "js-cookie";
 
 interface Category {
   categoryId: number;
@@ -19,18 +18,15 @@ export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Smart URL: Tries to use an environment variable; if it doesn't exist, it adapts the incomes URL
-  const API_URL = 
-    process.env.NEXT_PUBLIC_API_URL_CATEGORIES || 
-    process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') || 
+  const API_URL =
+    process.env.NEXT_PUBLIC_API_URL_CATEGORIES ||
+    process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') ||
     "http://localhost:8080/api/categories";
 
   const fetchCategories = async () => {
-    const token = Cookies.get("auth_token");
-    if (!token) return;
-
     try {
       const res = await fetch(API_URL, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       if (res.ok) {
         const data = await res.json();
@@ -49,8 +45,7 @@ export default function CategoriesPage() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = Cookies.get("auth_token");
-    
+
     if (!name.trim()) {
       toast.error("Please enter a name");
       return;
@@ -60,9 +55,9 @@ export default function CategoriesPage() {
     try {
       const res = await fetch(API_URL, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ name: name.trim(), type }),
       });
@@ -81,13 +76,12 @@ export default function CategoriesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const token = Cookies.get("auth_token");
     const toastId = toast.loading("Deleting...");
-    
+
     try {
       const res = await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
 
       if (res.ok) {
@@ -104,12 +98,12 @@ export default function CategoriesPage() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <Toaster position="top-right" />
-      
+
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header and Back Button */}
         <div className="flex items-center gap-4 mb-8">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="p-2 bg-white border border-slate-200 rounded-xl text-slate-500 hover:text-indigo-600 hover:border-indigo-200 transition-colors"
           >
             <ArrowLeft size={20} />
@@ -123,7 +117,7 @@ export default function CategoriesPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
+
           {/* LEFT PANEL: FORM */}
           <div className="md:col-span-1">
             <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">

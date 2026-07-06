@@ -1,12 +1,7 @@
 import LogoutButton from "./components/LogoutButton";
 import {
-  ArrowUpCircle,
-  ArrowDownCircle,
-  Wallet,
   PlusCircle,
   History,
-  TrendingUp,
-  TrendingDown,
   BarChart3,
   Tag,
   Settings
@@ -15,7 +10,6 @@ import Link from "next/link";
 import TransactionList from "./components/TransactionList";
 import { cookies } from "next/headers";
 import { formatCurrency } from "@/lib/utils";
-import { getUsdArsRate } from "@/lib/exchangeRate";
 import DashboardKPIs from "./components/DashboardKPIs";
 import { fetchWithRetry } from "@/lib/serverFetch";
 export const maxDuration = 60;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, PieChart as PieIcon, CreditCard, TrendingUp, Calendar, Filter, Activity } from "lucide-react";
+import { ArrowLeft, PieChart as PieIcon, TrendingUp, Calendar, Filter, Activity } from "lucide-react";
 import { Pie, Doughnut, Line, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS, ArcElement, Tooltip, Legend,

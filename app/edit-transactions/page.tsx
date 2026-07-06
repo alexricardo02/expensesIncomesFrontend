@@ -1,21 +1,8 @@
-import Image from "next/image";
-import React from "react";
 import {
-  ArrowUpCircle,
-  ArrowDownCircle,
-  Wallet,
-  PlusCircle,
-  History,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
   ArrowLeft,
-  Pencil,
-  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import TransactionTable from "../components/TransactionTable";
-import { formatCurrency } from "@/lib/utils";
 import { cookies } from "next/headers"
 import { getUsdArsRate } from "@/lib/exchangeRate";
 import { fetchWithRetry } from "@/lib/serverFetch";
