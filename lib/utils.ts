@@ -1,6 +1,6 @@
 // src/lib/utils.ts
 
-export const formatCurrency = (value: number, currency: string, compact: boolean = false): string => {
+export const formatCurrency = (value: number, currency: string, compact: boolean = false, useCode: boolean = false): string => {
   const locales: Record<string, string> = {
     EUR: "de-DE",
     USD: "en-US",
@@ -15,6 +15,7 @@ export const formatCurrency = (value: number, currency: string, compact: boolean
   return new Intl.NumberFormat(locales[currency] || "en-US", {
     style: "currency",
     currency: locales[currency] ? currency : "USD",
+    currencyDisplay: useCode ? "code" : "symbol",
     minimumFractionDigits: minFractions,
     maximumFractionDigits: maxFractions,
     notation: compact ? "compact" : "standard",

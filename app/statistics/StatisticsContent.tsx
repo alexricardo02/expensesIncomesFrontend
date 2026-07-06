@@ -7,11 +7,14 @@ import {
   Chart as ChartJS, ArcElement, Tooltip, Legend,
   CategoryScale, LinearScale, PointElement, LineElement, Title, Filler, BarElement
 } from "chart.js";
+import { formatCurrency } from "@/lib/utils";
+import { useCurrencyDisplay } from "../context/CurrencyDisplayContext";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, Filler, BarElement);
 export default function StatisticsContent({ data }: { data: any }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { convert } = useCurrencyDisplay();
 
   if (!data) return <div className="p-8 text-center text-slate-500">No data available or error loading stats.</div>;
 
@@ -201,7 +204,11 @@ export default function StatisticsContent({ data }: { data: any }) {
                       </td>
                       <td className="py-3 pr-4 text-sm text-slate-500">{tx.paymentMethod?.replace('_', ' ')}</td>
                       <td className={`py-3 text-sm font-semibold text-right whitespace-nowrap ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-slate-700'}`}>
-                        {tx.type === 'INCOME' ? '+' : '-'}${tx.amount.toFixed(2)}
+                        {tx.type === 'INCOME' ? '+ ' : '- '}
+                        {(() => { 
+                          const conv = convert(tx.amount, tx.currency); 
+                          return formatCurrency(conv.amount, conv.currency, false, true); 
+                        })()}
                       </td>
                     </tr>
                   ))}

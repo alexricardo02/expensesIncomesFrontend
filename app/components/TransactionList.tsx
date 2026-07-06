@@ -59,7 +59,7 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                   {/* FIX: Se evalúa la moneda seleccionada y se hace la conversión en vivo */}
                   {isIncome ? "+ " : "- "} {(() => {
                     const conv = convert(t.amount, t.currency);
-                    return formatCurrency(conv.amount, conv.currency);
+                    return formatCurrency(conv.amount, conv.currency, false, true);
                   })()}
                 </div>
                 {isExpanded ? (
