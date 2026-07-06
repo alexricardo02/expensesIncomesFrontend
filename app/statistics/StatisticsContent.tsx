@@ -169,7 +169,7 @@ export default function StatisticsContent({ data }: { data: any }) {
 
           {/* FIX: Nuevo Gráfico de Barras */}
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 lg:col-span-2 flex flex-col items-center">
-            <h3 className="text-lg font-semibold mb-6">Comparativa de Gastos</h3>
+            <h3 className="text-lg font-semibold mb-6">Expenses comparison</h3>
             <div className="w-full h-72">
               <Bar data={barChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
             </div>
@@ -179,7 +179,7 @@ export default function StatisticsContent({ data }: { data: any }) {
         {/* FIX: Vista de Libro Mayor (Ledger) solicitada por el usuario */}
         <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 mt-8">
           <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-            <Calendar size={20} className="text-indigo-500" /> Detalle de Movimientos (Libro Mayor)
+            <Calendar size={20} className="text-indigo-500" /> Movement details (General Ledger)
           </h3>
 
           {data.transactions && data.transactions.length > 0 ? (
@@ -187,11 +187,11 @@ export default function StatisticsContent({ data }: { data: any }) {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-slate-200 text-sm text-slate-500">
-                    <th className="pb-3 pr-4 font-medium">Fecha</th>
-                    <th className="pb-3 pr-4 font-medium">Descripción</th>
-                    <th className="pb-3 pr-4 font-medium">Categoría</th>
-                    <th className="pb-3 pr-4 font-medium">Método</th>
-                    <th className="pb-3 font-medium text-right">Monto</th>
+                    <th className="pb-3 pr-4 font-medium">Date</th>
+                    <th className="pb-3 pr-4 font-medium">Description</th>
+                    <th className="pb-3 pr-4 font-medium">Category</th>
+                    <th className="pb-3 pr-4 font-medium">Method</th>
+                    <th className="pb-3 font-medium text-right">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -216,7 +216,7 @@ export default function StatisticsContent({ data }: { data: any }) {
               </table>
             </div>
           ) : (
-            <p className="text-slate-500 text-sm text-center py-4">No se encontraron movimientos para el periodo seleccionado.</p>
+            <p className="text-slate-500 text-sm text-center py-4">No transactions found for this period</p>
           )}
         </div>
 

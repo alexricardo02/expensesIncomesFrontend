@@ -19,7 +19,7 @@ export default function ExchangeRateBar() {
         onChange={(e) => setDisplayMode(e.target.value as any)}
         className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium cursor-pointer"
       >
-        <option value="ORIGINAL">Sin cambio</option>
+        <option value="ORIGINAL">No change</option>
         <option value="ARS_TO_USD">ARS a USD</option>
         <option value="USD_TO_ARS">USD a ARS</option>
       </select>
