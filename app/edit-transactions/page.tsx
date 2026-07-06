@@ -29,22 +29,16 @@ async function getTransactions(): Promise<any[] | { coldStart: boolean }> {
 
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
     
-    const [incomesRes, expensesRes] = await Promise.all([
-      fetchWithRetry(`${baseUrl}/incomes?size=1000`, { headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        }}),
-      fetchWithRetry(`${baseUrl}/expenses?size=1000`, { headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        }})
+    const [incomesData, expensesData] = await Promise.all([
+      fetchWithRetry(`${baseUrl}/incomes?size=1000`, { 
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+      }),
+      fetchWithRetry(`${baseUrl}/expenses?size=1000`, { 
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+      })
     ]);
 
-    if (!incomesRes || !expensesRes) return { coldStart: true };
-    if (!incomesRes.ok || !expensesRes.ok) throw new Error("Failed to fetch data");
-
-    const incomesData = await incomesRes.json();
-    const expensesData = await expensesRes.json();
+    if (!incomesData || !expensesData) return { coldStart: true };
 
     const incomes = Array.isArray(incomesData) ? incomesData : (Array.isArray(incomesData?.content) ? incomesData.content : []);
     const expenses = Array.isArray(expensesData) ? expensesData : (Array.isArray(expensesData?.content) ? expensesData.content : []);

@@ -25,7 +25,7 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
   let statsData = null;
 
   try {
-    const [incRes, expRes, catRes] = await Promise.all([
+    const [incomesData, expensesData, categoriesData] = await Promise.all([
       fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/incomes?${queryStr}`, {
         headers: { Authorization: `Bearer ${token}` }
       }),
@@ -37,7 +37,7 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
       })
     ]);
 
-    if (!incRes || !expRes || !catRes) {
+    if (!incomesData || !expensesData || !categoriesData) {
       return (
         <div className="p-8 mt-10 text-center text-amber-700 bg-amber-50 max-w-2xl mx-auto rounded-xl font-medium border border-amber-200">
            El servidor se está despertando. Recarga la página en 20 segundos.
@@ -45,13 +45,9 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
       );
     }
 
-    const incomesData = incRes.ok ? await incRes.json() : { content: [] };
-    const expensesData = expRes.ok ? await expRes.json() : { content: [] };
-    const categories = catRes.ok ? await catRes.json() : [];
-
     const rawIncomes = incomesData.content || [];
     const rawExpenses = expensesData.content || [];
-
+    const categories = Array.isArray(categoriesData) ? categoriesData : [];
     const txType = params.type || "ALL";
     const processIncomes = txType === "ALL" || txType === "INCOME" ? rawIncomes.map((t: any) => ({...t, type: 'INCOME'})) : [];
     const processExpenses = txType === "ALL" || txType === "EXPENSE" ? rawExpenses.map((t: any) => ({...t, type: 'EXPENSE'})) : [];
