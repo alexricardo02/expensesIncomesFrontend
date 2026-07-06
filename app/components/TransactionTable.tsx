@@ -24,16 +24,15 @@ const CURRENCIES = ["USD", "EUR", "GBP", "JPY", "ARS"];
 export default function TransactionTable({
   initialTransactions,
 }: TransactionTableProps) {
-  // Estados para Modales
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [transactions, setTransactions] = useState<any[]>(initialTransactions);
   const router = useRouter();
   const { convert } = useCurrencyDisplay();
 
-  // --- ESTADOS PARA FILTROS ---
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterDate, setFilterDate] = useState<string>("");
@@ -67,7 +66,7 @@ export default function TransactionTable({
   }, []);
 
 
-  const filteredTransactions = initialTransactions.filter((t) => {
+  const filteredTransactions = transactions.filter((t) => {
     const matchesType = filterType === "all" || t.kind === filterType;
     const matchesCategory = filterCategory === "all" || (t.typeName || t.type) === filterCategory;
     const matchesDate = filterDate === "" || t.date === filterDate;
@@ -155,8 +154,24 @@ export default function TransactionTable({
 
       if (response.ok) {
         toast.success("Transaction updated successfully!");
+        
+        const updatedTxResponse = await response.json(); 
+        setTransactions(prev => prev.map(t => {
+          if (t.displayId === selectedTransaction.displayId) {
+            return {
+              ...t,
+              amount: transactionData.amount,
+              currency: transactionData.currency,
+              date: transactionData.date,
+              description: transactionData.description,
+              paymentMethod: transactionData.paymentMethod,
+              typeName: currentCategories.find(c => c.categoryId === transactionData.categoryId)?.name || t.typeName
+            };
+          }
+          return t;
+        }));
+
         closeModal();
-        setTimeout(() => window.location.reload(), 1000);
       } else {
         const errorBody = await response.json();
         toast.error(`Error: ${errorBody.message || "Could not update transaction"}`);
@@ -187,8 +202,8 @@ export default function TransactionTable({
 
       if (response.ok) {
         toast.success("Deleted successfully!", { id: loadingToast });
+        setTransactions(prev => prev.filter(t => t.displayId !== selectedTransaction.displayId));
         closeModal();
-        setTimeout(() => router.refresh(), 1000);
       } else {
         toast.error("Could not delete", { id: loadingToast });
       }
