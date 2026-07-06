@@ -4,7 +4,7 @@ import { useCurrencyDisplay } from "../context/CurrencyDisplayContext";
 import { DollarSign } from "lucide-react";
 
 export default function ExchangeRateBar() {
-  const { rate, displayCurrency, setDisplayCurrency } = useCurrencyDisplay();
+  const { rate, displayMode, setDisplayMode } = useCurrencyDisplay();
 
   return (
     <div className="flex items-center gap-3">
@@ -15,12 +15,13 @@ export default function ExchangeRateBar() {
         </div>
       )}
       <select
-        value={displayCurrency}
-        onChange={(e) => setDisplayCurrency(e.target.value as "USD" | "ARS")}
+        value={displayMode}
+        onChange={(e) => setDisplayMode(e.target.value as any)}
         className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium cursor-pointer"
       >
-        <option value="USD">Show in USD</option>
-        <option value="ARS">Show in ARS</option>
+        <option value="ORIGINAL">Sin cambio</option>
+        <option value="ARS_TO_USD">ARS a USD</option>
+        <option value="USD_TO_ARS">USD a ARS</option>
       </select>
     </div>
   );

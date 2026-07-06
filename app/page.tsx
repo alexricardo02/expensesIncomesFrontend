@@ -129,6 +129,8 @@ export default async function Home() {
 
               <div className="flex flex-col md:flex-row gap-3 md:items-center">
 
+                <ExchangeRateBar />
+
                 <LogoutButton />
 
                 <Link

@@ -6,13 +6,16 @@ import { useCurrencyDisplay } from "../context/CurrencyDisplayContext";
 import { formatCurrency } from "@/lib/utils";
 
 export default function DashboardKPIs({ transactions }: { transactions: any[] }) {
-  const { convert } = useCurrencyDisplay();
+  const { convert, displayMode } = useCurrencyDisplay();
 
   // WHY: By computing aggregates in the client, the UI instantly reacts to Context changes (ARS/USD toggle) without a server roundtrip.
   const sumConverted = (txs: any[]) =>
     txs.reduce((acc, t) => acc + convert(t.amount, t.currency).amount, 0);
 
-  const targetCurrency = transactions.length > 0 ? convert(1, transactions[0].currency).currency : "USD";
+  let targetCurrency = "MIXED";
+  if (displayMode === "ARS_TO_USD") targetCurrency = "USD";
+  else if (displayMode === "USD_TO_ARS") targetCurrency = "ARS";
+  else if (transactions.length > 0) targetCurrency = transactions[0].currency;
 
   const now = new Date();
   const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
