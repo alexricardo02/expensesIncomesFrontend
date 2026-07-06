@@ -12,7 +12,7 @@ export async function getUsdArsRate() {
     );
     if (!res) return 1000;
     if (!res.ok) return null;
-    return res.json();
+    return res.data;
   } catch {
     return null;
   }
