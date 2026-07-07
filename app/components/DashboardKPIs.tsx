@@ -12,8 +12,10 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
   const targetCurrency = transactions[0]?.primaryCurrency || "USD";
 
   const now = new Date();
+  const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
   const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  const lastMonthStr = `${now.getFullYear()}-${String(now.getMonth()).padStart(2, "0")}`;
+  const lastMonthStr = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth() + 1).padStart(2, "0")}`;
 
   const incomes = transactions.filter((t) => t.kind === "income");
   const expenses = transactions.filter((t) => t.kind === "expense");
