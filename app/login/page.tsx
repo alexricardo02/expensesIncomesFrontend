@@ -48,7 +48,7 @@ export default function LoginPage() {
 
       Cookies.set("user_profile", JSON.stringify(data), { expires: 7, path: '/' });
       
-      window.location.href = "/dashboard";
+      router.push("/");
     } catch (err: any) {
       setError(err.message);
     } finally {
