@@ -110,6 +110,16 @@ export default function LoginPage() {
             </div>
           </div>
 
+          <div className="text-right -mt-2">
+            <button
+              type="button"
+              onClick={() => router.push("/forgot-password")}
+              className="text-sm text-indigo-600 font-medium hover:underline cursor-pointer"
+            >
+              Forgot password?
+            </button>
+          </div>
+
           <button
             type="submit"
             disabled={loading}

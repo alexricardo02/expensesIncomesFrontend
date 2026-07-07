@@ -13,7 +13,6 @@ export default function ExportMenu() {
         const toastId = toast.loading(`Generating ${format.toUpperCase()}...`);
 
         try {
-            // Petición segura a través de tu proxy interno
             const res = await fetch(`/api/exports/transactions?format=${format}`, {
                 method: "GET",
                 credentials: "include",
@@ -23,9 +22,7 @@ export default function ExportMenu() {
 
             const blob = await res.blob();
 
-            // 🚀 OPCIÓN A: El navegador soporta la API de selección de archivos (Chrome, Edge, Opera)
             if ("showSaveFilePicker" in window) {
-                // Mapeamos los MIME types correctos para que la ventana filtre el formato exacto
                 const mimeTypes: Record<string, string> = {
                     csv: "text/csv",
                     xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
