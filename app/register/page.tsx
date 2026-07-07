@@ -54,6 +54,8 @@ export default function RegisterPage() {
         throw new Error(data?.message || "Error al crear la cuenta");
       }
 
+      router.push("/login");
+
     } catch (err: any) {
       setError(err.message);
     } finally {

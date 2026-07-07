@@ -30,6 +30,7 @@ async function proxy(request: NextRequest, path: string[]) {
   const responseHeaders = new Headers(backendResponse.headers);
   // Eliminamos esta cabecera para evitar errores de codificación en navegadores
   responseHeaders.delete("content-encoding"); 
+  responseHeaders.delete("content-length");
   
   // 3. Creamos la respuesta pasándole los bytes crudos
   const response = new NextResponse(buffer, { 
