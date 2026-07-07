@@ -142,10 +142,8 @@ export default function TransactionTable({
 
       const response = await fetch(endpoint, {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(transactionData),
       });
 
@@ -192,9 +190,7 @@ export default function TransactionTable({
           : `${baseUrl}/expenses/${realId}`;
       const response = await fetch(endpoint, {
         method: "DELETE",
-        headers: {
-          'Authorization': `Bearer ${Cookies.get('auth_token')}` // <--- ¡ESTO ES VITAL!
-        }
+        credentials: "include",
       });
 
       if (response.ok) {

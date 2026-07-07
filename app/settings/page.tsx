@@ -23,11 +23,9 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      const token = Cookies.get("auth_token");
-      if (!token) return;
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings`, {
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
         });
         if (res.ok) {
           const data = await res.json();
@@ -54,7 +52,8 @@ export default function SettingsPage() {
       const timeoutId = setTimeout(() => controller.abort(), 15000);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings/currency`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ primaryCurrency: selected }),
       });
 
