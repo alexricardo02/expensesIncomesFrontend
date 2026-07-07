@@ -31,9 +31,9 @@ export default function LoginPage() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/login`, {
+      const res = await fetch(`/api/users/login`, {
         method: "POST",
-        credentials: "include",
+        credentials: "include", // Esencial para que el navegador acepte la cookie del proxy
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: cleanUsername, password: cleanPassword }),
       });
@@ -48,7 +48,7 @@ export default function LoginPage() {
 
       Cookies.set("user_profile", JSON.stringify(data), { expires: 7, path: '/' });
       
-      router.push("/");
+      window.location.href = "/dashboard";
     } catch (err: any) {
       setError(err.message);
     } finally {
