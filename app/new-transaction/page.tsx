@@ -25,13 +25,10 @@ export default function NewTransactionPage() {
     const fetchCategories = async () => {
 
       try {
-        const res = await fetch(
-          process.env.NEXT_PUBLIC_API_URL_CATEGORIES || "http://localhost:8080/api/categories",
-          {
-            credentials: "include",
-            headers: { "Content-Type": "application/json" }
-          }
-        );
+        const res = await fetch("/api/categories", {
+          credentials: "include",
+          headers: { "Content-Type": "application/json" }
+        });
         if (res.ok) {
           const data = await res.json();
           setCategories(data);
@@ -87,10 +84,7 @@ export default function NewTransactionPage() {
     };
 
     try {
-      const endpoint =
-        type === "income"
-          ? `${process.env.NEXT_PUBLIC_API_URL_INCOMES}`
-          : `${process.env.NEXT_PUBLIC_API_URL_EXPENSES}`;
+      const endpoint = type === "income" ? "/api/incomes" : "/api/expenses";
 
       const res = await fetch(endpoint, {
         method: "POST",

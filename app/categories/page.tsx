@@ -5,6 +5,7 @@ import { Trash2, ArrowLeft, Tag, PlusCircle, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 
+
 interface Category {
   categoryId: number;
   name: string;
@@ -18,10 +19,7 @@ export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Smart URL: Tries to use an environment variable; if it doesn't exist, it adapts the incomes URL
-  const API_URL =
-    process.env.NEXT_PUBLIC_API_URL_CATEGORIES ||
-    process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') ||
-    "http://localhost:8080/api/categories";
+  const API_URL = "/api/categories";
 
   const fetchCategories = async () => {
     try {
