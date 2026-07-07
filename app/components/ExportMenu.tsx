@@ -11,24 +11,69 @@ export default function ExportMenu() {
         setOpen(false);
         setLoading(true);
         const toastId = toast.loading(`Generating ${format.toUpperCase()}...`);
+
         try {
+            // Petición segura a través de tu proxy interno
             const res = await fetch(`/api/exports/transactions?format=${format}`, {
                 method: "GET",
                 credentials: "include",
             });
+
             if (!res.ok) throw new Error("Export failed");
+
             const blob = await res.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `transactions.${format}`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-            toast.success("Downloaded!", { id: toastId });
-        } catch {
-            toast.error("Could not export data", { id: toastId });
+
+            // 🚀 OPCIÓN A: El navegador soporta la API de selección de archivos (Chrome, Edge, Opera)
+            if ("showSaveFilePicker" in window) {
+                // Mapeamos los MIME types correctos para que la ventana filtre el formato exacto
+                const mimeTypes: Record<string, string> = {
+                    csv: "text/csv",
+                    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    pdf: "application/pdf",
+                };
+
+                // Abrimos la ventana nativa "Guardar como..."
+                const handle = await (window as any).showSaveFilePicker({
+                    suggestedName: `transactions.${format}`,
+                    types: [
+                        {
+                            description: `${format.toUpperCase()} Document`,
+                            accept: {
+                                [mimeTypes[format]]: [`.${format}`],
+                            },
+                        },
+                    ],
+                });
+
+                // Escribimos los bytes del archivo directamente en la ruta elegida por el usuario
+                const writable = await handle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+
+                toast.success("Downloaded!", { id: toastId });
+            }
+            // 🔄 OPCIÓN B: Fallback tradicional para navegadores sin soporte completo (Safari / Firefox)
+            else {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `transactions.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+                toast.success("Downloaded!", { id: toastId });
+            }
+        } catch (error: any) {
+            // 💡 Detalle de UX: Si el usuario presiona "Cancelar" en la ventana de Guardar Como,
+            // la API arroja un error de tipo 'AbortError'. Lo capturamos para que no muestre un toast de error falso.
+            if (error.name === "AbortError") {
+                toast.dismiss(toastId);
+            } else {
+                console.error("Error exporting:", error);
+                toast.error("Could not export data", { id: toastId });
+            }
         } finally {
             setLoading(false);
         }
