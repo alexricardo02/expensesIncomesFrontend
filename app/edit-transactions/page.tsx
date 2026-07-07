@@ -3,6 +3,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import TransactionTable from "../components/TransactionTable";
+import ExportMenu from "../components/ExportMenu";
 import { cookies } from "next/headers"
 import { getUsdArsRate } from "@/lib/exchangeRate";
 import { fetchWithRetry } from "@/lib/serverFetch";
@@ -74,16 +75,19 @@ export default async function EditTransactionsPage() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
-        <Link
-          href="/"
-          className="flex items-center text-slate-500 hover:text-slate-800 mb-6 group transition-colors cursor-pointer"
-        >
-          <ArrowLeft
-            size={20}
-            className="mr-2 group-hover:-translate-x-1 transition-transform cursor-pointer"
-          />
-          Back to Dashboard
-        </Link>
+        <div className="flex items-center justify-between mb-6">
+          <Link
+            href="/"
+            className="flex items-center text-slate-500 hover:text-slate-800 group transition-colors cursor-pointer"
+          >
+            <ArrowLeft
+              size={20}
+              className="mr-2 group-hover:-translate-x-1 transition-transform cursor-pointer"
+            />
+            Back to Dashboard
+          </Link>
+          <ExportMenu />
+        </div>
 
         {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
