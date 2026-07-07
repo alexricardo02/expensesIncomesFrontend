@@ -23,9 +23,19 @@ async function proxy(request: NextRequest, path: string[]) {
   }
 
   const backendResponse = await fetch(targetUrl, init);
-  const data = await backendResponse.json();
 
-  const response = NextResponse.json(data, { status: backendResponse.status });
+  const buffer = await backendResponse.arrayBuffer();
+
+  // 2. Clonamos las cabeceras originales (para conservar el Content-Type de PDF/Excel)
+  const responseHeaders = new Headers(backendResponse.headers);
+  // Eliminamos esta cabecera para evitar errores de codificación en navegadores
+  responseHeaders.delete("content-encoding"); 
+  
+  // 3. Creamos la respuesta pasándole los bytes crudos
+  const response = new NextResponse(buffer, { 
+    status: backendResponse.status,
+    headers: responseHeaders 
+  });
 
   const setCookieHeader = backendResponse.headers.get("set-cookie");
   if (setCookieHeader) {
