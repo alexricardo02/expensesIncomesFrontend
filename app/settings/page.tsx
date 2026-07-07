@@ -24,7 +24,7 @@ export default function SettingsPage() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings`, {
+        const res = await fetch(`/api/settings`, {
           credentials: "include",
         });
         if (res.ok) {
@@ -50,10 +50,12 @@ export default function SettingsPage() {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings/currency`, {
+      const res = await fetch(`/api/settings/currency`, {
         method: "PUT",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ primaryCurrency: selected }),
       });
 
@@ -71,9 +73,9 @@ export default function SettingsPage() {
       }
     } catch (error: any) {
       if (error.name === 'AbortError') {
-         toast.error("Server is waking up (cold start). Please try again in 30 seconds.", { id: toastId, duration: 6000 });
+        toast.error("Server is waking up (cold start). Please try again in 30 seconds.", { id: toastId, duration: 6000 });
       } else {
-         toast.error("Connection error. Server might be down.", { id: toastId });
+        toast.error("Connection error. Server might be down.", { id: toastId });
       }
     } finally {
       setSaving(false);
@@ -120,11 +122,10 @@ export default function SettingsPage() {
                     <button
                       key={c.code}
                       onClick={() => setSelected(c.code)}
-                      className={`flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${
-                        selected === c.code
+                      className={`flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${selected === c.code
                           ? "border-indigo-500 bg-indigo-50 text-indigo-700"
                           : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                      }`}
+                        }`}
                     >
                       {c.code}
                       {selected === c.code && <Check size={16} />}
