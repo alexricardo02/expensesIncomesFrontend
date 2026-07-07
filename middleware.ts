@@ -37,4 +37,8 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = { matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'] };
+export const config = {
+  // Se excluyen rutas proxy (/api/*), recursos estáticos y páginas públicas
+  // Evita que el middleware exija un JWT en el handshake inicial de autenticación
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|register).*)'],
+};

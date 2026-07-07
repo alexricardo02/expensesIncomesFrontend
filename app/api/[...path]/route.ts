@@ -22,23 +22,16 @@ async function proxy(request: NextRequest, path: string[]) {
     init.body = await request.arrayBuffer();
   }
 
-  const backendRes = await fetch(targetUrl, init);
+  const backendResponse = await fetch(targetUrl, init);
+  const data = await backendResponse.json();
 
-  const responseHeaders = new Headers(backendRes.headers);
-  responseHeaders.delete("content-encoding");
-  responseHeaders.delete("content-length");
-  responseHeaders.delete("transfer-encoding");
-  responseHeaders.delete("set-cookie");
+  const response = NextResponse.json(data, { status: backendResponse.status });
 
-  const body = await backendRes.arrayBuffer();
-  const response = new NextResponse(body, {
-    status: backendRes.status,
-    headers: responseHeaders,
-  });
-
-  const setCookies = (backendRes.headers as any).getSetCookie?.() ?? [];
-  setCookies.forEach((c: string) => response.headers.append("Set-Cookie", c));
-
+  const setCookieHeader = backendResponse.headers.get("set-cookie");
+  if (setCookieHeader) {
+    // Requerido para propagar la cookie HttpOnly al navegador a través de Next.js Server
+    response.headers.set("set-cookie", setCookieHeader);
+  }
   return response;
 }
 
