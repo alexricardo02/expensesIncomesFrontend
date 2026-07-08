@@ -173,10 +173,9 @@ export default function TransactionTable({
     const loadingToast = toast.loading("Deleting...");
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
       const endpoint = selectedTransaction.kind === "income"
-          ? `${baseUrl}/incomes/${realId}`
-          : `${baseUrl}/expenses/${realId}`;
+        ? `/api/incomes/${realId}`
+        : `/api/expenses/${realId}`;
       const response = await fetch(endpoint, {
         method: "DELETE",
         credentials: "include",
