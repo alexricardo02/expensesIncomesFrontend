@@ -67,6 +67,7 @@ export default function SettingsPage() {
           "Primary currency updated. Historical amounts are being recalculated in the background.",
           { id: toastId, duration: 5000 }
         );
+        router.refresh();
       } else {
         const err = await res.json().catch(() => null);
         toast.error(err?.message || "Could not update currency", { id: toastId });
