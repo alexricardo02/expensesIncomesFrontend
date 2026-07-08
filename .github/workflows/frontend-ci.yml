@@ -7,6 +7,13 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   security-and-build:
     name: Security, License and Build Check
@@ -15,6 +22,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Secret Scan (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,13 +38,20 @@ jobs:
         # --ignore-scripts prevents malicious or tracking scripts from running automatically during install
         run: npm ci --ignore-scripts
 
+      - name: Verify Package Integrity (Anti-Malware)
+        # Valida firmas de procedencia publicadas en npm; detecta paquetes alterados/maliciosos
+        run: npm audit signatures
+
       - name: Disable Next.js Telemetry (Privacy)
         # Next.js sends usage data to Vercel by default. This explicitly blocks it for privacy compliance.
         run: npx next telemetry disable
 
-      - name: License Check (Anti-GPL)
-        # Scans the dependency tree. Fails the build if any GPL/AGPL libraries are found.
-        run: npx license-checker-rseidelsohn --summary --failOn "GPL; GPL-1.0; GPL-2.0; GPL-3.0; AGPL; AGPL-3.0"
+      - name: Dependency Review (License + Known Malicious Packages)
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          deny-licenses: GPL-1.0-only, GPL-2.0-only, GPL-3.0-only, AGPL-1.0-only, AGPL-3.0-only, GPL-1.0-or-later, GPL-2.0-or-later, GPL-3.0-or-later, AGPL-3.0-or-later
 
       - name: Privacy Scanner (Datenschutz Check)
         # Checks package.json for known third-party tracking and analytics tools
@@ -56,3 +75,16 @@ jobs:
       - name: Build Project
         # Builds the Next.js frontend only if all previous security and privacy checks pass
         run: npm run build
+  
+  codeql:
+    name: Static Application Security Testing (CodeQL)
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+      - uses: github/codeql-action/analyze@v3
