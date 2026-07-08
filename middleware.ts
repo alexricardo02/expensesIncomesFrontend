@@ -1,16 +1,26 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return !payload.exp || payload.exp * 1000 < Date.now();
+  } catch {
+    return true;
+  }
+}
+
+
 export async function middleware(request: NextRequest) {
   const authToken = request.cookies.get('auth_token')?.value;
   const refreshToken = request.cookies.get('refresh_token')?.value;
   const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register');
 
-  if (authToken) {
+  if (authToken && !isTokenExpired(authToken)) {
     if (isAuthPage) return NextResponse.redirect(new URL('/', request.url));
     return NextResponse.next();
   }
-
+  
   if (!authToken && refreshToken) {
     try {
       const controller = new AbortController();

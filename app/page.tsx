@@ -12,6 +12,7 @@ import { cookies } from "next/headers";
 import { formatCurrency } from "@/lib/utils";
 import DashboardKPIs from "./components/DashboardKPIs";
 import { fetchWithRetry } from "@/lib/serverFetch";
+import { redirect } from "next/navigation";
 export const maxDuration = 60;
 
 
@@ -90,8 +91,13 @@ export default async function Home() {
 
   const isColdStart = !Array.isArray(result) && (result as any)?.coldStart;
 
-
   const cookieStore = await cookies();
+  const authToken = cookieStore.get("auth_token")?.value;
+
+  if (!authToken) {
+    redirect("/login");
+  }
+  
   const userProfileCookie = cookieStore.get("user_profile")?.value;
   let usernameToShow = "Guest";
 

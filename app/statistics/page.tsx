@@ -1,16 +1,18 @@
 import { cookies } from "next/headers";
 import StatisticsContent from "./StatisticsContent";
 import { fetchWithRetry } from "@/lib/serverFetch";
+import { redirect } from "next/navigation";
+
 export const maxDuration = 60;
 
 // WHY: searchParams is used directly in the Page component, removing the need for a separate getStats() function.
 export default async function Page({ searchParams }: { searchParams: { [key: string]: string | undefined } }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
+  if (!token) redirect("/login");
 
   if (!token) return <StatisticsContent data={null} />;
 
-  // Await searchParams in Next.js 15+
   const params = await searchParams;
   
   const queryArgs = new URLSearchParams({ size: '1000' }); 
@@ -22,6 +24,7 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
   const queryStr = queryArgs.toString();
 
   let statsData = null;
+  
 
   try {
     const [incRes, expRes, catRes] = await Promise.all([

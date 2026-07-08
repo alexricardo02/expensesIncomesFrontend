@@ -7,6 +7,8 @@ import ExportMenu from "../components/ExportMenu";
 import { cookies } from "next/headers"
 import { getUsdArsRate } from "@/lib/exchangeRate";
 import { fetchWithRetry } from "@/lib/serverFetch";
+import { redirect } from "next/navigation";
+
 export const maxDuration = 60;
 
 async function getTransactions(): Promise<any[] | { coldStart: boolean }> {
@@ -66,6 +68,10 @@ if (incomesRes.coldStart || expensesRes.coldStart) return { coldStart: true };
  * their recent income and expenses, and a list of their recent transactions.
  */
 export default async function EditTransactionsPage() {
+
+  const cookieStore = await cookies();
+
+  if (!cookieStore.get("auth_token")?.value) redirect("/login");
   const result = await getTransactions();
   const transactions = Array.isArray(result) ? result : [];
   const isColdStart = !Array.isArray(result) && result?.coldStart;
