@@ -125,7 +125,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 disabled:opacity-50 cursor-pointer"
           >
-            {loading ? "Iniciando sesión..." : "Entrar"}
+            {loading ? "Logging in..." : "Log in"}
           </button>
 
           <p className="text-center text-sm text-slate-500 mt-6">
