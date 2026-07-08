@@ -45,11 +45,7 @@ export default function TransactionTable({
         // Usamos la URL de incomes pero reemplazamos la ruta para apuntar a categories
         const baseUrl = process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') || 'http://localhost:8080/api/categories';
 
-        const response = await fetch(baseUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch("/api/categories", { credentials: "include" });
 
         if (response.ok) {
           const data = await response.json();
@@ -136,16 +132,9 @@ export default function TransactionTable({
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
 
-      const endpoint = kind === "income" 
-          ? `${baseUrl}/incomes/${realId}`
-          : `${baseUrl}/expenses/${realId}`;
+      const endpoint = kind === "income" ? `/api/incomes/${realId}` : `/api/expenses/${realId}`;
 
-      const response = await fetch(endpoint, {
-        method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(transactionData),
-      });
+      const response = await fetch(endpoint, { method: "PUT", credentials: "include", headers: {"Content-Type":"application/json"}, body: JSON.stringify(transactionData) });
 
       if (response.ok) {
         toast.success("Transaction updated successfully!");

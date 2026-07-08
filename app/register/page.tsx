@@ -37,7 +37,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/register`, {
+      const res = await fetch("/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // 2. ¡EL ARREGLO ESTÁ AQUÍ! 
