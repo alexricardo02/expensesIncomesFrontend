@@ -235,7 +235,7 @@ export default async function Home() {
                         }`}
                     >
                       {t.kind === "income" ? "+" : "-"}{" "}
-                      {formatCurrency(t.amount, t.currency)}
+                      {formatCurrency(t.amount, t.currency, false, true)}
                     </td>
                   </tr>
                 ))}
