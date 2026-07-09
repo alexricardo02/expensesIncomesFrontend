@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Settings as SettingsIcon, Check } from "lucide-react";
+import { ArrowLeft, Settings as SettingsIcon, Check, AlertTriangle } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 
@@ -124,8 +124,8 @@ export default function SettingsPage() {
                       key={c.code}
                       onClick={() => setSelected(c.code)}
                       className={`flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${selected === c.code
-                          ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                         }`}
                     >
                       {c.code}
@@ -144,6 +144,54 @@ export default function SettingsPage() {
               {saving ? "Saving..." : "Save changes"}
             </button>
           </div>
+          {/* Additional settings — under development */}
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-4 bg-amber-50 border-b border-amber-100 text-amber-700 text-sm font-medium flex items-center gap-2">
+              <AlertTriangle size={16} />
+              The features below are under development and not yet functional.
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Language */}
+              <div>
+                <h2 className="font-semibold text-slate-800 mb-1">Language</h2>
+                <p className="text-sm text-slate-500 mb-4">Choose the language used across the app.</p>
+                <select
+                  disabled
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-400 cursor-not-allowed"
+                >
+                  <option>English</option>
+                  <option>Spanish</option>
+                </select>
+              </div>
+
+              {/* Change password */}
+              <div>
+                <h2 className="font-semibold text-slate-800 mb-1">Change Password</h2>
+                <p className="text-sm text-slate-500 mb-4">Update your account password.</p>
+                <button
+                  disabled
+                  className="w-full py-3 bg-slate-100 text-slate-400 font-bold rounded-xl cursor-not-allowed"
+                >
+                  Change Password
+                </button>
+              </div>
+
+              {/* Delete account */}
+              <div>
+                <h2 className="font-semibold text-rose-700 mb-1">Delete Account</h2>
+                <p className="text-sm text-slate-500 mb-4">Permanently delete your account and all associated data.</p>
+                <button
+                  disabled
+                  className="w-full py-3 bg-rose-50 text-rose-300 font-bold rounded-xl cursor-not-allowed"
+                >
+                  Delete Account
+                </button>
+              </div>
+            </div>
+          </div>
+
+
         </div>
       </div>
     </main>

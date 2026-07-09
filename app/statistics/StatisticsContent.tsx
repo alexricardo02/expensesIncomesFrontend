@@ -16,6 +16,8 @@ export default function StatisticsContent({ data }: { data: any }) {
 
   if (!data) return <div className="p-8 text-center text-slate-500">No data available or error loading stats.</div>;
 
+  const currency = data.primaryCurrency || "USD";
+
   const updateFilter = (updates: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
     Object.entries(updates).forEach(([key, value]) => {
@@ -129,15 +131,15 @@ export default function StatisticsContent({ data }: { data: any }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-emerald-50 p-6 rounded-3xl">
             <p className="text-emerald-700 font-semibold text-sm">Total Incomes</p>
-            <h2 className="text-3xl font-bold text-emerald-600 mt-2">${data.totalIn.toFixed(2)}</h2>
+            <h2 className="text-3xl font-bold text-emerald-600 mt-2">{formatCurrency(data.totalIn, currency, true)}</h2>
           </div>
           <div className="bg-rose-50 p-6 rounded-3xl">
             <p className="text-rose-700 font-semibold text-sm">Total Expenses</p>
-            <h2 className="text-3xl font-bold text-rose-600 mt-2">${data.totalOut.toFixed(2)}</h2>
+            <h2 className="text-3xl font-bold text-rose-600 mt-2">{formatCurrency(data.totalOut, currency, true)}</h2>
           </div>
           <div className="bg-indigo-50 p-6 rounded-3xl">
             <p className="text-indigo-700 font-semibold text-sm flex items-center gap-2"><Activity size={16} /> Daily Avg. Expense</p>
-            <h2 className="text-3xl font-bold text-indigo-600 mt-2">${data.dailyAverage.toFixed(2)}</h2>
+            <h2 className="text-3xl font-bold text-indigo-600 mt-2">{formatCurrency(data.dailyAverage, currency, true)}</h2>
           </div>
         </div>
 
@@ -147,21 +149,29 @@ export default function StatisticsContent({ data }: { data: any }) {
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 lg:col-span-2">
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2"><TrendingUp size={20} className="text-indigo-500" /> Accumulated Balance</h3>
             <div className="w-full h-72">
-              <Line data={lineChartData} options={{ maintainAspectRatio: false }} />
+              <Line data={lineChartData} options={{
+                maintainAspectRatio: false,
+                plugins: { tooltip: { callbacks: { label: (ctx) => formatCurrency(ctx.parsed.y || 0, currency, true) } } },
+                scales: { y: { ticks: { callback: (v) => formatCurrency(Number(v), currency, true) } } },
+              }} />
             </div>
           </div>
 
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-6">Expenses by Category</h3>
             <div className="w-full max-w-72">
-              <Doughnut data={buildChartData(data.expensesByCategory)} />
+              <Doughnut data={buildChartData(data.expensesByCategory)} options={{
+                plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${formatCurrency((ctx.parsed as number) || 0, currency, true)}` } } },
+              }} />
             </div>
           </div>
 
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-6">Incomes by Category</h3>
             <div className="w-full max-w-72">
-              <Pie data={buildChartData(data.incomesByCategory)} />
+              <Pie data={buildChartData(data.incomesByCategory)} options={{
+                plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${formatCurrency((ctx.parsed as number) || 0, currency, true)}` } } },
+              }} />
             </div>
           </div>
 
@@ -169,7 +179,14 @@ export default function StatisticsContent({ data }: { data: any }) {
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 lg:col-span-2 flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-6">Expenses comparison</h3>
             <div className="w-full h-72">
-              <Bar data={barChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+              <Bar data={barChartData} options={{
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { callbacks: { label: (ctx) => formatCurrency(ctx.parsed.y || 0, currency, true) } },
+                },
+                scales: { y: { ticks: { callback: (v) => formatCurrency(Number(v), currency, true) } } },
+              }} />
             </div>
           </div>
 
@@ -203,8 +220,8 @@ export default function StatisticsContent({ data }: { data: any }) {
                       <td className="py-3 pr-4 text-sm text-slate-500">{tx.paymentMethod?.replace('_', ' ')}</td>
                       <td className={`py-3 text-sm font-semibold text-right whitespace-nowrap ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-slate-700'}`}>
                         {tx.type === 'INCOME' ? '+ ' : '- '}
-                        {(() => { 
-                          return formatCurrency(tx.amount, tx.currency, false, true); 
+                        {(() => {
+                          return formatCurrency(tx.amount, tx.currency, false, true);
                         })()}
                       </td>
                     </tr>

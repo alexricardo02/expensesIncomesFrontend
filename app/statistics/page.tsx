@@ -24,28 +24,25 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
   const queryStr = queryArgs.toString();
 
   let statsData = null;
-  
+
 
   try {
-    const [incRes, expRes, catRes] = await Promise.all([
-      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/incomes?${queryStr}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }),
-      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/expenses?${queryStr}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }),
-      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+    const [incRes, expRes, catRes, settingsRes] = await Promise.all([
+      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/incomes?${queryStr}`, { headers: { Authorization: `Bearer ${token}` } }),
+      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/expenses?${queryStr}`, { headers: { Authorization: `Bearer ${token}` } }),
+      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, { headers: { Authorization: `Bearer ${token}` } }),
+      fetchWithRetry(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings`, { headers: { Authorization: `Bearer ${token}` } }),
     ]);
 
     if (incRes.coldStart || expRes.coldStart || catRes.coldStart) {
       return (
         <div className="p-8 mt-10 text-center text-amber-700 bg-amber-50 max-w-2xl mx-auto rounded-xl font-medium border border-amber-200">
-           El servidor se está despertando. Recarga la página en 20 segundos.
+          El servidor se está despertando. Recarga la página en 20 segundos.
         </div>
       );
     }
+
+    const primaryCurrency = settingsRes.ok ? settingsRes.data.primaryCurrency : "USD";
 
     const incomesData = incRes.ok ? incRes.data : { content: [] };
     const expensesData = expRes.ok ? expRes.data : { content: [] };
@@ -111,7 +108,8 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     statsData = { 
       totalIn, totalOut, expensesByCategory, incomesByCategory, 
       expensesByMethod, balanceOverTime, dailyAverage: totalOut / daysDiff, categories, currentParams: params,
-      transactions: allTransactions
+      transactions: allTransactions,
+      primaryCurrency
     };
 
     return <StatisticsContent data={statsData} />;
