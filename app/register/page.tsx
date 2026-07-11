@@ -71,6 +71,13 @@ export default function RegisterPage() {
     }
   };
 
+  const isPasswordValid = passwordRules.every((rule) => rule.test(password));
+  const isFormValid = 
+    username.trim().length > 0 && 
+    email.trim().length > 0 && 
+    isPasswordValid && 
+    acceptedPolicy;
+
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
@@ -191,8 +198,8 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            disabled={loading || !acceptedPolicy}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 mt-2 cursor-pointer"
+            disabled={loading || !isFormValid} 
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 mt-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600"
           >
             {loading ? "Creating account..." : "Register"}
           </button>
