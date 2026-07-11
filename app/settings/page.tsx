@@ -20,6 +20,10 @@ export default function SettingsPage() {
   const [selected, setSelected] = useState("USD");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -80,6 +84,36 @@ export default function SettingsPage() {
       }
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!deletePassword) {
+      toast.error("Please enter your password");
+      return;
+    }
+    setDeleting(true);
+    const toastId = toast.loading("Deleting account...");
+    try {
+      const res = await fetch("/api/users/me", {
+        method: "DELETE",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: deletePassword }),
+      });
+
+      if (res.ok) {
+        toast.success("Account deleted", { id: toastId });
+        Cookies.remove("user_profile");
+        router.push("/login");
+      } else {
+        const err = await res.json().catch(() => null);
+        toast.error(err?.message || "Incorrect password", { id: toastId });
+      }
+    } catch {
+      toast.error("Connection error", { id: toastId });
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -144,6 +178,19 @@ export default function SettingsPage() {
               {saving ? "Saving..." : "Save changes"}
             </button>
           </div>
+
+          {/* Delete account */}
+          <div>
+            <h2 className="font-semibold text-rose-700 mb-1">Delete Account</h2>
+            <p className="text-sm text-slate-500 mb-4">Permanently delete your account and all associated data.</p>
+            <button
+              disabled
+              className="w-full py-3 bg-rose-50 text-rose-300 font-bold rounded-xl cursor-not-allowed"
+            >
+              Delete Account
+            </button>
+          </div>
+
           {/* Additional settings — under development */}
           <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-4 bg-amber-50 border-b border-amber-100 text-amber-700 text-sm font-medium flex items-center gap-2">
@@ -176,24 +223,70 @@ export default function SettingsPage() {
                   Change Password
                 </button>
               </div>
-
-              {/* Delete account */}
-              <div>
-                <h2 className="font-semibold text-rose-700 mb-1">Delete Account</h2>
-                <p className="text-sm text-slate-500 mb-4">Permanently delete your account and all associated data.</p>
-                <button
-                  disabled
-                  className="w-full py-3 bg-rose-50 text-rose-300 font-bold rounded-xl cursor-not-allowed"
-                >
-                  Delete Account
-                </button>
-              </div>
             </div>
           </div>
-
-
         </div>
       </div>
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div className="p-8 text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 text-rose-600 mb-4">
+                <AlertTriangle size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Delete your account?</h3>
+              <p className="text-slate-500">This will permanently delete your account and all your transactions and categories. This action cannot be undone.</p>
+            </div>
+            <div className="bg-slate-50 p-4 flex gap-3">
+              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer">
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowDeleteConfirm(false); setShowDeletePassword(true); }}
+                className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 transition-colors cursor-pointer"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeletePassword && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-100">
+              <h3 className="text-lg font-bold text-slate-900">Confirm with your password</h3>
+              <p className="text-sm text-slate-500 mt-1">Enter your password to permanently delete your account.</p>
+            </div>
+            <div className="p-6">
+              <input
+                type="password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                placeholder="••••••••"
+                className="text-slate-900 w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none"
+                autoFocus
+              />
+            </div>
+            <div className="bg-slate-50 p-4 flex gap-3">
+              <button
+                onClick={() => { setShowDeletePassword(false); setDeletePassword(""); }}
+                className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleting}
+                className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 disabled:opacity-50 transition-colors cursor-pointer"
+              >
+                {deleting ? "Deleting..." : "Delete Account"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
