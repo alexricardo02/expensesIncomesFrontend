@@ -60,9 +60,24 @@ export async function PUT(request: NextRequest, ctx: Ctx) {
   const { path } = await ctx.params;
   return proxy(request, path);
 }
-export async function DELETE(request: NextRequest, ctx: Ctx) {
-  const { path } = await ctx.params;
-  return proxy(request, path);
+export async function DELETE(
+  req: NextRequest, 
+  { params }: { params: Promise<{ path: string[] }> } 
+) {
+  const token = req.cookies.get('auth_token')?.value;
+  const body = await req.json().catch(() => ({})); 
+
+  // WHY: Next.js 15 requiere resolver asíncronamente los parámetros de la URL
+  const resolvedParams = await params;
+
+  return fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${resolvedParams.path.join('/')}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(body)
+  });
 }
 export async function PATCH(request: NextRequest, ctx: Ctx) {
   const { path } = await ctx.params;
