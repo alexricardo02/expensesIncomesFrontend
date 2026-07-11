@@ -184,14 +184,14 @@ export default function SettingsPage() {
             <h2 className="font-semibold text-rose-700 mb-1">Delete Account</h2>
             <p className="text-sm text-slate-500 mb-4">Permanently delete your account and all associated data.</p>
             <button
-              disabled
-              className="w-full py-3 bg-rose-50 text-rose-300 font-bold rounded-xl cursor-not-allowed"
+              onClick={() => setShowDeleteConfirm(true)}
+              className="w-full py-3 bg-rose-50 text-rose-600 font-bold rounded-xl hover:bg-rose-100 transition-colors cursor-pointer"
             >
               Delete Account
             </button>
           </div>
 
-          {/* Additional settings — under development */}
+          { }
           <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-4 bg-amber-50 border-b border-amber-100 text-amber-700 text-sm font-medium flex items-center gap-2">
               <AlertTriangle size={16} />
