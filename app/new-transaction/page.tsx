@@ -205,6 +205,7 @@ export default function NewTransactionPage() {
                     <option value="USD">USD - Dollars</option>
                     <option value="EUR">EUR - Euros</option>
                     <option value="GBP">GBP - Pounds</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
                     <option value="ARS">ARS - Argentine Pesos</option>
                   </select>
                   <ChevronDown
