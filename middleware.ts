@@ -4,7 +4,9 @@ import type { NextRequest } from 'next/server';
 function isTokenExpired(token: string): boolean {
   try {
     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    const payload = JSON.parse(atob(base64));
+    // Edge requiere el padding '=' exacto para decodificar sin fallar
+    const pad = base64.length % 4 === 0 ? '' : '='.repeat(4 - (base64.length % 4));
+    const payload = JSON.parse(atob(base64 + pad));
     return !payload.exp || payload.exp * 1000 < Date.now();
   } catch {
     return true;
@@ -21,7 +23,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
-  if (!authToken && refreshToken) {
+  if (refreshToken) {
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
@@ -33,7 +35,8 @@ export async function middleware(request: NextRequest) {
       clearTimeout(timeout);
 
       if (res.ok) {
-        const response = NextResponse.next();
+        // 🔴 BONUS: Si se refrescó con éxito, pero estaban en /login, redirigir al Dashboard
+        const response = isAuthPage ? NextResponse.redirect(new URL('/', request.url)) : NextResponse.next();
         const setCookies = (res.headers as any).getSetCookie?.() ?? [];
         setCookies.forEach((c: string) => response.headers.append('Set-Cookie', c));
         return response;
@@ -43,6 +46,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Si no hay refresh token, o el refresh falló, expulsar
   if (!isAuthPage) return NextResponse.redirect(new URL('/login', request.url));
   return NextResponse.next();
 }
