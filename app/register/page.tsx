@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, User, Mail, AlertCircle, ArrowLeft, Eye, EyeOff, Check } from "lucide-react";
+import LegalFooter from "../components/LegalFooter";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -11,6 +12,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [acceptedPolicy, setAcceptedPolicy] = useState(false);
   const passwordRules = [
     { label: "At least 8 characters", test: (p: string) => p.length >= 8 },
     { label: "At least one uppercase letter", test: (p: string) => /[A-Z]/.test(p) },
@@ -24,6 +26,12 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    if (!acceptedPolicy) {
+      setError("You must accept the Privacy Policy to register.");
+      setLoading(false);
+      return;
+    }
 
     // 1. Limpiamos con seguridad (agregué email que faltaba limpiar)
     const cleanUsername = username ? username.trim().toLowerCase() : "";
@@ -164,14 +172,32 @@ export default function RegisterPage() {
             )}
           </div>
 
+          <div className="flex items-start gap-2">
+            <input
+              type="checkbox"
+              id="acceptPolicy"
+              checked={acceptedPolicy}
+              onChange={(e) => setAcceptedPolicy(e.target.checked)}
+              className="mt-1 cursor-pointer"
+              required
+            />
+            <label htmlFor="acceptPolicy" className="text-sm text-slate-600 cursor-pointer">
+              By signing up, you agree to our{" "}
+              <a href="/datenschutzerklarung" target="_blank" className="text-indigo-600 hover:underline">
+                Privacy Policy
+              </a>.
+            </label>
+          </div>
+
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !acceptedPolicy}
             className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 mt-2 cursor-pointer"
           >
             {loading ? "Creating account..." : "Register"}
           </button>
         </form>
+        <LegalFooter />
       </div>
     </div>
   );

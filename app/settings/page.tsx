@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Settings as SettingsIcon, Check, AlertTriangle } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 const CURRENCIES = [
   { code: "USD", label: "US Dollar" },
@@ -225,8 +226,19 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+
+          <div className="p-6 border-t border-slate-100 flex justify-center gap-4 text-xs text-slate-400">
+            <Link href="/impressum" className="hover:text-slate-600 hover:underline">
+              Impressum
+            </Link>
+            <span>|</span>
+            <Link href="/datenschutzerklarung" className="hover:text-slate-600 hover:underline">
+              Datenschutzerklärung
+            </Link>
+          </div>
         </div>
       </div>
+
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">

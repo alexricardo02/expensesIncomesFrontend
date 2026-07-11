@@ -4,6 +4,7 @@ import { useState} from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Lock, User, AlertCircle, Eye, EyeOff } from "lucide-react";
+import LegalFooter from "../components/LegalFooter";
 
 
 export default function LoginPage() {
@@ -138,6 +139,7 @@ export default function LoginPage() {
             </button>
           </p>
         </form>
+        <LegalFooter />
       </div>
     </div>
   );
