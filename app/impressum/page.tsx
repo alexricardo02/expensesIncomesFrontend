@@ -15,10 +15,11 @@ export default function ImpressumPage() {
           <h1 className="text-2xl font-bold">Impressum</h1>
 
           <section className="space-y-1 text-sm text-slate-700">
-            <h2 className="font-semibold text-slate-900">Angaben gemäß § 5 TMG</h2>
+            {/* Aktualisiert von TMG auf das aktuelle DDG für maximale Compliance-Qualität im Portfolio */}
+            <h2 className="font-semibold text-slate-900">Angaben gemäß § 5 DDG</h2>
             <p>Alex Ricardo Brinckmann</p>
-            <p>Isaac-Fulda-Alle 4</p>
-            <p>55124 Mainz, Germany</p>
+            <p>Isaac-Fulda-Allee 4</p>
+            <p>55124 Mainz, Deutschland</p>
           </section>
 
           <section className="space-y-1 text-sm text-slate-700">
@@ -32,8 +33,8 @@ export default function ImpressumPage() {
           </section>
 
           <p className="text-xs text-slate-400 pt-4 border-t border-slate-100">
-            This is a personal, non-commercial portfolio project. Finance Tracker is
-            provided as-is for demonstration purposes.
+            Dies ist un persönliches, nicht-kommerzielles Portfolio-Projekt. Finance Tracker wird
+            im vorliegenden Zustand (as-is) ausschließlich zu Demonstrationszwecken bereitgestellt.
           </p>
         </div>
       </div>

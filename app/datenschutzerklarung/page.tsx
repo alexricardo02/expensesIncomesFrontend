@@ -17,7 +17,7 @@ export default function DatenschutzPage() {
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-2xl mx-auto space-y-6">
         <Link href="/login" className="flex items-center text-slate-500 hover:text-slate-800 text-sm">
-          <ArrowLeft size={16} className="mr-2" /> Back
+          <ArrowLeft size={16} className="mr-2" /> Zurück
         </Link>
 
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-8">
@@ -25,7 +25,7 @@ export default function DatenschutzPage() {
 
           <Section title="1. Verantwortlicher">
             <p>
-              Alex Ricardo Brinckmann, Isaac-Fulda-Allee 4, 55124 Mainz, Germany —
+              Alex Ricardo Brinckmann, Isaac-Fulda-Allee 4, 55124 Mainz, Deutschland —
               E-Mail: brinckmannalex@gmail.com
             </p>
           </Section>
@@ -75,14 +75,14 @@ export default function DatenschutzPage() {
                 Löschung deines Kontos und aller zugehörigen Daten — jederzeit
                 selbstständig unter{" "}
                 <Link href="/settings" className="text-indigo-600 hover:underline">
-                  Settings → Delete Account
+                  Einstellungen → Konto löschen
                 </Link>
               </li>
               <li>
                 Datenübertragbarkeit — Export deiner Transaktionen als CSV, Excel
                 oder PDF unter{" "}
                 <Link href="/edit-transactions" className="text-indigo-600 hover:underline">
-                  Export
+                  Exportieren
                 </Link>
               </li>
               <li>Widerspruch und Einschränkung der Verarbeitung</li>

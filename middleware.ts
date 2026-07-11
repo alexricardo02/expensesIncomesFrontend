@@ -35,7 +35,6 @@ export async function middleware(request: NextRequest) {
       clearTimeout(timeout);
 
       if (res.ok) {
-        // 🔴 BONUS: Si se refrescó con éxito, pero estaban en /login, redirigir al Dashboard
         const response = isAuthPage ? NextResponse.redirect(new URL('/', request.url)) : NextResponse.next();
         const setCookies = (res.headers as any).getSetCookie?.() ?? [];
         setCookies.forEach((c: string) => response.headers.append('Set-Cookie', c));
