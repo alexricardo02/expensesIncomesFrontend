@@ -60,9 +60,20 @@ export async function PUT(request: NextRequest, ctx: Ctx) {
   const { path } = await ctx.params;
   return proxy(request, path);
 }
-export async function DELETE(request: NextRequest, ctx: Ctx) {
-  const { path } = await ctx.params;
-  return proxy(request, path);
+export async function DELETE(req: NextRequest, { params }: { params: { path: string[] } }) {
+  const token = req.cookies.get('auth_token')?.value;
+  
+  // Extraer el body para reenviar la contraseña
+  const body = await req.json().catch(() => ({})); 
+
+  return fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${params.path.join('/')}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` // ¡Crucial para no recibir 403!
+    },
+    body: JSON.stringify(body) // Reenviar el DTO al backend
+  });
 }
 export async function PATCH(request: NextRequest, ctx: Ctx) {
   const { path } = await ctx.params;
