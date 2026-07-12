@@ -3,8 +3,10 @@
 import { ArrowUpCircle, ArrowDownCircle, Wallet, TrendingUp, TrendingDown } from "lucide-react";
 import BalanceChart from "./BalanceChart";
 import { formatCurrency } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function DashboardKPIs({ transactions }: { transactions: any[] }) {
+  const { t } = useLanguage();
 
   // WHY: By computing aggregates in the client, the UI instantly reacts to Context changes (ARS/USD toggle) without a server roundtrip.
   const sumConverted = (txs: any[]) => txs.reduce((acc, t) => acc + (t.amountPrimary ?? t.amount), 0);
@@ -48,7 +50,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
                 <Wallet size={18} />
               </div>
               <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
-                Total Balance
+                {t("dashboard.kpis.totalBalance")}
               </span>
             </div>
           </div>
@@ -71,7 +73,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
         <div className="hidden md:block bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-4">
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><ArrowUpCircle size={20} /></div>
-            <span className="text-xs font-bold text-slate-400 uppercase">Incomes</span>
+            <span className="text-xs font-bold text-slate-400 uppercase">{t("dashboard.kpis.incomes")}</span>
           </div>
           <h2 className="text-3xl font-bold text-emerald-600">{formatCurrency(totalIncomes, targetCurrency, true)}</h2>
         </div>
@@ -90,7 +92,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
         <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
           <div className="flex items-center gap-2 mb-2">
             <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><ArrowUpCircle size={16} /></div>
-            <span className="text-xs font-bold text-slate-400 uppercase">Income</span>
+            <span className="text-xs font-bold text-slate-400 uppercase">{t("dashboard.kpis.income")}</span>
           </div>
           <h2 className="text-xl font-bold text-emerald-600">{formatCurrency(totalIncomes, targetCurrency, true)}</h2>
         </div>

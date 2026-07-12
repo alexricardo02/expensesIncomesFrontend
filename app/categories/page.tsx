@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Trash2, ArrowLeft, Tag, PlusCircle, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 
 interface Category {
@@ -17,6 +18,7 @@ export default function CategoriesPage() {
   const [name, setName] = useState("");
   const [type, setType] = useState("expense");
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useLanguage();
 
   // Smart URL: Tries to use an environment variable; if it doesn't exist, it adapts the incomes URL
   const API_URL = "/api/categories";
@@ -45,7 +47,7 @@ export default function CategoriesPage() {
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.error("Please enter a name");
+      toast.error(t("categories.nameRequired"));
       return;
     }
 
@@ -61,12 +63,12 @@ export default function CategoriesPage() {
       });
 
       if (res.ok) {
-        toast.success("Category created!", { id: toastId });
+        toast.success(t("categories.createSuccess"), { id: toastId });
         setName(""); // Clear the input
         fetchCategories(); // Reload the list
       } else {
         const err = await res.json();
-        toast.error(err.message || "Could not create", { id: toastId });
+        toast.error(err.message || t("categories.createError"), { id: toastId });
       }
     } catch (error) {
       toast.error("Connection error", { id: toastId });
@@ -74,7 +76,7 @@ export default function CategoriesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const toastId = toast.loading("Deleting...");
+    const toastId = toast.loading(t("categories.deleteLoading"));
 
     try {
       const res = await fetch(`${API_URL}/${id}`, {
@@ -83,10 +85,10 @@ export default function CategoriesPage() {
       });
 
       if (res.ok) {
-        toast.success("Category deleted", { id: toastId });
+        toast.success(t("categories.deleteSuccess"), { id: toastId });
         fetchCategories(); // Reload the list
       } else {
-        toast.error("Could not delete", { id: toastId });
+        toast.error(t("categories.deleteError"), { id: toastId });
       }
     } catch (error) {
       toast.error("Connection error", { id: toastId });
@@ -124,19 +126,19 @@ export default function CategoriesPage() {
               </h2>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Name</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("categories.nameLabel")}</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="E.g. Food, Salary..."
+                    placeholder={t("categories.namePlaceholder")}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                     maxLength={30}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Type</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("categories.typeLabel")}</label>
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
@@ -150,7 +152,7 @@ export default function CategoriesPage() {
                   type="submit"
                   className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm active:scale-95"
                 >
-                  Save Category
+                  {t("categories.save")}
                 </button>
               </form>
             </div>
@@ -160,11 +162,11 @@ export default function CategoriesPage() {
           <div className="md:col-span-2">
             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
               {isLoading ? (
-                <div className="p-8 text-center text-slate-400">Loading categories...</div>
+                <div className="p-8 text-center text-slate-400">{t("categories.loading")}</div>
               ) : categories.length === 0 ? (
                 <div className="p-8 text-center text-slate-400">
                   <Tag size={32} className="mx-auto mb-3 opacity-50" />
-                  You have no custom categories.
+                  {t("categories.emptyState")}
                 </div>
               ) : (
                 <ul className="divide-y divide-slate-100">

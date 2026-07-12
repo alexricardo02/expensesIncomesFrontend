@@ -5,6 +5,7 @@ import Papa from "papaparse";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Upload, CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type Row = Record<string, string>;
 type KindMode = "signed" | "separate";
@@ -35,6 +36,7 @@ function parseNumber(raw: string): number | null {
 
 export default function ImportPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [headers, setHeaders] = useState<string[]>([]);
   const [rows, setRows] = useState<Row[]>([]);
   const [kindMode, setKindMode] = useState<KindMode>("signed");
@@ -79,7 +81,7 @@ export default function ImportPage() {
               setRows(res2.data);
               setResult(null);
             },
-            error: () => toast.error("Could not parse CSV file"),
+            error: () => toast.error(t("import.parseError")),
           });
           return;
         }
@@ -142,12 +144,12 @@ export default function ImportPage() {
   const handleImport = async () => {
     const { payload, skippedRows } = buildPayload();
     if (payload.length === 0) {
-      toast.error("No valid rows to import. Check your column mapping.");
+      toast.error(t("import.noValidRows"));
       return;
     }
 
     setSubmitting(true);
-    const toastId = toast.loading(`Importing ${payload.length} transactions...`);
+    const toastId = toast.loading(`${t("import.importing")} ${payload.length} ${t("import.imported")}`);
     try {
       const res = await fetch("/api/imports/transactions", {
         method: "POST",
@@ -163,13 +165,13 @@ export default function ImportPage() {
           skipped: data.skipped + skippedRows.length,
           errors: [...skippedRows, ...(data.errors || [])],
         });
-        toast.success(`Imported ${data.imported} transactions!`, { id: toastId });
+        toast.success(`${t("import.importSuccess")} ${data.imported}`, { id: toastId });
       } else {
         const err = await res.json().catch(() => null);
-        toast.error(err?.message || "Import failed", { id: toastId });
+        toast.error(err?.message || t("import.importFailed"), { id: toastId });
       }
     } catch {
-      toast.error("Connection error", { id: toastId });
+      toast.error(t("import.connectionError"), { id: toastId });
     } finally {
       setSubmitting(false);
     }
@@ -194,18 +196,18 @@ export default function ImportPage() {
       <Toaster position="top-right" />
       <div className="max-w-3xl mx-auto space-y-6">
         <button onClick={() => router.push("/")} className="flex items-center text-slate-500 hover:text-slate-800 text-sm">
-          <ArrowLeft size={18} className="mr-2" /> Back to Dashboard
+          <ArrowLeft size={18} className="mr-2" /> {t("import.backToDashboard")}
         </button>
 
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-6">
           <div>
-            <h1 className="text-xl font-bold flex items-center gap-2"><Upload size={20} className="text-indigo-600" /> Import Transactions</h1>
-            <p className="text-slate-500 text-sm mt-1">Upload a CSV export from your bank and map its columns.</p>
+            <h1 className="text-xl font-bold flex items-center gap-2"><Upload size={20} className="text-indigo-600" /> {t("import.title")}</h1>
+            <p className="text-slate-500 text-sm mt-1">{t("import.subtitle")}</p>
           </div>
 
           <label className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 bg-indigo-50 text-indigo-700 border-2 border-dashed border-indigo-200 rounded-xl text-sm font-semibold cursor-pointer hover:bg-indigo-100 hover:border-indigo-300 transition-colors">
             <Upload size={18} />
-            {rows.length > 0 ? "Change CSV file" : "Choose CSV file"}
+            {rows.length > 0 ? t("import.changeCsvFile") : t("import.chooseCsvFile")}
             <input type="file" accept=".csv" onChange={handleFile} className="hidden" />
           </label>
 
@@ -213,25 +215,25 @@ export default function ImportPage() {
             <>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Column separator</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.columnSeparator")}</label>
                   <select value={delimiter} onChange={(e) => setDelimiter(e.target.value as Delimiter)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
-                    <option value="auto">Auto-detect</option>
-                    <option value=",">Comma (,)</option>
-                    <option value=";">Semicolon (;)</option>
+                    <option value="auto">{t("import.autoDetect")}</option>
+                    <option value=",">{t("import.comma")}</option>
+                    <option value=";">{t("import.semicolon")}</option>
                   </select>
                   <p className="text-[11px] text-slate-400 mt-1">Select before choosing the file.</p>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Amount format</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.amountFormat")}</label>
                   <select value={kindMode} onChange={(e) => setKindMode(e.target.value as KindMode)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
-                    <option value="signed">Single column (negative = expense)</option>
-                    <option value="separate">Two columns (charges / credits)</option>
+                    <option value="signed">{t("import.signed")}</option>
+                    <option value="separate">{t("import.separate")}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Date format</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.dateFormat")}</label>
                   <select value={dateFmt} onChange={(e) => setDateFmt(e.target.value as DateFmt)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
                     <option value="YYYY-MM-DD">YYYY-MM-DD</option>
@@ -242,30 +244,30 @@ export default function ImportPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <HeaderSelect label="Date column" field="date" />
-                <HeaderSelect label="Description column" field="description" />
-                <HeaderSelect label="Category column" field="category" />
+                <HeaderSelect label={t("import.dateColumn")} field="date" />
+                <HeaderSelect label={t("import.descriptionColumn")} field="description" />
+                <HeaderSelect label={t("import.categoryColumn")} field="category" />
                 {kindMode === "signed" ? (
-                  <HeaderSelect label="Amount column" field="amount" />
+                  <HeaderSelect label={t("import.amountColumn")} field="amount" />
                 ) : (
                   <>
-                    <HeaderSelect label="Charges (expense) column" field="chargeCol" />
-                    <HeaderSelect label="Credits (income) column" field="creditCol" />
+                    <HeaderSelect label={t("import.chargesColumn")} field="chargeCol" />
+                    <HeaderSelect label={t("import.creditsColumn")} field="creditCol" />
                   </>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Currency source</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.currencySource")}</label>
                   <div className="flex p-1 bg-slate-100 rounded-xl mb-2 w-fit">
                     <button type="button" onClick={() => setCurrencyMode("fixed")}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "fixed" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500"}`}>
-                      Fixed currency
+                      {t("import.fixedCurrency")}
                     </button>
                     <button type="button" onClick={() => setCurrencyMode("column")}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "column" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500"}`}>
-                      From column
+                      {t("import.fromColumn")}
                     </button>
                   </div>
 
@@ -278,20 +280,20 @@ export default function ImportPage() {
                     <div className="flex items-center gap-2">
                       <select value={map.currencyCol} onChange={(e) => setMap({ ...map, currencyCol: e.target.value })}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
-                        <option value="">-- select column --</option>
+                        <option value="">{t("import.selectColumn")}</option>
                         {headers.map((h) => <option key={h} value={h}>{h}</option>)}
                       </select>
                       <div className="relative group shrink-0">
                         <AlertCircle size={18} className="text-amber-500 cursor-help" />
                         <div className="absolute right-0 bottom-full mb-2 hidden group-hover:block w-56 bg-slate-800 text-white text-xs rounded-lg p-2 shadow-lg z-10">
-                          The selected column must contain official currency codes (e.g. USD, EUR, GBP, JPY, ARS).
+                          {t("import.currencyHint")}
                         </div>
                       </div>
                     </div>
                   )}
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Payment method</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.paymentMethod")}</label>
                   <select value={defaultPaymentMethod} onChange={(e) => setDefaultPaymentMethod(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
                     {PAYMENT_METHODS.map((p) => <option key={p} value={p}>{p.replace("_", " ")}</option>)}
@@ -299,14 +301,14 @@ export default function ImportPage() {
                 </div>
               </div>
 
-              <p className="text-xs text-slate-400">{rows.length} rows detected in file.</p>
+              <p className="text-xs text-slate-400">{rows.length} {t("import.rowsDetected")}</p>
 
               <button
                 onClick={handleImport}
                 disabled={submitting}
                 className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
               >
-                {submitting ? "Importing..." : `Import ${rows.length} rows`}
+                {submitting ? t("import.importing") : `${t("import.importButton")} ${rows.length}`}
               </button>
             </>
           )}
@@ -314,11 +316,11 @@ export default function ImportPage() {
           {result && (
             <div className="border-t border-slate-100 pt-4 space-y-2">
               <div className="flex items-center gap-2 text-emerald-600 font-semibold">
-                <CheckCircle2 size={18} /> {result.imported} imported
+                <CheckCircle2 size={18} /> {result.imported} {t("import.imported")}
               </div>
               {result.skipped > 0 && (
                 <div className="text-amber-700 bg-amber-50 rounded-xl p-3 text-sm space-y-1">
-                  <div className="flex items-center gap-2 font-semibold"><AlertTriangle size={16} /> {result.skipped} skipped</div>
+                  <div className="flex items-center gap-2 font-semibold"><AlertTriangle size={16} /> {result.skipped} {t("import.skipped")}</div>
                   <ul className="list-disc pl-5 max-h-40 overflow-y-auto">
                     {result.errors.slice(0, 20).map((e, i) => <li key={i}>{e}</li>)}
                   </ul>

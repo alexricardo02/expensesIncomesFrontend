@@ -6,6 +6,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 
 interface Category {
@@ -35,6 +36,7 @@ export default function TransactionTable({
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterDate, setFilterDate] = useState<string>("");
   const [filterMinAmount, setFilterMinAmount] = useState<string>("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -101,7 +103,7 @@ export default function TransactionTable({
 
     const token = Cookies.get("auth_token");
     if (!token) {
-      alert("Expired session. Please, try again.");
+      alert(t("common.expiredSession"));
       return;
     }
 
@@ -137,7 +139,7 @@ export default function TransactionTable({
       const response = await fetch(endpoint, { method: "PUT", credentials: "include", headers: {"Content-Type":"application/json"}, body: JSON.stringify(transactionData) });
 
       if (response.ok) {
-        toast.success("Transaction updated successfully!");
+        toast.success(t("transactions.table.updateSuccess"));
         
         const updatedTxResponse = await response.json(); 
         setTransactions(prev => prev.map(t => {
@@ -158,10 +160,10 @@ export default function TransactionTable({
         closeModal();
       } else {
         const errorBody = await response.json();
-        toast.error(`Error: ${errorBody.message || "Could not update transaction"}`);
+        toast.error(`Error: ${errorBody.message || t("transactions.table.updateError")}`);
       }
     } catch (error) {
-      toast.error("Backend is offline or unreachable.");
+      toast.error(t("transactions.table.backendOffline"));
     }
   };
 
@@ -170,7 +172,7 @@ export default function TransactionTable({
       selectedTransaction.incomeId ||
       selectedTransaction.expenseId ||
       selectedTransaction.id;
-    const loadingToast = toast.loading("Deleting...");
+    const loadingToast = toast.loading(t("transactions.table.deleteLoading"));
 
     try {
       const endpoint = selectedTransaction.kind === "income"
@@ -182,14 +184,14 @@ export default function TransactionTable({
       });
 
       if (response.ok) {
-        toast.success("Deleted successfully!", { id: loadingToast });
+        toast.success(t("transactions.table.deleteSuccess"), { id: loadingToast });
         setTransactions(prev => prev.filter(t => t.displayId !== selectedTransaction.displayId));
         closeModal();
       } else {
-        toast.error("Could not delete", { id: loadingToast });
+        toast.error(t("transactions.table.deleteError"), { id: loadingToast });
       }
     } catch (error) {
-      toast.error("Network error", { id: loadingToast });
+      toast.error(t("transactions.table.networkError"), { id: loadingToast });
     }
   };
 
@@ -203,16 +205,16 @@ export default function TransactionTable({
         {/* Filtro Tipo */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-            <Filter size={14} /> Type
+            <Filter size={14} /> {t("transactions.filter.type")}
           </label>
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
             className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           >
-            <option value="all">All Types</option>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
+            <option value="all">{t("transactions.filter.allTypes")}</option>
+            <option value="income">{t("transactions.filter.income")}</option>
+            <option value="expense">{t("transactions.filter.expense")}</option>
           </select>
         </div>
 
@@ -226,7 +228,7 @@ export default function TransactionTable({
             onChange={(e) => setFilterCategory(e.target.value)}
             className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           >
-            <option value="all">All Categories</option>
+            <option value="all">{t("transactions.filter.allCategories")}</option>
             {uniqueCategoryNames.map((catName) => (
               <option key={catName} value={catName}>
                 {catName}
@@ -238,7 +240,7 @@ export default function TransactionTable({
         {/* Filtro Fecha */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-            <Calendar size={14} /> Date
+            <Calendar size={14} /> {t("transactions.filter.date")}
           </label>
           <input
             type="date"
@@ -251,7 +253,7 @@ export default function TransactionTable({
         {/* Filtro Monto Mínimo */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-            <DollarSign size={14} /> Min Amount
+            <DollarSign size={14} /> {t("transactions.filter.minAmount")}
           </label>
           <input
             type="number"
@@ -272,7 +274,7 @@ export default function TransactionTable({
           }}
           className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition-colors text-sm cursor-pointer"
         >
-          <Eraser size={16} /> Clear
+          <Eraser size={16} /> {t("common.clear")}
         </button>
       </div>
 
@@ -281,12 +283,12 @@ export default function TransactionTable({
         <table className="w-full text-left border-collapse">
           <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
             <tr>
-              <th className="px-6 py-4 font-medium">Type</th>
-              <th className="px-6 py-4 font-medium">Category</th>
-              <th className="px-6 py-4 font-medium">Method</th>
-              <th className="px-6 py-4 font-medium">Date</th>
-              <th className="px-6 py-4 font-medium text-right">Amount</th>
-              <th className="px-6 py-4 font-medium text-right">Actions</th>
+              <th className="px-6 py-4 font-medium">{t("transactions.table.type")}</th>
+              <th className="px-6 py-4 font-medium">{t("transactions.table.category")}</th>
+              <th className="px-6 py-4 font-medium">{t("transactions.table.method")}</th>
+              <th className="px-6 py-4 font-medium">{t("transactions.table.date")}</th>
+              <th className="px-6 py-4 font-medium text-right">{t("transactions.table.amount")}</th>
+              <th className="px-6 py-4 font-medium text-right">{t("transactions.table.actions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -304,11 +306,11 @@ export default function TransactionTable({
                 </td>
                 <td className="px-6 py-4">
                   <span className="font-medium text-slate-900">
-                    {t.typeName || t.type || "Uncategorized"}
+                    {t.typeName || t.type || t("common.uncategorized")}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-slate-500 text-xs">
-                  {t.paymentMethod?.replace('_', ' ') || 'N/A'}
+                  {t.paymentMethod?.replace('_', ' ') || t("common.na")}
                 </td>
                 <td className="px-6 py-4 text-slate-500">{t.date}</td>
                 <td
@@ -390,7 +392,7 @@ export default function TransactionTable({
               {isExpanded && (
                 <div className="px-4 pb-4 pt-2 bg-slate-50/50 border-t border-slate-50 animate-in slide-in-from-top-2 duration-200">
                   <p className="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">
-                    Actions
+                    {t("transactions.table.actions")}
                   </p>
                   <div className="grid grid-cols-2 gap-3">
                     <button
@@ -419,7 +421,7 @@ export default function TransactionTable({
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="p-6 border-b border-slate-100 flex justify-between items-center">
               <h3 className="text-xl font-bold text-slate-900">
-                Edit {selectedTransaction?.kind}
+                {t("transactions.table.modalTitle", { type: selectedTransaction?.kind || t("common.type") })}
               </h3>
               <button
                 onClick={closeModal}
@@ -434,7 +436,7 @@ export default function TransactionTable({
                 {/* AMOUNT */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    Amount
+                    {t("common.amount")}
                   </label>
                   <input
                     name="amount"
@@ -448,8 +450,8 @@ export default function TransactionTable({
 
                 {/* CURRENCY */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
-                    <Globe size={14} /> Currency
+                  <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
+                    <Globe size={14} /> {t("transactions.table.currency")}
                   </label>
                   <select
                     name="currency"
@@ -466,8 +468,8 @@ export default function TransactionTable({
 
                 {/* PAYMENT METHOD */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
-                    <CreditCard size={14} /> Payment Method
+                  <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
+                    <CreditCard size={14} /> {t("transactions.table.paymentMethod")}
                   </label>
                   <select
                     name="paymentMethod"
@@ -485,8 +487,8 @@ export default function TransactionTable({
 
               {/* CATEGORY DINÁMICO */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
-                  <Tag size={14} /> Category
+                <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
+                  <Tag size={14} /> {t("transactions.table.category")}
                 </label>
                 <select
                   name="categoryId" // IMPORTANTE: Ahora mapeamos a 'categoryId'
@@ -494,7 +496,7 @@ export default function TransactionTable({
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   required
                 >
-                  <option value="" disabled>Select a category</option>
+                  <option value="" disabled>{t("transactions.table.selectCategory")}</option>
                   {currentCategories.map((cat) => (
                     <option key={cat.categoryId} value={cat.categoryId}>
                       {cat.name}
@@ -506,7 +508,7 @@ export default function TransactionTable({
               {/* DATE */}
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">
-                  Date
+                  {t("transactions.table.date")}
                 </label>
                 <input
                   name="date"
@@ -520,7 +522,7 @@ export default function TransactionTable({
               {/* DESCRIPTION */}
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">
-                  Description
+                  {t("common.description")}
                 </label>
                 <textarea
                   name="description"
@@ -536,13 +538,13 @@ export default function TransactionTable({
                   onClick={closeModal}
                   className="flex-1 py-3 px-4 border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </button>
                 <button
                   type="submit"
                   className="flex-1 py-3 px-4 bg-indigo-600 rounded-xl font-semibold text-white hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Save size={18} /> Save Changes
+                  <Save size={18} /> {t("transactions.table.saveChanges")}
                 </button>
               </div>
             </form>
@@ -559,11 +561,10 @@ export default function TransactionTable({
                 <AlertTriangle size={32} />
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-2">
-                Are you sure?
+                {t("transactions.table.deleteTitle")}
               </h3>
               <p className="text-slate-500">
-                You are about to delete this {selectedTransaction?.kind}. This
-                action cannot be undone.
+                {t("transactions.table.deleteDescription", { type: selectedTransaction?.kind || t("common.type") })}
               </p>
             </div>
             <div className="bg-slate-50 p-4 flex gap-3">
@@ -577,7 +578,7 @@ export default function TransactionTable({
                 onClick={confirmDelete}
                 className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 transition-colors cursor-pointer"
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           </div>

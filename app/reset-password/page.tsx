@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, ArrowLeft, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function ResetPasswordForm() {
   const [password, setPassword] = useState("");
@@ -11,6 +12,7 @@ function ResetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -19,11 +21,11 @@ function ResetPasswordForm() {
     setError("");
 
     if (!token) {
-      setError("Missing or invalid reset token.");
+      setError(t("auth.resetPassword.missingToken"));
       return;
     }
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("auth.resetPassword.passwordMismatch"));
       return;
     }
 
@@ -55,12 +57,12 @@ function ResetPasswordForm() {
           onClick={() => router.push("/login")}
           className="flex items-center text-slate-400 hover:text-slate-600 mb-6 text-sm transition-colors cursor-pointer"
         >
-          <ArrowLeft size={16} className="mr-1" /> Back to Login
+          <ArrowLeft size={16} className="mr-1" /> {t("common.backToLogin")}
         </button>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Reset Password</h1>
-          <p className="text-slate-500 mt-2">Choose a new password for your account</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t("auth.resetPassword.title")}</h1>
+          <p className="text-slate-500 mt-2">{t("auth.resetPassword.subtitle")}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -72,7 +74,7 @@ function ResetPasswordForm() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">New Password</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">{t("auth.resetPassword.newPasswordLabel")}</label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-slate-400" size={20} />
               <input
@@ -95,7 +97,7 @@ function ResetPasswordForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Confirm Password</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">{t("auth.resetPassword.confirmPasswordLabel")}</label>
             <input
               type={showPassword ? "text" : "password"}
               value={confirmPassword}
@@ -112,7 +114,7 @@ function ResetPasswordForm() {
             disabled={loading}
             className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 disabled:opacity-50 cursor-pointer"
           >
-            {loading ? "Resetting..." : "Reset Password"}
+            {loading ? t("auth.resetPassword.resetting") : t("auth.resetPassword.submit")}
           </button>
         </form>
       </div>

@@ -2,15 +2,17 @@
 import { useState } from "react";
 import { Download, FileSpreadsheet, FileText, FileType } from "lucide-react";
 import toast from "react-hot-toast";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function ExportMenu() {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { t } = useLanguage();
 
     const handleExport = async (format: "csv" | "xlsx" | "pdf") => {
         setOpen(false);
         setLoading(true);
-        const toastId = toast.loading(`Generating ${format.toUpperCase()}...`);
+        const toastId = toast.loading(t("common.exporting"));
 
         try {
             const res = await fetch(`/api/exports/transactions?format=${format}`, {
@@ -69,7 +71,7 @@ export default function ExportMenu() {
                 toast.dismiss(toastId);
             } else {
                 console.error("Error exporting:", error);
-                toast.error("Could not export data", { id: toastId });
+                toast.error(t("common.exportFailed"), { id: toastId });
             }
         } finally {
             setLoading(false);
@@ -83,7 +85,7 @@ export default function ExportMenu() {
                 disabled={loading}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer"
             >
-                <Download size={18} /> Export
+                <Download size={18} /> {t("common.export")}
             </button>
             {open && (
                 <div className="absolute right-0 mt-2 w-44 bg-white border border-slate-100 rounded-xl shadow-lg z-10 overflow-hidden">

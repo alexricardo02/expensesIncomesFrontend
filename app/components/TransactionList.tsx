@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface TransactionListProps {
   transactions: any[];
@@ -11,6 +12,7 @@ interface TransactionListProps {
 
 export default function TransactionList({ transactions }: { transactions: any[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const toggleRow = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -41,7 +43,7 @@ export default function TransactionList({ transactions }: { transactions: any[] 
               {/* 2. Información Central: Nombre + FECHA (Nueva mejora) */}
               <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <p className="font-semibold text-slate-800 text-[13px] text-left truncate leading-snug">
-                  {t.typeName || t.type || "Uncategorized"}
+                  {t.typeName || t.type || t("common.uncategorized")}
                 </p>
                 <p className="text-slate-400 text-[11px] text-left leading-none mt-0.5">
                   {t.date}
@@ -71,16 +73,16 @@ export default function TransactionList({ transactions }: { transactions: any[] 
               }`}>
               <div className="px-6 pt-2 grid grid-cols-2 gap-y-3 text-xs border-t border-slate-50 mt-1">
                 <div>
-                  <p className="text-slate-400 uppercase font-semibold">Date</p>
+                  <p className="text-slate-400 uppercase font-semibold">{t("common.date")}</p>
                   <p className="text-slate-700">{t.date}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 uppercase font-semibold">Full Amount</p>
+                  <p className="text-slate-400 uppercase font-semibold">{t("common.fullAmount")}</p>
                   <p className="text-slate-700 font-mono">{t.amount} {t.currency}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 uppercase font-semibold">Status</p>
-                  <p className="text-emerald-500 font-medium italic">Verified</p>
+                  <p className="text-slate-400 uppercase font-semibold">{t("common.status")}</p>
+                  <p className="text-emerald-500 font-medium italic">{t("common.verified")}</p>
                 </div>
               </div>
             </div>

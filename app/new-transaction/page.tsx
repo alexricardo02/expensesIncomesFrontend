@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, DollarSign, Calendar, Tag, FileText, Globe, ChevronDown, CreditCard } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
-import { v4 as uuidv4 } from "uuid"; 
+import { v4 as uuidv4 } from "uuid";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 
 interface Category {
@@ -20,6 +21,7 @@ export default function NewTransactionPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const idempotencyKeyRef = React.useRef(uuidv4());
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -56,16 +58,16 @@ export default function NewTransactionPage() {
     e.preventDefault();
 
     if (!formData.categoryId || formData.categoryId === "") {
-      toast.error("Please select a valid category");
+      toast.error(t("transactions.table.selectCategory"));
       return;
     }
 
     if (isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
-      toast.error("Please enter a valid amount greater than 0");
+      toast.error(t("common.amount"));
       return;
     }
 
-    const loadingToast = toast.loading("Creating transaction...");
+    const loadingToast = toast.loading(t("common.loading"));
 
     const token = Cookies.get("auth_token");
     const profileStr = Cookies.get("user_profile");
@@ -98,7 +100,7 @@ export default function NewTransactionPage() {
 
       if (res.ok) {
         idempotencyKeyRef.current = uuidv4();
-        toast.success("Saved successfully!", { id: loadingToast });
+        toast.success(t("transactions.table.updateSuccess"), { id: loadingToast });
         setTimeout(() => {
           router.refresh();
           router.push("/");
@@ -107,7 +109,7 @@ export default function NewTransactionPage() {
         const errorBody = await res.json();
         console.error("DETALLE DEL ERROR DESDE SPRING:", errorBody);
 
-        const errorMessage = errorBody.message || "Check the fields and try again";
+        const errorMessage = errorBody.message || t("common.error");
         toast.error(`Error: ${errorMessage}`, { id: loadingToast });
 
         if (errorBody.errors) {
@@ -116,7 +118,7 @@ export default function NewTransactionPage() {
 
       }
     } catch (error) {
-      toast.error("Backend is offline.", { id: loadingToast });
+      toast.error(t("common.backendOffline"), { id: loadingToast });
     }
   };
 
@@ -136,16 +138,16 @@ export default function NewTransactionPage() {
             size={20}
             className="mr-2 group-hover:-translate-x-1 transition-transform cursor-pointer"
           />
-          Back to Dashboard
+          {t("common.backToDashboard")}
         </button>
 
         <div className="bg-white rounded-3xl shadow-xl border border-slate-200/60 overflow-hidden">
           <div className="p-8 border-b border-slate-100 bg-white">
             <h1 className="text-2xl font-bold text-slate-900">
-              New Transaction
+              {t("common.newTransaction")}
             </h1>
             <p className="text-slate-500 mt-1">
-              Fill in the details for your {type}.
+              {t("transactions.form.subtitle", { type: t(`common.${type}`) })}
             </p>
           </div>
 
@@ -174,7 +176,7 @@ export default function NewTransactionPage() {
               {/* AMOUNT */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                  <DollarSign size={16} className="text-indigo-500" /> Amount
+                  <DollarSign size={16} className="text-indigo-500" /> {t("common.amount")}
                 </label>
                 <input
                   required
@@ -192,7 +194,7 @@ export default function NewTransactionPage() {
               {/* CURRENCY */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                  <Globe size={16} className="text-indigo-500" /> Currency
+                  <Globe size={16} className="text-indigo-500" /> {t("transactions.table.currency")}
                 </label>
                 <div className="relative">
                   <select
@@ -219,7 +221,7 @@ export default function NewTransactionPage() {
             {/* PAYMENT METHOD */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                <CreditCard size={16} className="text-indigo-500" /> Payment Method
+                <CreditCard size={16} className="text-indigo-500" /> {t("transactions.table.paymentMethod")}
               </label>
               <div className="relative">
                 <select
@@ -242,7 +244,7 @@ export default function NewTransactionPage() {
               {/* CATEGORY DROPDOWN */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                  <Tag size={16} className="text-indigo-500" /> Category
+                  <Tag size={16} className="text-indigo-500" /> {t("common.category")}
                 </label>
                 <div className="relative">
                   <select
@@ -255,7 +257,7 @@ export default function NewTransactionPage() {
                   >
                     {/* Sustituir las opciones estáticas por este bloque dinámico */}
                     <option value="" disabled>
-                      {isLoadingCategories ? "Loading..." : "Select a category"}
+                      {isLoadingCategories ? t("common.loading") : t("transactions.table.selectCategory")}
                     </option>
                     {dynamicCategories.map((cat) => (
                       <option key={cat.categoryId} value={cat.categoryId.toString()}>
@@ -274,7 +276,7 @@ export default function NewTransactionPage() {
               {/* DATE */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                  <Calendar size={16} className="text-indigo-500" /> Date
+                  <Calendar size={16} className="text-indigo-500" /> {t("common.date")}
                 </label>
                 <input
                   required
@@ -291,7 +293,7 @@ export default function NewTransactionPage() {
             {/* DESCRIPTION */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                <FileText size={16} className="text-indigo-500" /> Description
+                <FileText size={16} className="text-indigo-500" /> {t("common.description")}
               </label>
               <textarea
                 rows={3}
@@ -309,7 +311,7 @@ export default function NewTransactionPage() {
               className="cursor-pointer w-full flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all text-lg"
             >
               <Save size={22} />
-              Confirm Transaction
+              {t("common.save")}
             </button>
           </form>
         </div>

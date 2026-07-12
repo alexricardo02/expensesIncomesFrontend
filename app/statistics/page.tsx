@@ -2,12 +2,19 @@ import { cookies } from "next/headers";
 import StatisticsContent from "./StatisticsContent";
 import { fetchWithRetry } from "@/lib/serverFetch";
 import { redirect } from "next/navigation";
+import { getTranslation, type Locale } from "@/lib/i18n/translations";
 
 export const maxDuration = 60;
 
 // WHY: searchParams is used directly in the Page component, removing the need for a separate getStats() function.
 export default async function Page({ searchParams }: { searchParams: { [key: string]: string | undefined } }) {
   const cookieStore = await cookies();
+  const localeCookie = cookieStore.get("locale")?.value;
+  const locale = (localeCookie === "es" || localeCookie === "de" ? localeCookie : "en") as Locale;
+  const t = (path: string, params?: Record<string, string | number>) => {
+    const translated = getTranslation(path, locale, params);
+    return typeof translated === "string" ? translated : String(translated);
+  };
   const token = cookieStore.get("auth_token")?.value;
   if (!token) redirect("/login");
 
@@ -37,7 +44,7 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
     if (incRes.coldStart || expRes.coldStart || catRes.coldStart) {
       return (
         <div className="p-8 mt-10 text-center text-amber-700 bg-amber-50 max-w-2xl mx-auto rounded-xl font-medium border border-amber-200">
-          El servidor se está despertando. Recarga la página en 20 segundos.
+          {t("statistics.coldStart")}
         </div>
       );
     }

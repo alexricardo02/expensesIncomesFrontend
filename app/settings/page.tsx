@@ -6,6 +6,7 @@ import { ArrowLeft, Settings as SettingsIcon, Check, AlertTriangle } from "lucid
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 const CURRENCIES = [
   { code: "USD", label: "US Dollar" },
@@ -15,8 +16,15 @@ const CURRENCIES = [
   { code: "JPY", label: "Japanese Yen" },
 ];
 
+const LANGUAGES: { code: "en" | "es" | "de"; label: string }[] = [
+  { code: "en", label: "English" },
+  { code: "es", label: "Español" },
+  { code: "de", label: "Deutsch" },
+];
+
 export default function SettingsPage() {
   const router = useRouter();
+  const { locale, setLocale, t } = useLanguage();
   const [currentCurrency, setCurrentCurrency] = useState("USD");
   const [selected, setSelected] = useState("USD");
   const [loading, setLoading] = useState(true);
@@ -136,19 +144,15 @@ export default function SettingsPage() {
               <SettingsIcon size={20} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Settings</h1>
-              <p className="text-slate-500 text-sm">Manage how your app behaves</p>
+              <h1 className="text-xl font-bold text-slate-900">{t("settings.title")}</h1>
+              <p className="text-slate-500 text-sm">{t("settings.subtitle")}</p>
             </div>
           </div>
 
           <div className="p-6 space-y-4">
             <div>
-              <h2 className="font-semibold text-slate-800 mb-1">Primary currency</h2>
-              <p className="text-sm text-slate-500 mb-4">
-                All totals, charts and KPIs are shown in this currency. Transactions
-                created in a different currency are automatically converted using
-                live exchange rates.
-              </p>
+              <h2 className="font-semibold text-slate-800 mb-1">{t("settings.currencyTitle")}</h2>
+              <p className="text-sm text-slate-500 mb-4">{t("settings.currencyDesc")}</p>
 
               {loading ? (
                 <div className="h-12 bg-slate-100 rounded-xl animate-pulse" />
@@ -176,52 +180,62 @@ export default function SettingsPage() {
               disabled={saving || loading || selected === currentCurrency}
               className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
-              {saving ? "Saving..." : "Save changes"}
+              {saving ? t("settings.saving") : t("settings.saveChanges")}
             </button>
           </div>
 
           {/* Delete account */}
           <div>
-            <h2 className="font-semibold text-rose-700 mb-1">Delete Account</h2>
-            <p className="text-sm text-slate-500 mb-4">Permanently delete your account and all associated data.</p>
+            <h2 className="font-semibold text-rose-700 mb-1">{t("settings.deleteTitle")}</h2>
+<p className="text-sm text-slate-500 mb-4">{t("settings.deleteDesc")}</p>
             <button
               onClick={() => setShowDeleteConfirm(true)}
               className="w-full py-3 bg-rose-50 text-rose-600 font-bold rounded-xl hover:bg-rose-100 transition-colors cursor-pointer"
             >
-              Delete Account
+              {t("settings.deleteButton")}
             </button>
+          </div>
+
+          {/* Language */}
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-6">
+              <h2 className="font-semibold text-slate-800 mb-1">{t("settings.languageTitle")}</h2>
+              <p className="text-sm text-slate-500 mb-4">{t("settings.languageDesc")}</p>
+              <div className="grid grid-cols-3 gap-3">
+                {LANGUAGES.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => setLocale(l.code)}
+                    className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${locale === l.code
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                      }`}
+                  >
+                    {l.label}
+                    {locale === l.code && <Check size={16} />}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           { }
           <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-4 bg-amber-50 border-b border-amber-100 text-amber-700 text-sm font-medium flex items-center gap-2">
               <AlertTriangle size={16} />
-              The features below are under development and not yet functional.
+              {t("settings.underDev")}
             </div>
 
             <div className="p-6 space-y-6">
-              {/* Language */}
-              <div>
-                <h2 className="font-semibold text-slate-800 mb-1">Language</h2>
-                <p className="text-sm text-slate-500 mb-4">Choose the language used across the app.</p>
-                <select
-                  disabled
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-400 cursor-not-allowed"
-                >
-                  <option>English</option>
-                  <option>Spanish</option>
-                </select>
-              </div>
-
               {/* Change password */}
               <div>
-                <h2 className="font-semibold text-slate-800 mb-1">Change Password</h2>
-                <p className="text-sm text-slate-500 mb-4">Update your account password.</p>
+                <h2 className="font-semibold text-slate-800 mb-1">{t("settings.passwordTitle")}</h2>
+                <p className="text-sm text-slate-500 mb-4">{t("settings.passwordDesc")}</p>
                 <button
                   disabled
                   className="w-full py-3 bg-slate-100 text-slate-400 font-bold rounded-xl cursor-not-allowed"
                 >
-                  Change Password
+                  {t("settings.changePassword")}
                 </button>
               </div>
             </div>
@@ -246,18 +260,18 @@ export default function SettingsPage() {
               <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 text-rose-600 mb-4">
                 <AlertTriangle size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Delete your account?</h3>
-              <p className="text-slate-500">This will permanently delete your account and all your transactions and categories. This action cannot be undone.</p>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">{t("settings.deleteConfirmTitle")}</h3>
+<p className="text-slate-500">{t("settings.deleteConfirmDesc")}</p>
             </div>
             <div className="bg-slate-50 p-4 flex gap-3">
               <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer">
-                Cancel
+                {t("settings.cancel")}
               </button>
               <button
                 onClick={() => { setShowDeleteConfirm(false); setShowDeletePassword(true); }}
                 className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 transition-colors cursor-pointer"
               >
-                Continue
+                {t("settings.continueLabel")}
               </button>
             </div>
           </div>
@@ -268,8 +282,8 @@ export default function SettingsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div className="p-6 border-b border-slate-100">
-              <h3 className="text-lg font-bold text-slate-900">Confirm with your password</h3>
-              <p className="text-sm text-slate-500 mt-1">Enter your password to permanently delete your account.</p>
+              <h3 className="text-lg font-bold text-slate-900">{t("settings.deleteConfirmPasswordTitle")}</h3>
+<p className="text-sm text-slate-500 mt-1">{t("settings.deleteConfirmPasswordDesc")}</p>
             </div>
             <div className="p-6">
               <input
@@ -286,7 +300,7 @@ export default function SettingsPage() {
                 onClick={() => { setShowDeletePassword(false); setDeletePassword(""); }}
                 className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
               >
-                Cancel
+                {t("settings.cancel")}
               </button>
               <button
                 onClick={handleDeleteAccount}
@@ -294,6 +308,7 @@ export default function SettingsPage() {
                 className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {deleting ? "Deleting..." : "Delete Account"}
+                {deleting ? t("settings.deletingLabel") : t("settings.deleteAccountLabel")}
               </button>
             </div>
           </div>

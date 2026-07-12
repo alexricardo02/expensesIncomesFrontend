@@ -14,6 +14,7 @@ import { formatCurrency } from "@/lib/utils";
 import DashboardKPIs from "./components/DashboardKPIs";
 import { fetchWithRetry } from "@/lib/serverFetch";
 import { redirect } from "next/navigation";
+import { getTranslation, type Locale } from "@/lib/i18n/translations";
 export const maxDuration = 60;
 
 
@@ -94,13 +95,19 @@ export default async function Home() {
 
   const cookieStore = await cookies();
   const authToken = cookieStore.get("auth_token")?.value;
+  const localeCookie = cookieStore.get("locale")?.value;
+  const locale = (localeCookie === "es" || localeCookie === "de" ? localeCookie : "en") as Locale;
+  const translate = (path: string, params?: Record<string, string | number>) => {
+    const translated = getTranslation(path, locale, params);
+    return typeof translated === "string" ? translated : String(translated);
+  };
 
   if (!authToken) {
     redirect("/login");
   }
   
   const userProfileCookie = cookieStore.get("user_profile")?.value;
-  let usernameToShow = "Guest";
+  let usernameToShow = translate("common.guest");
 
   if (userProfileCookie) {
     try {
@@ -120,11 +127,11 @@ export default async function Home() {
         <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">
-              Financial Dashboard
+              {translate("dashboard.title")}
             </h1>
             <p className="text-slate-500 text-sm">
-                Welcome, <span className="text-blue-600">{usernameToShow}</span>!
-                Here&apos;s today&apos;s summary
+                {translate("dashboard.welcome", { name: usernameToShow })}
+                {translate("dashboard.summary")}
             </p>
           </div>
 
@@ -142,28 +149,28 @@ export default async function Home() {
                 <Link href="/categories" className="w-full md:w-auto">
                   <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
                     <Tag size={20} />
-                    Categories
+                    {translate("common.categories")}
                   </button>
                 </Link>
 
                 <Link href="/statistics" className="w-full md:w-auto">
                   <button className="flex items-center justify-center w-full gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
                     <BarChart3 size={20} />
-                    View Stats
+                    {translate("common.viewStats")}
                   </button>
               </Link>
 
               <Link href="/import" className="w-full md:w-auto">
                 <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
                   <Upload size={20} />
-                  Import
+                  {translate("common.import")}
                 </button>
               </Link>
 
               <Link href="/new-transaction" className="w-full md:w-auto">
                 <button className="flex items-center justify-center w-full gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
                   <PlusCircle size={20} />
-                  New Transaction
+                  {translate("common.newTransaction")}
                   </button>
                 </Link>
 
@@ -176,7 +183,7 @@ export default async function Home() {
 
           {isColdStart && (
             <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 mt-6 rounded-xl text-center font-medium shadow-sm">
-              El servidor se está despertando (Cold Start). Por favor, recarga la página en 20 segundos.
+              {translate("dashboard.coldStart")}
             </div>
           )}
 
@@ -185,11 +192,11 @@ export default async function Home() {
           <div className="p-6 border-b border-slate-50 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="text-slate-400" size={20} />
-              <h3 className="font-semibold text-lg">Recent Activity</h3>
+              <h3 className="font-semibold text-lg">{translate("dashboard.recentActivity")}</h3>
             </div>
             <Link href="/edit-transactions">
               <button className="text-indigo-600 text-sm font-medium hover:underline cursor-pointer">
-                View all
+                {translate("common.viewAll")}
               </button>
             </Link>
           </div>
@@ -200,7 +207,7 @@ export default async function Home() {
               <TransactionList transactions={recentTransactions} />
             ) : (
               <div className="p-10 text-center text-slate-400">
-                No transactions.
+                {translate("common.noTransactions")}
               </div>
             )}
           </div>
@@ -210,10 +217,10 @@ export default async function Home() {
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
                 <tr>
-                  <th className="px-6 py-4 font-medium">Type</th>
-                  <th className="px-6 py-4 font-medium">Category</th>
-                  <th className="px-6 py-4 font-medium">Date</th>
-                  <th className="px-6 py-4 font-medium text-right">Amount</th>
+                  <th className="px-6 py-4 font-medium">{translate("common.type")}</th>
+                  <th className="px-6 py-4 font-medium">{translate("common.category")}</th>
+                  <th className="px-6 py-4 font-medium">{translate("common.date")}</th>
+                  <th className="px-6 py-4 font-medium text-right">{translate("common.amount")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">

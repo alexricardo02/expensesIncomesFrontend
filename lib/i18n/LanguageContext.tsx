@@ -1,0 +1,62 @@
+"use client";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import Cookies from "js-cookie";
+import { Locale, getTranslation } from "./translations";
+
+const SUPPORTED: Locale[] = ["en", "es", "de"];
+const COOKIE_NAME = "locale";
+
+function detectLocale(): Locale {
+  if (typeof navigator === "undefined") return "en";
+  const langs = navigator.languages?.length ? navigator.languages : [navigator.language];
+  for (const l of langs) {
+    const code = l.slice(0, 2).toLowerCase();
+    if (SUPPORTED.includes(code as Locale)) return code as Locale;
+  }
+  return "en";
+}
+
+interface LanguageContextValue {
+  locale: Locale;
+  setLocale: (l: Locale) => void;
+  t: (path: string, params?: Record<string, string | number>) => string;
+}
+
+const LanguageContext = createContext<LanguageContextValue | null>(null);
+
+export function LanguageProvider({ children, initialLocale }: { children: React.ReactNode; initialLocale?: Locale }) {
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    if (initialLocale) return initialLocale;
+    if (typeof window === "undefined") return "en";
+
+    const saved = Cookies.get(COOKIE_NAME) as Locale | undefined;
+    return saved && SUPPORTED.includes(saved) ? saved : detectLocale();
+  });
+
+  useEffect(() => {
+    const resolvedLocale = initialLocale || locale;
+    Cookies.set(COOKIE_NAME, resolvedLocale, { expires: 365, path: "/" });
+  }, [initialLocale, locale]);
+
+  const setLocale = useCallback((l: Locale) => {
+    setLocaleState(l);
+    Cookies.set(COOKIE_NAME, l, { expires: 365, path: "/" });
+  }, []);
+
+  const t = useCallback((path: string, params?: Record<string, string | number>): string => {
+    const translated = getTranslation(path, locale, params);
+    return typeof translated === "string" ? translated : String(translated);
+  }, [locale]);
+
+  return (
+    <LanguageContext.Provider value={{ locale, setLocale, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  const ctx = useContext(LanguageContext);
+  if (!ctx) throw new Error("useLanguage must be used within LanguageProvider");
+  return ctx;
+}

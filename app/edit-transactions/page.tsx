@@ -8,6 +8,7 @@ import { cookies } from "next/headers"
 import { getUsdArsRate } from "@/lib/exchangeRate";
 import { fetchWithRetry } from "@/lib/serverFetch";
 import { redirect } from "next/navigation";
+import { getTranslation, type Locale } from "@/lib/i18n/translations";
 
 export const maxDuration = 60;
 
@@ -70,6 +71,12 @@ if (incomesRes.coldStart || expensesRes.coldStart) return { coldStart: true };
 export default async function EditTransactionsPage() {
 
   const cookieStore = await cookies();
+  const localeCookie = cookieStore.get("locale")?.value;
+  const locale = (localeCookie === "es" || localeCookie === "de" ? localeCookie : "en") as Locale;
+  const t = (path: string, params?: Record<string, string | number>) => {
+    const translated = getTranslation(path, locale, params);
+    return typeof translated === "string" ? translated : String(translated);
+  };
 
   if (!cookieStore.get("auth_token")?.value) redirect("/login");
   const result = await getTransactions();
@@ -90,7 +97,7 @@ export default async function EditTransactionsPage() {
               size={20}
               className="mr-2 group-hover:-translate-x-1 transition-transform cursor-pointer"
             />
-            Back to Dashboard
+            {t("common.backToDashboard")}
           </Link>
           <ExportMenu />
         </div>
@@ -99,7 +106,7 @@ export default async function EditTransactionsPage() {
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           {isColdStart ? (
             <div className="p-10 text-center text-amber-700 bg-amber-50 font-medium">
-              El servidor se está despertando. Recarga la página en 20 segundos.
+              {t("statistics.coldStart")}
             </div>
           ) : (
             <TransactionTable initialTransactions={transactions} />

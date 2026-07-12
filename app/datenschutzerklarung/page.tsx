@@ -1,7 +1,8 @@
+"use client";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-
-export const metadata = { title: "Datenschutzerklärung — Finance Tracker" };
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { getTranslation } from "@/lib/i18n/translations";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -13,34 +14,31 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function DatenschutzPage() {
+  const { locale, t } = useLanguage();
+  const dataList = getTranslation("legal.dataList", locale);
+  const dataItems = Array.isArray(dataList) ? dataList : [dataList];
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-2xl mx-auto space-y-6">
         <Link href="/login" className="flex items-center text-slate-500 hover:text-slate-800 text-sm">
-          <ArrowLeft size={16} className="mr-2" /> Zurück
+          <ArrowLeft size={16} className="mr-2" /> {t("common.back")}
         </Link>
 
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-8">
-          <h1 className="text-2xl font-bold">Datenschutzerklärung</h1>
+          <h1 className="text-2xl font-bold">{t("legal.privacyTitle")}</h1>
 
           <Section title="1. Verantwortlicher">
             <p>
-              Alex Ricardo Brinckmann, Isaac-Fulda-Allee 4, 55124 Mainz, Deutschland —
-              E-Mail: brinckmannalex@gmail.com
+              {t("legal.name")}, {t("legal.address")}, {t("legal.city")} — {t("legal.email")}
             </p>
           </Section>
 
           <Section title="2. Welche Daten wir verarbeiten">
             <ul className="list-disc pl-5 space-y-1">
-              <li>E-Mail-Adresse (Registrierung, Konto-Wiederherstellung)</li>
-              <li>
-                Passwort — gespeichert ausschließlich als gesalzener BCrypt-Hash,
-                niemals im Klartext
-              </li>
-              <li>
-                Finanzdaten — von dir eingetragene Einnahmen/Ausgaben, Kategorien
-                und Zahlungsmethoden
-              </li>
+              {dataItems.map((item: string) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
           </Section>
 

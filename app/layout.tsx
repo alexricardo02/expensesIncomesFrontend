@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { cookies } from "next/headers";
 import "./globals.css";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import type { Locale } from "@/lib/i18n/translations";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
@@ -22,17 +18,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const SUPPORTED_LOCALES: Locale[] = ["en", "es", "de"];
+
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get("locale")?.value as Locale | undefined;
+  const initialLocale = cookieLocale && SUPPORTED_LOCALES.includes(cookieLocale) ? cookieLocale : undefined;
+
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang={initialLocale ?? "en"}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <LanguageProvider initialLocale={initialLocale}>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
