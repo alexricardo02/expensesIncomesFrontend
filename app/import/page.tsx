@@ -3,12 +3,14 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Upload, CheckCircle2, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Upload, CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 type Row = Record<string, string>;
 type KindMode = "signed" | "separate";
 type DateFmt = "YYYY-MM-DD" | "DD/MM/YYYY" | "MM/DD/YYYY";
+type CurrencyMode = "fixed" | "column";
+type Delimiter = "auto" | "," | ";";
 
 const CURRENCIES = ["USD", "EUR", "GBP", "JPY", "ARS"];
 const PAYMENT_METHODS = ["CASH", "CREDIT_CARD", "DEBIT_CARD", "BANK_TRANSFER", "OTHER"];
@@ -39,10 +41,12 @@ export default function ImportPage() {
   const [dateFmt, setDateFmt] = useState<DateFmt>("YYYY-MM-DD");
   const [defaultCurrency, setDefaultCurrency] = useState("USD");
   const [defaultPaymentMethod, setDefaultPaymentMethod] = useState("OTHER");
+  const [delimiter, setDelimiter] = useState<Delimiter>("auto");
+  const [currencyMode, setCurrencyMode] = useState<CurrencyMode>("fixed");
 
   const [map, setMap] = useState<Record<string, string>>({
     date: "", description: "", category: "",
-    amount: "", chargeCol: "", creditCol: "",
+    amount: "", chargeCol: "", creditCol: "", currencyCol: "",
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -51,17 +55,19 @@ export default function ImportPage() {
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const forcedDelimiter = delimiter === "auto" ? undefined : delimiter;
     Papa.parse<Row>(file, {
       header: true,
       skipEmptyLines: "greedy",
       encoding: "UTF-8",
+      delimiter: forcedDelimiter,
       delimitersToGuess: [",", ";", "\t", "|"],
-      transformHeader: (h) => h.trim().replace(/^\uFEFF/, ""), 
+      transformHeader: (h) => h.trim().replace(/^\uFEFF/, ""),
       complete: (res) => {
         const fields = res.meta.fields || [];
         const data = res.data;
 
-        if (fields.length === 1 && fields[0].includes(";")) {
+        if (!forcedDelimiter && fields.length === 1 && fields[0].includes(";")) {
           Papa.parse<Row>(file, {
             header: true,
             skipEmptyLines: "greedy",
@@ -93,10 +99,18 @@ export default function ImportPage() {
     rows.forEach((r, idx) => {
       const dateRaw = map.date ? r[map.date] : "";
       const date = parseDate(dateRaw || "", dateFmt);
+      const currency = currencyMode === "column" && map.currencyCol
+        ? (r[map.currencyCol] || "").trim().toUpperCase()
+        : defaultCurrency;
       if (!date) { skippedRows.push(`Row ${idx + 1}: invalid/missing date`); return; }
 
       let kind: "income" | "expense";
       let amount: number | null;
+
+      if (currencyMode === "column" && !currency) {
+        skippedRows.push(`Row ${idx + 1}: missing currency value`);
+        return;
+      }
 
       if (kindMode === "signed") {
         amount = map.amount ? parseNumber(r[map.amount]) : null;
@@ -114,7 +128,7 @@ export default function ImportPage() {
       payload.push({
         kind,
         amount,
-        currency: defaultCurrency,
+        currency,
         date,
         categoryName: map.category ? (r[map.category] || "Uncategorized") : "Uncategorized",
         description: map.description ? r[map.description] : "",
@@ -189,11 +203,25 @@ export default function ImportPage() {
             <p className="text-slate-500 text-sm mt-1">Upload a CSV export from your bank and map its columns.</p>
           </div>
 
-          <input type="file" accept=".csv" onChange={handleFile} className="text-sm" />
+          <label className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 bg-indigo-50 text-indigo-700 border-2 border-dashed border-indigo-200 rounded-xl text-sm font-semibold cursor-pointer hover:bg-indigo-100 hover:border-indigo-300 transition-colors">
+            <Upload size={18} />
+            {rows.length > 0 ? "Change CSV file" : "Choose CSV file"}
+            <input type="file" accept=".csv" onChange={handleFile} className="hidden" />
+          </label>
 
           {headers.length > 0 && (
             <>
               <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Column separator</label>
+                  <select value={delimiter} onChange={(e) => setDelimiter(e.target.value as Delimiter)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    <option value="auto">Auto-detect</option>
+                    <option value=",">Comma (,)</option>
+                    <option value=";">Semicolon (;)</option>
+                  </select>
+                  <p className="text-[11px] text-slate-400 mt-1">Select before choosing the file.</p>
+                </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Amount format</label>
                   <select value={kindMode} onChange={(e) => setKindMode(e.target.value as KindMode)}
@@ -228,12 +256,39 @@ export default function ImportPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Currency</label>
-                  <select value={defaultCurrency} onChange={(e) => setDefaultCurrency(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
-                    {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                <div className="col-span-2">
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Currency source</label>
+                  <div className="flex p-1 bg-slate-100 rounded-xl mb-2 w-fit">
+                    <button type="button" onClick={() => setCurrencyMode("fixed")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "fixed" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500"}`}>
+                      Fixed currency
+                    </button>
+                    <button type="button" onClick={() => setCurrencyMode("column")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "column" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500"}`}>
+                      From column
+                    </button>
+                  </div>
+
+                  {currencyMode === "fixed" ? (
+                    <select value={defaultCurrency} onChange={(e) => setDefaultCurrency(e.target.value)}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                      {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <select value={map.currencyCol} onChange={(e) => setMap({ ...map, currencyCol: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                        <option value="">-- select column --</option>
+                        {headers.map((h) => <option key={h} value={h}>{h}</option>)}
+                      </select>
+                      <div className="relative group shrink-0">
+                        <AlertCircle size={18} className="text-amber-500 cursor-help" />
+                        <div className="absolute right-0 bottom-full mb-2 hidden group-hover:block w-56 bg-slate-800 text-white text-xs rounded-lg p-2 shadow-lg z-10">
+                          The selected column must contain official currency codes (e.g. USD, EUR, GBP, JPY, ARS).
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Payment method</label>
