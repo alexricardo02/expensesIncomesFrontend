@@ -4,7 +4,8 @@ import {
   History,
   BarChart3,
   Tag,
-  Settings
+  Settings,
+  Upload
 } from "lucide-react";
 import Link from "next/link";
 import TransactionList from "./components/TransactionList";
@@ -150,12 +151,19 @@ export default async function Home() {
                     <BarChart3 size={20} />
                     View Stats
                   </button>
-                </Link>
+              </Link>
 
-                <Link href="/new-transaction" className="w-full md:w-auto">
-                  <button className="flex items-center justify-center w-full gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
-                    <PlusCircle size={20} />
-                    New Transaction
+              <Link href="/import" className="w-full md:w-auto">
+                <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
+                  <Upload size={20} />
+                  Import
+                </button>
+              </Link>
+
+              <Link href="/new-transaction" className="w-full md:w-auto">
+                <button className="flex items-center justify-center w-full gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
+                  <PlusCircle size={20} />
+                  New Transaction
                   </button>
                 </Link>
 
