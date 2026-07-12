@@ -53,10 +53,33 @@ export default function ImportPage() {
     if (!file) return;
     Papa.parse<Row>(file, {
       header: true,
-      skipEmptyLines: true,
+      skipEmptyLines: "greedy",
+      encoding: "UTF-8",
+      delimitersToGuess: [",", ";", "\t", "|"],
+      transformHeader: (h) => h.trim().replace(/^\uFEFF/, ""), 
       complete: (res) => {
-        setHeaders(res.meta.fields || []);
-        setRows(res.data);
+        let fields = res.meta.fields || [];
+        let data = res.data;
+
+        if (fields.length === 1 && fields[0].includes(";")) {
+          Papa.parse<Row>(file, {
+            header: true,
+            skipEmptyLines: "greedy",
+            encoding: "UTF-8",
+            delimiter: ";",
+            transformHeader: (h) => h.trim().replace(/^\uFEFF/, ""),
+            complete: (res2) => {
+              setHeaders(res2.meta.fields || []);
+              setRows(res2.data);
+              setResult(null);
+            },
+            error: () => toast.error("Could not parse CSV file"),
+          });
+          return;
+        }
+
+        setHeaders(fields);
+        setRows(data);
         setResult(null);
       },
       error: () => toast.error("Could not parse CSV file"),
