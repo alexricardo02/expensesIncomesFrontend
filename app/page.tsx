@@ -154,19 +154,19 @@ export default async function Home() {
             </Link>
             <Link href="/edit-transactions" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
               <ArrowLeftRight size={20} />
-              Transactions
+              {translate("dashboard.transactions")}
             </Link>
             <Link href="/categories" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
               <Tag size={20} />
-              Categories
+              {translate("dashboard.categories")}
             </Link>
             <Link href="/statistics" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
               <BarChart3 size={20} />
-              Reports
+              {translate("dashboard.reports")}
             </Link>
             <Link href="/settings" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
               <Settings size={20} />
-              Settings
+              {translate("dashboard.settings")}
             </Link>
           </nav>
         </div>
