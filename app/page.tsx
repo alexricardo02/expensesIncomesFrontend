@@ -5,7 +5,14 @@ import {
   BarChart3,
   Tag,
   Settings,
-  Upload
+  Upload,
+  LayoutDashboard,
+  ArrowLeftRight,
+  CreditCard,
+  Wallet,
+  Utensils,
+  MonitorPlay,
+  Gift
 } from "lucide-react";
 import Link from "next/link";
 import TransactionList from "./components/TransactionList";
@@ -120,62 +127,88 @@ export default async function Home() {
 
   const recentTransactions = transactions.slice(0, 10);
 
+  const getCategoryIcon = (kind: string, type: string) => {
+    if (kind === "income") return <Wallet className="text-emerald-500" size={20} />;
+    const t = type.toLowerCase();
+    if (t.includes("food")) return <Utensils className="text-slate-400" size={20} />;
+    if (t.includes("subscription")) return <MonitorPlay className="text-slate-400" size={20} />;
+    if (t.includes("gift")) return <Gift className="text-slate-400" size={20} />;
+    return <CreditCard className="text-slate-400" size={20} />;
+  };
+
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* HEADER SECTION */}
-        <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">
-              {translate("dashboard.title")}
-            </h1>
-            <p className="text-slate-500 text-sm">
-                {translate("dashboard.welcome", { name: usernameToShow })}
-                {translate("dashboard.summary")}
-            </p>
+    // WHY: Cambiamos a un flex layout con 'h-screen' y 'overflow-hidden' para fijar la sidebar a la izquierda y permitir que solo el contenido principal haga scroll.
+    <div className="flex min-h-screen bg-slate-50 text-slate-900 overflow-hidden">
+      
+      {/* SIDEBAR NAVIGATION (Desktop) */}
+      <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 bg-slate-50 px-4 py-8 justify-between shrink-0 h-screen">
+        <div className="space-y-8">
+          <div className="px-4 font-black text-2xl text-slate-900 tracking-tighter">
+            Finance<span className="text-emerald-600">Tracker</span>
           </div>
 
+          <nav className="space-y-2">
+            <Link href="/" className="flex items-center gap-3 px-4 py-3 bg-slate-200/50 text-slate-900 rounded-xl font-semibold transition-colors">
+              <LayoutDashboard size={20} />
+              Dashboard
+            </Link>
+            <Link href="/edit-transactions" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
+              <ArrowLeftRight size={20} />
+              Transactions
+            </Link>
+            <Link href="/categories" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
+              <Tag size={20} />
+              Categories
+            </Link>
+            <Link href="/statistics" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
+              <BarChart3 size={20} />
+              Reports
+            </Link>
+            <Link href="/settings" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
+              <Settings size={20} />
+              Settings
+            </Link>
+          </nav>
+        </div>
+        
+        <div className="px-4">
+          <LogoutButton />
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT */}
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto h-screen">
+        <div className="max-w-6xl mx-auto space-y-8">
+          
+          {/* HEADER SECTION */}
+          <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">
+                {translate("dashboard.title")}
+              </h1>
+              <p className="text-slate-500 text-sm">
+                  {translate("dashboard.welcome", { name: usernameToShow })}
+                  {translate("dashboard.summary")}
+              </p>
+            </div>
+
+            {/* WHY: Las acciones secundarias se movieron a la Sidebar, dejando la cabecera limpia solo para la inserción de datos (Import/New). */}
             <div className="w-full md:w-auto mt-4 md:mt-0">
               <div className="flex flex-col md:flex-row gap-3 md:items-center w-full">
-
-                <LogoutButton />
-
-                <Link href="/settings" className="w-full md:w-auto">
-                  <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
-                    <Settings size={20} />
+                <Link href="/import" className="w-full md:w-auto">
+                  <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors font-semibold shadow-sm cursor-pointer">
+                    <Upload size={20} />
+                    {translate("common.import")}
                   </button>
                 </Link>
 
-                <Link href="/categories" className="w-full md:w-auto">
-                  <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
-                    <Tag size={20} />
-                    {translate("common.categories")}
+                <Link href="/new-transaction" className="w-full md:w-auto">
+                  <button className="flex items-center justify-center w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-100 cursor-pointer">
+                    <PlusCircle size={20} />
+                    {translate("common.newTransaction")}
                   </button>
                 </Link>
-
-                <Link href="/statistics" className="w-full md:w-auto">
-                  <button className="flex items-center justify-center w-full gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
-                    <BarChart3 size={20} />
-                    {translate("common.viewStats")}
-                  </button>
-              </Link>
-
-              <Link href="/import" className="w-full md:w-auto">
-                <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer">
-                  <Upload size={20} />
-                  {translate("common.import")}
-                </button>
-              </Link>
-
-              <Link href="/new-transaction" className="w-full md:w-auto">
-                <button className="flex items-center justify-center w-full gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer">
-                  <PlusCircle size={20} />
-                  {translate("common.newTransaction")}
-                  </button>
-                </Link>
-
               </div>
-
             </div>
           </header>
 
@@ -187,78 +220,78 @@ export default async function Home() {
             </div>
           )}
 
-        {/* RECENT ACTIVITY TABLE */}
-        <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <History className="text-slate-400" size={20} />
-              <h3 className="font-semibold text-lg">{translate("dashboard.recentActivity")}</h3>
-            </div>
-            <Link href="/edit-transactions">
-              <button className="text-indigo-600 text-sm font-medium hover:underline cursor-pointer">
-                {translate("common.viewAll")}
-              </button>
-            </Link>
-          </div>
-
-          {/* 1. VISTA MOBILE: Se muestra en celulares, se oculta en PC (md:hidden) */}
-          <div className="block md:hidden">
-            {recentTransactions.length > 0 ? (
-              <TransactionList transactions={recentTransactions} />
-            ) : (
-              <div className="p-10 text-center text-slate-400">
-                {translate("common.noTransactions")}
+          {/* RECENT ACTIVITY TABLE */}
+          <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-6 border-b border-slate-50 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <History className="text-slate-400" size={20} />
+                <h3 className="font-semibold text-lg">{translate("dashboard.recentActivity")}</h3>
               </div>
-            )}
-          </div>
+              <Link href="/edit-transactions">
+                <button className="text-indigo-600 text-sm font-medium hover:underline cursor-pointer">
+                  {translate("common.viewAll")}
+                </button>
+              </Link>
+            </div>
 
-          {/* 2. VISTA DESKTOP: Se oculta en celulares (hidden), se muestra en PC (md:block) */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
-                <tr>
-                  <th className="px-6 py-4 font-medium">{translate("common.type")}</th>
-                  <th className="px-6 py-4 font-medium">{translate("common.category")}</th>
-                  <th className="px-6 py-4 font-medium">{translate("common.date")}</th>
-                  <th className="px-6 py-4 font-medium text-right">{translate("common.amount")}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {recentTransactions.map((t) => (
-                  <tr
-                    key={t.displayId}
-                    className="hover:bg-slate-50/50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${t.kind === "income"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-rose-100 text-rose-700"
+            <div className="block md:hidden">
+              {recentTransactions.length > 0 ? (
+                <TransactionList transactions={recentTransactions} />
+              ) : (
+                <div className="p-10 text-center text-slate-400">
+                  {translate("common.noTransactions")}
+                </div>
+              )}
+            </div>
+
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
+                  <tr>
+                    <th className="px-6 py-4 font-medium">{translate("common.type")}</th>
+                    <th className="px-6 py-4 font-medium">{translate("common.category")}</th>
+                    <th className="px-6 py-4 font-medium">{translate("common.date")}</th>
+                    <th className="px-6 py-4 font-medium text-right">{translate("common.amount")}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {recentTransactions.map((t) => (
+                    <tr
+                      key={t.displayId}
+                      className="hover:bg-slate-50/50 transition-colors"
+                    >
+                      <td className="px-6 py-4 flex items-center gap-3">
+                        {getCategoryIcon(t.kind, t.type)}
+                        <span
+                          className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${t.kind === "income"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-rose-100 text-rose-700"
+                            }`}
+                        >
+                          {t.kind}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 font-medium text-slate-900">
+                        {t.type}
+                      </td>
+                      <td className="px-6 py-4 text-slate-500">{t.date}</td>
+                      <td
+                        className={`px-6 py-4 text-right font-semibold ${t.kind === "income"
+                            ? "text-emerald-600"
+                            : "text-rose-600"
                           }`}
                       >
-                        {t.kind}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 font-medium text-slate-900">
-                      {t.type}
-                    </td>
-                    <td className="px-6 py-4 text-slate-500">{t.date}</td>
-                    <td
-                      className={`px-6 py-4 text-right font-semibold ${t.kind === "income"
-                          ? "text-emerald-600"
-                          : "text-rose-600"
-                        }`}
-                    >
-                      {t.kind === "income" ? "+" : "-"}{" "}
-                      {formatCurrency(t.amount, t.currency, false, true)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
-    </main>
+                        {t.kind === "income" ? "+" : "-"}{" "}
+                        {formatCurrency(t.amount, t.currency, false, true)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
   );
 }
