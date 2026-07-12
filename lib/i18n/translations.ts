@@ -57,11 +57,16 @@ export const translations = {
       required: "Required",
     },
     dashboard: {
+      transactions: "Transactions",
+      categories: "Categories",
+      reports: "Reports",
+      settings: "Settings",
       title: "Financial Dashboard",
       welcome: "Welcome, {name}!",
       summary: "Here's today's summary",
       recentActivity: "Recent Activity",
-      coldStart: "The server is waking up (Cold Start). Please reload the page in 20 seconds.",
+      coldStart:
+        "The server is waking up (Cold Start). Please reload the page in 20 seconds.",
       kpis: {
         totalBalance: "Total Balance",
         income: "Income",
@@ -117,7 +122,8 @@ export const translations = {
         emailPlaceholder: "you@example.com",
         submit: "Send Reset Link",
         sending: "Sending...",
-        success: "If that email exists in our system, a reset link has been sent. Check your inbox.",
+        success:
+          "If that email exists in our system, a reset link has been sent. Check your inbox.",
       },
       resetPassword: {
         title: "Reset Password",
@@ -158,7 +164,8 @@ export const translations = {
         selectCategory: "Select a category",
         modalTitle: "Edit {type}",
         deleteTitle: "Are you sure?",
-        deleteDescription: "You are about to delete this {type}. This action cannot be undone.",
+        deleteDescription:
+          "You are about to delete this {type}. This action cannot be undone.",
         updateSuccess: "Transaction updated successfully!",
         updateError: "Could not update transaction",
         deleteSuccess: "Deleted successfully!",
@@ -223,7 +230,8 @@ export const translations = {
       },
       emptyState: "No transactions found for this period",
       noData: "No data available or error loading stats.",
-      coldStart: "The server is waking up. Please reload the page in 20 seconds.",
+      coldStart:
+        "The server is waking up. Please reload the page in 20 seconds.",
     },
     import: {
       backToDashboard: "Back to Dashboard",
@@ -260,7 +268,8 @@ export const translations = {
       importSuccess: "Imported transactions!",
       importFailed: "Import failed",
       connectionError: "Connection error",
-      currencyHint: "The selected column must contain official currency codes (e.g. USD, EUR, GBP, JPY, ARS).",
+      currencyHint:
+        "The selected column must contain official currency codes (e.g. USD, EUR, GBP, JPY, ARS).",
       selectColumn: "-- select column --",
     },
     legal: {
@@ -273,9 +282,11 @@ export const translations = {
       email: "E-Mail: brinckmannalex@gmail.com",
       responsible: "Responsible for the content",
       responsibleName: "Alex Ricardo Brinckmann (address as above)",
-      disclaimer: "This is an impersonal, non-commercial portfolio project. Finance Tracker is provided in its current state for demonstration purposes only.",
+      disclaimer:
+        "This is an impersonal, non-commercial portfolio project. Finance Tracker is provided in its current state for demonstration purposes only.",
       privacyTitle: "Datenschutzerklärung",
-      privacyIntro: "This privacy policy explains how we handle your information.",
+      privacyIntro:
+        "This privacy policy explains how we handle your information.",
       responsibleEntity: "Responsible party",
       dataProcessed: "What data we process",
       dataList: [
@@ -290,16 +301,20 @@ export const translations = {
       providerNeon: "Neon Inc. — PostgreSQL database in the cloud",
       providerUpstash: "Upstash Inc. — Redis caching service",
       legalBasis: "Legal basis and purpose",
-      legalBasisText: "Processing is carried out to fulfill the contract (Art. 6(1)(b) GDPR) in order to manage your account and track your finances.",
+      legalBasisText:
+        "Processing is carried out to fulfill the contract (Art. 6(1)(b) GDPR) in order to manage your account and track your finances.",
       rightsTitle: "Your rights (GDPR)",
       rightsText: "You have the right to:",
       rightAccess: "Access to your stored data",
       rightCorrection: "Correction of inaccurate data (profile settings)",
-      rightDeletion: "Deletion of your account and all related data — at any time from Settings → Delete account",
-      rightPortability: "Data portability — export your transactions as CSV, Excel, or PDF from Export",
+      rightDeletion:
+        "Deletion of your account and all related data — at any time from Settings → Delete account",
+      rightPortability:
+        "Data portability — export your transactions as CSV, Excel, or PDF from Export",
       rightObjection: "Objection and restriction of processing",
       retentionTitle: "Storage duration",
-      retentionText: "Your data will be stored as long as your account exists. When the account is deleted, all personal and financial data will be removed irreversibly.",
+      retentionText:
+        "Your data will be stored as long as your account exists. When the account is deleted, all personal and financial data will be removed irreversibly.",
       contactTitle: "Contact the privacy team",
       contactText: "For questions: brinckmannalex@gmail.com",
       footer: {
@@ -393,11 +408,16 @@ export const translations = {
       required: "Requerido",
     },
     dashboard: {
+      transactions: "Transacciones",
+      categories: "Categorías",
+      reports: "Reportes",
+      settings: "Configuración",
       title: "Panel financiero",
       welcome: "¡Bienvenido, {name}!",
       summary: "Aquí tienes el resumen de hoy",
       recentActivity: "Actividad reciente",
-      coldStart: "El servidor se está despertando. Por favor, recarga la página en 20 segundos.",
+      coldStart:
+        "El servidor se está despertando. Por favor, recarga la página en 20 segundos.",
       kpis: {
         totalBalance: "Saldo total",
         income: "Ingreso",
@@ -437,7 +457,8 @@ export const translations = {
         privacyPolicy: "Política de privacidad",
         submit: "Registrarse",
         creating: "Creando cuenta...",
-        policyRequired: "Debes aceptar la Política de privacidad para registrarte.",
+        policyRequired:
+          "Debes aceptar la Política de privacidad para registrarte.",
         emptyFields: "Por favor, completa todos los campos.",
         passwordRules: {
           minLength: "Al menos 8 caracteres",
@@ -448,12 +469,14 @@ export const translations = {
       },
       forgotPassword: {
         title: "Recuperar contraseña",
-        subtitle: "Ingresa tu correo y te enviaremos un enlace para restablecerla",
+        subtitle:
+          "Ingresa tu correo y te enviaremos un enlace para restablecerla",
         emailLabel: "Correo",
         emailPlaceholder: "tu@ejemplo.com",
         submit: "Enviar enlace",
         sending: "Enviando...",
-        success: "Si ese correo existe en nuestro sistema, se ha enviado un enlace de recuperación. Revisa tu bandeja de entrada.",
+        success:
+          "Si ese correo existe en nuestro sistema, se ha enviado un enlace de recuperación. Revisa tu bandeja de entrada.",
       },
       resetPassword: {
         title: "Restablecer contraseña",
@@ -494,7 +517,8 @@ export const translations = {
         selectCategory: "Selecciona una categoría",
         modalTitle: "Editar {type}",
         deleteTitle: "¿Estás seguro?",
-        deleteDescription: "Vas a eliminar esta {type}. Esta acción no se puede deshacer.",
+        deleteDescription:
+          "Vas a eliminar esta {type}. Esta acción no se puede deshacer.",
         updateSuccess: "¡Transacción actualizada correctamente!",
         updateError: "No se pudo actualizar la transacción",
         deleteSuccess: "¡Eliminado correctamente!",
@@ -558,8 +582,10 @@ export const translations = {
         amount: "Monto",
       },
       emptyState: "No hay transacciones para este período",
-      noData: "No hay datos disponibles o se produjo un error al cargar las estadísticas.",
-      coldStart: "El servidor se está despertando. Recarga la página en 20 segundos.",
+      noData:
+        "No hay datos disponibles o se produjo un error al cargar las estadísticas.",
+      coldStart:
+        "El servidor se está despertando. Recarga la página en 20 segundos.",
     },
     import: {
       backToDashboard: "Volver al panel",
@@ -592,11 +618,13 @@ export const translations = {
       imported: "importadas",
       skipped: "omitidas",
       parseError: "No se pudo procesar el archivo CSV",
-      noValidRows: "No hay filas válidas para importar. Revisa la asignación de columnas.",
+      noValidRows:
+        "No hay filas válidas para importar. Revisa la asignación de columnas.",
       importSuccess: "¡Transacciones importadas!",
       importFailed: "No se pudo importar",
       connectionError: "Error de conexión",
-      currencyHint: "La columna seleccionada debe contener códigos de moneda oficiales (p. ej. USD, EUR, GBP, JPY, ARS).",
+      currencyHint:
+        "La columna seleccionada debe contener códigos de moneda oficiales (p. ej. USD, EUR, GBP, JPY, ARS).",
       selectColumn: "-- seleccionar columna --",
     },
     legal: {
@@ -609,9 +637,11 @@ export const translations = {
       email: "Correo: brinckmannalex@gmail.com",
       responsible: "Responsable del contenido",
       responsibleName: "Alex Ricardo Brinckmann (dirección como arriba)",
-      disclaimer: "Este es un proyecto de portafolio personal y no comercial. Finance Tracker se ofrece en su estado actual únicamente con fines de demostración.",
+      disclaimer:
+        "Este es un proyecto de portafolio personal y no comercial. Finance Tracker se ofrece en su estado actual únicamente con fines de demostración.",
       privacyTitle: "Política de privacidad",
-      privacyIntro: "Esta política de privacidad explica cómo tratamos tu información.",
+      privacyIntro:
+        "Esta política de privacidad explica cómo tratamos tu información.",
       responsibleEntity: "Responsable",
       dataProcessed: "Qué datos procesamos",
       dataList: [
@@ -620,22 +650,27 @@ export const translations = {
         "Datos financieros — tus entradas de ingresos/gastos, categorías y métodos de pago",
       ],
       hostingTitle: "Alojamiento y encargados",
-      hostingIntro: "Para prestar el servicio, utilizamos los siguientes proveedores:",
+      hostingIntro:
+        "Para prestar el servicio, utilizamos los siguientes proveedores:",
       providerVercel: "Vercel Inc. — alojamiento del frontend Next.js",
       providerRender: "Render Services — alojamiento del backend Spring Boot",
       providerNeon: "Neon Inc. — base de datos PostgreSQL en la nube",
       providerUpstash: "Upstash Inc. — servicio de caché Redis",
       legalBasis: "Base jurídica y finalidad",
-      legalBasisText: "El tratamiento se realiza para cumplir el contrato (art. 6.1.b GDPR) con el fin de gestionar tu cuenta y realizar el seguimiento de tus finanzas.",
+      legalBasisText:
+        "El tratamiento se realiza para cumplir el contrato (art. 6.1.b GDPR) con el fin de gestionar tu cuenta y realizar el seguimiento de tus finanzas.",
       rightsTitle: "Tus derechos (RGPD)",
       rightsText: "Tienes derecho a:",
       rightAccess: "Acceder a tus datos almacenados",
       rightCorrection: "Corregir datos inexactos (ajustes del perfil)",
-      rightDeletion: "Eliminar tu cuenta y todos los datos relacionados — en cualquier momento desde Configuración → Eliminar cuenta",
-      rightPortability: "Portabilidad de datos — exportar tus transacciones como CSV, Excel o PDF desde Exportar",
+      rightDeletion:
+        "Eliminar tu cuenta y todos los datos relacionados — en cualquier momento desde Configuración → Eliminar cuenta",
+      rightPortability:
+        "Portabilidad de datos — exportar tus transacciones como CSV, Excel o PDF desde Exportar",
       rightObjection: "Oponerte y limitar el tratamiento",
       retentionTitle: "Plazo de conservación",
-      retentionText: "Tus datos se conservarán mientras exista tu cuenta. Cuando se elimine la cuenta, todos los datos personales y financieros se eliminarán de forma irrecuperable.",
+      retentionText:
+        "Tus datos se conservarán mientras exista tu cuenta. Cuando se elimine la cuenta, todos los datos personales y financieros se eliminarán de forma irrecuperable.",
       contactTitle: "Contacto de privacidad",
       contactText: "Para preguntas: brinckmannalex@gmail.com",
       footer: {
@@ -730,11 +765,16 @@ export const translations = {
       required: "Erforderlich",
     },
     dashboard: {
+      transactions: "Transaktionen",
+      categories: "Kategorien",
+      reports: "Berichte",
+      settings: "Einstellungen",
       title: "Finanz-Dashboard",
       welcome: "Willkommen, {name}!",
       summary: "Hier ist deine Zusammenfassung für heute",
       recentActivity: "Letzte Aktivität",
-      coldStart: "Der Server wird gerade geweckt. Bitte lade die Seite in 20 Sekunden neu.",
+      coldStart:
+        "Der Server wird gerade geweckt. Bitte lade die Seite in 20 Sekunden neu.",
       kpis: {
         totalBalance: "Gesamtsaldo",
         income: "Einnahme",
@@ -774,7 +814,8 @@ export const translations = {
         privacyPolicy: "Datenschutzerklärung",
         submit: "Registrieren",
         creating: "Konto wird erstellt...",
-        policyRequired: "Du musst die Datenschutzerklärung akzeptieren, um dich zu registrieren.",
+        policyRequired:
+          "Du musst die Datenschutzerklärung akzeptieren, um dich zu registrieren.",
         emptyFields: "Bitte fülle alle Felder aus.",
         passwordRules: {
           minLength: "Mindestens 8 Zeichen",
@@ -785,12 +826,14 @@ export const translations = {
       },
       forgotPassword: {
         title: "Passwort vergessen",
-        subtitle: "Gib deine E-Mail ein und wir senden dir einen Link zum Zurücksetzen",
+        subtitle:
+          "Gib deine E-Mail ein und wir senden dir einen Link zum Zurücksetzen",
         emailLabel: "E-Mail",
         emailPlaceholder: "du@example.com",
         submit: "Link senden",
         sending: "Wird gesendet...",
-        success: "Wenn diese E-Mail in unserem System vorhanden ist, wurde ein Link zum Zurücksetzen gesendet. Bitte prüfe deinen Posteingang.",
+        success:
+          "Wenn diese E-Mail in unserem System vorhanden ist, wurde ein Link zum Zurücksetzen gesendet. Bitte prüfe deinen Posteingang.",
       },
       resetPassword: {
         title: "Passwort zurücksetzen",
@@ -831,7 +874,8 @@ export const translations = {
         selectCategory: "Wähle eine Kategorie",
         modalTitle: "{type} bearbeiten",
         deleteTitle: "Bist du sicher?",
-        deleteDescription: "Du bist dabei, diese {type} zu löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
+        deleteDescription:
+          "Du bist dabei, diese {type} zu löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
         updateSuccess: "Transaktion erfolgreich aktualisiert!",
         updateError: "Transaktion konnte nicht aktualisiert werden",
         deleteSuccess: "Erfolgreich gelöscht!",
@@ -896,13 +940,15 @@ export const translations = {
       },
       emptyState: "Keine Transaktionen für diesen Zeitraum gefunden",
       noData: "Keine Daten verfügbar oder Fehler beim Laden der Statistiken.",
-      coldStart: "Der Server wird gerade geweckt. Bitte lade die Seite in 20 Sekunden neu.",
+      coldStart:
+        "Der Server wird gerade geweckt. Bitte lade die Seite in 20 Sekunden neu.",
     },
     import: {
       backToDashboard: "Zurück zum Dashboard",
       selectBeforeFile: "Wähle dies aus, bevor du die Datei auswählst.",
       title: "Transaktionen importieren",
-      subtitle: "Lade einen CSV-Export deiner Bank hoch und ordne die Spalten zu.",
+      subtitle:
+        "Lade einen CSV-Export deiner Bank hoch und ordne die Spalten zu.",
       changeCsvFile: "CSV-Datei ändern",
       chooseCsvFile: "CSV-Datei auswählen",
       columnSeparator: "Spaltentrenner",
@@ -929,11 +975,13 @@ export const translations = {
       imported: "importiert",
       skipped: "übersprungen",
       parseError: "CSV-Datei konnte nicht gelesen werden",
-      noValidRows: "Es gibt keine gültigen Zeilen zum Importieren. Prüfe die Spaltenzuordnung.",
+      noValidRows:
+        "Es gibt keine gültigen Zeilen zum Importieren. Prüfe die Spaltenzuordnung.",
       importSuccess: "Transaktionen importiert!",
       importFailed: "Import fehlgeschlagen",
       connectionError: "Verbindungsfehler",
-      currencyHint: "Die ausgewählte Spalte muss offizielle Währungscodes enthalten (z. B. USD, EUR, GBP, JPY, ARS).",
+      currencyHint:
+        "Die ausgewählte Spalte muss offizielle Währungscodes enthalten (z. B. USD, EUR, GBP, JPY, ARS).",
       selectColumn: "-- Spalte auswählen --",
     },
     legal: {
@@ -946,9 +994,11 @@ export const translations = {
       email: "E-Mail: brinckmannalex@gmail.com",
       responsible: "Verantwortlich für den Inhalt",
       responsibleName: "Alex Ricardo Brinckmann (Anschrift wie oben)",
-      disclaimer: "Dies ist ein persönliches, nicht-kommerzielles Portfolio-Projekt. Finance Tracker wird im vorliegenden Zustand ausschließlich zu Demonstrationszwecken bereitgestellt.",
+      disclaimer:
+        "Dies ist ein persönliches, nicht-kommerzielles Portfolio-Projekt. Finance Tracker wird im vorliegenden Zustand ausschließlich zu Demonstrationszwecken bereitgestellt.",
       privacyTitle: "Datenschutzerklärung",
-      privacyIntro: "Diese Datenschutzerklärung erklärt, wie wir deine Informationen behandeln.",
+      privacyIntro:
+        "Diese Datenschutzerklärung erklärt, wie wir deine Informationen behandeln.",
       responsibleEntity: "Verantwortlicher",
       dataProcessed: "Welche Daten wir verarbeiten",
       dataList: [
@@ -957,22 +1007,27 @@ export const translations = {
         "Finanzdaten — deine Einnahmen-/Ausgaben-Einträge, Kategorien und Zahlungsmethoden",
       ],
       hostingTitle: "Hosting und Auftragsverarbeiter",
-      hostingIntro: "Zur Bereitstellung des Dienstes nutzen wir folgende Dienstleister:",
+      hostingIntro:
+        "Zur Bereitstellung des Dienstes nutzen wir folgende Dienstleister:",
       providerVercel: "Vercel Inc. — Hosting des Next.js-Frontends",
       providerRender: "Render Services — Hosting des Spring-Boot-Backends",
       providerNeon: "Neon Inc. — PostgreSQL-Datenbank in der Cloud",
       providerUpstash: "Upstash Inc. — Redis-Caching-Dienst",
       legalBasis: "Rechtsgrundlage und Zweck",
-      legalBasisText: "Die Verarbeitung erfolgt zur Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO), um dir die Kontoverwaltung und das Tracking deiner Finanzen zu ermöglichen.",
+      legalBasisText:
+        "Die Verarbeitung erfolgt zur Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO), um dir die Kontoverwaltung und das Tracking deiner Finanzen zu ermöglichen.",
       rightsTitle: "Deine Rechte (DSGVO)",
       rightsText: "Du hast jederzeit das Recht auf:",
       rightAccess: "Auskunft über deine gespeicherten Daten",
       rightCorrection: "Berichtigung unrichtiger Daten (Profil-Einstellungen)",
-      rightDeletion: "Löschung deines Kontos und aller zugehörigen Daten — jederzeit aus Einstellungen → Konto löschen",
-      rightPortability: "Datenübertragbarkeit — Export deiner Transaktionen als CSV, Excel oder PDF über Exportieren",
+      rightDeletion:
+        "Löschung deines Kontos und aller zugehörigen Daten — jederzeit aus Einstellungen → Konto löschen",
+      rightPortability:
+        "Datenübertragbarkeit — Export deiner Transaktionen als CSV, Excel oder PDF über Exportieren",
       rightObjection: "Widerspruch und Einschränkung der Verarbeitung",
       retentionTitle: "Speicherdauer",
-      retentionText: "Deine Daten werden gespeichert, solange dein Konto besteht. Bei Löschung des Kontos werden alle personenbezogenen und finanziellen Daten unwiderruflich entfernt.",
+      retentionText:
+        "Deine Daten werden gespeichert, solange dein Konto besteht. Bei Löschung des Kontos werden alle personenbezogenen und finanziellen Daten unwiderruflich entfernt.",
       contactTitle: "Kontakt zum Datenschutz",
       contactText: "Bei Fragen: brinckmannalex@gmail.com",
       footer: {
@@ -1013,14 +1068,21 @@ export const translations = {
   },
 } as const;
 
-export function getTranslation(path: string, locale?: Locale | string, params?: Record<string, string | number>): string | string[] {
-  const safeLocale = (locale && locale in translations ? locale : "en") as Locale;
+export function getTranslation(
+  path: string,
+  locale?: Locale | string,
+  params?: Record<string, string | number>,
+): string | string[] {
+  const safeLocale = (
+    locale && locale in translations ? locale : "en"
+  ) as Locale;
   const parts = path.split(".");
   let node: any = translations[safeLocale];
   for (const p of parts) node = node?.[p];
   if (typeof node === "string") {
     return Object.entries(params || {}).reduce(
-      (acc, [key, value]) => acc.replace(new RegExp(`\\{${key}\\}`, "g"), String(value)),
+      (acc, [key, value]) =>
+        acc.replace(new RegExp(`\\{${key}\\}`, "g"), String(value)),
       node,
     );
   }
@@ -1031,7 +1093,8 @@ export function getTranslation(path: string, locale?: Locale | string, params?: 
   for (const p of parts) fallback = fallback?.[p];
   if (typeof fallback === "string") {
     return Object.entries(params || {}).reduce(
-      (acc, [key, value]) => acc.replace(new RegExp(`\\{${key}\\}`, "g"), String(value)),
+      (acc, [key, value]) =>
+        acc.replace(new RegExp(`\\{${key}\\}`, "g"), String(value)),
       fallback,
     );
   }
