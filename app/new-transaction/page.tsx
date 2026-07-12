@@ -154,20 +154,14 @@ export default function NewTransactionPage() {
           <form onSubmit={handleSubmit} className="p-8 space-y-8">
             {/* TYPE TOGGLE */}
             <div className="flex p-1.5 bg-slate-100 rounded-2xl">
-              {(["expense", "income"] as const).map((t) => (
+              {(["expense", "income"] as const).map((opt) => (
                 <button
-                  key={t}
+                  key={opt}
                   type="button"
-                  onClick={() => {
-                    setType(t);
-                    setFormData({ ...formData, categoryId: "" }); // Reseteamos al cambiar de pestaña
-                  }}
-                  className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === t
-                    ? "bg-white text-indigo-600 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
-                    }`}
+                  onClick={() => { setType(opt); setFormData({ ...formData, categoryId: "" }); }}
+                  className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === opt ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
                 >
-                  {t}
+                  {t(`common.${opt}`)}
                 </button>
               ))}
             </div>

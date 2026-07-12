@@ -142,6 +142,7 @@ export const translations = {
         expense: "Expense",
       },
       table: {
+        subtitle: "Add a new {type}",
         type: "Type",
         category: "Category",
         method: "Method",
@@ -477,6 +478,7 @@ export const translations = {
         expense: "Gasto",
       },
       table: {
+        subtitle: "Agrega un nuevo {type}",
         type: "Tipo",
         category: "Categoría",
         method: "Método",
@@ -813,6 +815,7 @@ export const translations = {
         expense: "Ausgabe",
       },
       table: {
+        subtitle: "Füge eine neue {type} hinzu",
         type: "Typ",
         category: "Kategorie",
         method: "Methode",

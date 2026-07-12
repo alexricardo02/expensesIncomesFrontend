@@ -136,12 +136,12 @@ export default function TransactionTable({
 
       const endpoint = kind === "income" ? `/api/incomes/${realId}` : `/api/expenses/${realId}`;
 
-      const response = await fetch(endpoint, { method: "PUT", credentials: "include", headers: {"Content-Type":"application/json"}, body: JSON.stringify(transactionData) });
+      const response = await fetch(endpoint, { method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(transactionData) });
 
       if (response.ok) {
         toast.success(t("transactions.table.updateSuccess"));
-        
-        const updatedTxResponse = await response.json(); 
+
+        const updatedTxResponse = await response.json();
         setTransactions(prev => prev.map(t => {
           if (t.displayId === selectedTransaction.displayId) {
             return {
@@ -292,49 +292,36 @@ export default function TransactionTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-700">
-            {filteredTransactions.map((t) => (
-              <tr
-                key={t.displayId}
-                className="hover:bg-slate-50/50 transition-colors group"
-              >
+            {filteredTransactions.map((tx) => (
+              <tr key={tx.displayId} className="hover:bg-slate-50/50 transition-colors group">
                 <td className="px-6 py-4">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${t.kind === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
-                  >
-                    {t.kind}
+                  <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${tx.kind === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
+                    {tx.kind}
                   </span>
                 </td>
                 <td className="px-6 py-4">
                   <span className="font-medium text-slate-900">
-                    {t.typeName || t.type || t("common.uncategorized")}
+                    {tx.typeName || tx.type || t("common.uncategorized")}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-slate-500 text-xs">
-                  {t.paymentMethod?.replace('_', ' ') || t("common.na")}
+                  {tx.paymentMethod?.replace('_', ' ') || t("common.na")}
                 </td>
-                <td className="px-6 py-4 text-slate-500">{t.date}</td>
-                <td
-                  className={`px-6 py-4 text-right font-semibold ${t.kind === "income" ? "text-emerald-600" : "text-rose-600"}`}
-                >
-                  {t.kind === "income" ? "+" : "-"}{" "}
-                  {(() => { 
-                    const safeAmount = t.amountPrimaryCurrency ?? t.amountPrimary ?? t.amount;
-                    const safeCurrency = t.primaryCurrency ?? t.currency ?? "USD";
-                    return formatCurrency(safeAmount, safeCurrency, false, true); 
+                <td className="px-6 py-4 text-slate-500">{tx.date}</td>
+                <td className={`px-6 py-4 text-right font-semibold ${tx.kind === "income" ? "text-emerald-600" : "text-rose-600"}`}>
+                  {tx.kind === "income" ? "+" : "-"}{" "}
+                  {(() => {
+                    const safeAmount = tx.amountPrimaryCurrency ?? tx.amountPrimary ?? tx.amount;
+                    const safeCurrency = tx.primaryCurrency ?? tx.currency ?? "USD";
+                    return formatCurrency(safeAmount, safeCurrency, false, true);
                   })()}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button
-                      onClick={() => openEditModal(t)}
-                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg cursor-pointer"
-                    >
+                    <button onClick={() => openEditModal(tx)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg cursor-pointer">
                       <Pencil size={18} />
                     </button>
-                    <button
-                      onClick={() => openDeleteModal(t)}
-                      className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer"
-                    >
+                    <button onClick={() => openDeleteModal(tx)} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer">
                       <Trash2 size={18} />
                     </button>
                   </div>
@@ -347,65 +334,42 @@ export default function TransactionTable({
 
       {/* --- VISTA MÓVIL (ACORDEÓN) --- */}
       <div className="md:hidden divide-y divide-slate-100">
-        {filteredTransactions.map((t) => {
-          const isExpanded = expandedId === t.displayId;
-          const isIncome = t.kind === "income";
-
+        {filteredTransactions.map((tx) => {
+          const isExpanded = expandedId === tx.displayId;
+          const isIncome = tx.kind === "income";
           return (
-            <div key={t.displayId} className="bg-white">
-              {/* Parte Visible */}
-              <div
-                onClick={() => toggleAccordion(t.displayId)}
-                className="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50"
-              >
+            <div key={tx.displayId} className="bg-white">
+              <div onClick={() => toggleAccordion(tx.displayId)} className="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50">
                 <div className="flex items-center gap-3">
-                  <div
-                    className={`w-2 h-2 rounded-full ${isIncome ? "bg-emerald-500" : "bg-rose-500"}`}
-                  />
+                  <div className={`w-2 h-2 rounded-full ${isIncome ? "bg-emerald-500" : "bg-rose-500"}`} />
                   <div>
-                    <p className="font-bold text-slate-900">
-                      {t.typeName || t.type}
-                    </p>
-                    <p className="text-xs text-slate-500">{t.date}</p>
+                    <p className="font-bold text-slate-900">{tx.typeName || tx.type}</p>
+                    <p className="text-xs text-slate-500">{tx.date}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span
-                    className={`font-bold ${isIncome ? "text-emerald-600" : "text-rose-600"}`}
-                  >
+                  <span className={`font-bold ${isIncome ? "text-emerald-600" : "text-rose-600"}`}>
                     {isIncome ? "+" : "-"}{" "}
-                    {(() => { 
-                      const safeAmount = t.amountPrimaryCurrency ?? t.amountPrimary ?? t.amount;
-                      const safeCurrency = t.primaryCurrency ?? t.currency ?? "USD";
-                      return formatCurrency(safeAmount, safeCurrency, false, true); 
+                    {(() => {
+                      const safeAmount = tx.amountPrimaryCurrency ?? tx.amountPrimary ?? tx.amount;
+                      const safeCurrency = tx.primaryCurrency ?? tx.currency ?? "USD";
+                      return formatCurrency(safeAmount, safeCurrency, false, true);
                     })()}
                   </span>
-                  {isExpanded ? (
-                    <ChevronUp size={20} className="text-slate-400" />
-                  ) : (
-                    <ChevronDown size={20} className="text-slate-400" />
-                  )}
+                  {isExpanded ? <ChevronUp size={20} className="text-slate-400" /> : <ChevronDown size={20} className="text-slate-400" />}
                 </div>
               </div>
-
-              {/* Parte Expandible (Acciones) */}
               {isExpanded && (
                 <div className="px-4 pb-4 pt-2 bg-slate-50/50 border-t border-slate-50 animate-in slide-in-from-top-2 duration-200">
                   <p className="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">
                     {t("transactions.table.actions")}
                   </p>
                   <div className="grid grid-cols-2 gap-3">
-                    <button
-                      onClick={() => openEditModal(t)}
-                      className="flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-indigo-600 font-bold shadow-sm active:scale-95 transition-transform"
-                    >
-                      <Pencil size={18} /> Edit
+                    <button onClick={() => openEditModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-indigo-600 font-bold shadow-sm active:scale-95 transition-transform">
+                      <Pencil size={18} /> {t("transactions.table.edit")}
                     </button>
-                    <button
-                      onClick={() => openDeleteModal(t)}
-                      className="flex items-center justify-center gap-2 py-3 bg-white border border-rose-100 rounded-xl text-rose-600 font-bold shadow-sm active:scale-95 transition-transform"
-                    >
-                      <Trash2 size={18} /> Delete
+                    <button onClick={() => openDeleteModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white border border-rose-100 rounded-xl text-rose-600 font-bold shadow-sm active:scale-95 transition-transform">
+                      <Trash2 size={18} /> {t("transactions.table.delete")}
                     </button>
                   </div>
                 </div>
