@@ -58,8 +58,8 @@ export default function ImportPage() {
       delimitersToGuess: [",", ";", "\t", "|"],
       transformHeader: (h) => h.trim().replace(/^\uFEFF/, ""), 
       complete: (res) => {
-        let fields = res.meta.fields || [];
-        let data = res.data;
+        const fields = res.meta.fields || [];
+        const data = res.data;
 
         if (fields.length === 1 && fields[0].includes(";")) {
           Papa.parse<Row>(file, {
