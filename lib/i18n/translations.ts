@@ -63,7 +63,7 @@ export const translations = {
       settings: "Settings",
       title: "Financial Dashboard",
       welcome: "Welcome, {name}!",
-      summary: "Here's today's summary",
+      summary: " Here's today's summary",
       recentActivity: "Recent Activity",
       coldStart:
         "The server is waking up (Cold Start). Please reload the page in 20 seconds.",
@@ -414,7 +414,7 @@ export const translations = {
       settings: "Configuración",
       title: "Panel financiero",
       welcome: "¡Bienvenido, {name}!",
-      summary: "Aquí tienes el resumen de hoy",
+      summary: " Aquí tienes el resumen de hoy",
       recentActivity: "Actividad reciente",
       coldStart:
         "El servidor se está despertando. Por favor, recarga la página en 20 segundos.",
@@ -771,7 +771,7 @@ export const translations = {
       settings: "Einstellungen",
       title: "Finanz-Dashboard",
       welcome: "Willkommen, {name}!",
-      summary: "Hier ist deine Zusammenfassung für heute",
+      summary: " Hier ist deine Zusammenfassung für heute",
       recentActivity: "Letzte Aktivität",
       coldStart:
         "Der Server wird gerade geweckt. Bitte lade die Seite in 20 Sekunden neu.",
