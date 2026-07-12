@@ -207,7 +207,11 @@ export default function SettingsPage() {
                 {LANGUAGES.map((l) => (
                   <button
                     key={l.code}
-                    onClick={() => setLocale(l.code)}
+                    onClick={() => {
+                      setLocale(l.code);
+                      Cookies.set("locale", l.code, { path: "/" });
+                      router.refresh();
+                    }}
                     className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${locale === l.code
                       ? "border-indigo-500 bg-indigo-50 text-indigo-700"
                       : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
@@ -263,7 +267,7 @@ export default function SettingsPage() {
                 <AlertTriangle size={32} />
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-2">{t("settings.deleteConfirmTitle")}</h3>
-<p className="text-slate-500">{t("settings.deleteConfirmDesc")}</p>
+              <p className="text-slate-500">{t("settings.deleteConfirmDesc")}</p>
             </div>
             <div className="bg-slate-50 p-4 flex gap-3">
               <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer">
@@ -285,7 +289,7 @@ export default function SettingsPage() {
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div className="p-6 border-b border-slate-100">
               <h3 className="text-lg font-bold text-slate-900">{t("settings.deleteConfirmPasswordTitle")}</h3>
-<p className="text-sm text-slate-500 mt-1">{t("settings.deleteConfirmPasswordDesc")}</p>
+              <p className="text-sm text-slate-500 mt-1">{t("settings.deleteConfirmPasswordDesc")}</p>
             </div>
             <div className="p-6">
               <input
