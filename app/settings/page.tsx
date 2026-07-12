@@ -185,18 +185,20 @@ export default function SettingsPage() {
           </div>
 
           {/* Delete account */}
-          <div>
-            <h2 className="font-semibold text-rose-700 mb-1">{t("settings.deleteTitle")}</h2>
-<p className="text-sm text-slate-500 mb-4">{t("settings.deleteDesc")}</p>
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="w-full py-3 bg-rose-50 text-rose-600 font-bold rounded-xl hover:bg-rose-100 transition-colors cursor-pointer"
-            >
-              {t("settings.deleteButton")}
-            </button>
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-6">
+              <h2 className="font-semibold text-rose-700 mb-1">{t("settings.deleteTitle")}</h2>
+              <p className="text-sm text-slate-500 mb-4">{t("settings.deleteDesc")}</p>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="w-full py-3 bg-rose-50 text-rose-600 font-bold rounded-xl hover:bg-rose-100 transition-colors cursor-pointer"
+              >
+                {t("settings.deleteButton")}
+              </button>
+            </div>
           </div>
 
-          {/* Language */}
+          { }
           <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-6">
               <h2 className="font-semibold text-slate-800 mb-1">{t("settings.languageTitle")}</h2>
