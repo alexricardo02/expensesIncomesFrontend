@@ -73,6 +73,7 @@ export const translations = {
         incomes: "Incomes",
         expense: "Expense",
         expenses: "Expenses",
+        vsLastMonth: "vs. last month",
       },
     },
     auth: {
@@ -424,6 +425,7 @@ export const translations = {
         incomes: "Ingresos",
         expense: "Gasto",
         expenses: "Gastos",
+        vsLastMonth: "vs. mes anterior",
       },
     },
     auth: {
@@ -781,6 +783,7 @@ export const translations = {
         incomes: "Einnahmen",
         expense: "Ausgabe",
         expenses: "Ausgaben",
+        vsLastMonth: "vs. letzten Monat",
       },
     },
     auth: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpCircle, ArrowDownCircle, Wallet, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowUpCircle, ArrowDownCircle, Wallet} from "lucide-react";
 import BalanceChart from "./BalanceChart";
 import { formatCurrency } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -39,6 +39,10 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
     ? 0 
     : ((totalBalanceThisMonth * 100) / totalBalanceLastMonth - 100) / 100;
 
+  const expensesMonthlyPercentage = lastMonthExpenses === 0
+    ? 0
+    : ((thisMonthExpenses - lastMonthExpenses) / lastMonthExpenses) * 100;
+
   return (
     <>
       {/* SUMMARY CARDS */}
@@ -60,10 +64,9 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
               <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight truncate">
                 {formatCurrency(totalBalance, targetCurrency, true)}
               </h2>
-              <div className={`flex items-center text-xs font-bold mt-1 ${totalBalanceThisMonth >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
-                {totalBalanceThisMonth >= 0 ? <TrendingUp size={14} className="mr-1 shrink-0" /> : <TrendingDown size={14} className="mr-1 shrink-0" />}
-                <span className="truncate">{totalBalanceThisMonth >= 0 ? "+" : ""}{monthlyKPIPercentage.toFixed(2)}%</span>
-              </div>
+              <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${monthlyKPIPercentage >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+                {monthlyKPIPercentage >= 0 ? "+" : ""}{monthlyKPIPercentage.toFixed(1)}% {t("dashboard.kpis.vsLastMonth")}
+              </span>
             </div>
             <div className="shrink-0">
               <BalanceChart transactions={transactions} isPositive={totalBalanceThisMonth >= 0} />
@@ -98,6 +101,9 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
           <h2 className="text-2xl md:text-3xl font-bold text-rose-600 tracking-tight truncate">
             {formatCurrency(totalExpenses, targetCurrency, true)}
           </h2>
+          <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${expensesMonthlyPercentage <= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+            {expensesMonthlyPercentage >= 0 ? "+" : ""}{expensesMonthlyPercentage.toFixed(1)}% {t("dashboard.kpis.vsLastMonth")}
+          </span>
         </div>
       </div>
 

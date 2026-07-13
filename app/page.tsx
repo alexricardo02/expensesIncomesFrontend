@@ -139,7 +139,7 @@ export default async function Home() {
 
   return (
     // WHY: Cambiamos a un flex layout con 'h-screen' y 'overflow-hidden' para fijar la sidebar a la izquierda y permitir que solo el contenido principal haga scroll.
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden">
+    <div className="flex min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden">
 
       {/* SIDEBAR NAVIGATION (Desktop) */}
       <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4 py-8 justify-between shrink-0 h-screen">
