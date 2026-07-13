@@ -22,6 +22,7 @@ import DashboardKPIs from "./components/DashboardKPIs";
 import { fetchWithRetry } from "@/lib/serverFetch";
 import { redirect } from "next/navigation";
 import { getTranslation, type Locale } from "@/lib/i18n/translations";
+import ThemeToggle from "./components/ThemeToggle";
 export const maxDuration = 60;
 
 
@@ -33,7 +34,7 @@ async function getTransactions(): Promise<any[] | { transactions: any[]; coldSta
 
   try {
 
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
 
     const [incomesRes, expensesRes] = await Promise.all([
       fetchWithRetry(`${baseUrl}/incomes?size=100`, { headers: { Authorization: `Bearer ${token}` } }),
@@ -54,7 +55,7 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/a
         amount: Number(i.amount) || 0,
         date: i.date || "1970-01-01",
         description: i.description || "",
-        typeName: i.categoryName || "Uncategorized", 
+        typeName: i.categoryName || "Uncategorized",
         type: i.categoryName || "Uncategorized",
         currency: i.currency || "USD",
         kind: "income",
@@ -94,8 +95,8 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/a
 export default async function Home() {
   const result = await getTransactions();
 
-  const transactions = Array.isArray(result) 
-    ? result 
+  const transactions = Array.isArray(result)
+    ? result
     : (result?.transactions || []);
 
   const isColdStart = !Array.isArray(result) && (result as any)?.coldStart;
@@ -112,7 +113,7 @@ export default async function Home() {
   if (!authToken) {
     redirect("/login");
   }
-  
+
   const userProfileCookie = cookieStore.get("user_profile")?.value;
   let usernameToShow = translate("common.guest");
 
@@ -138,40 +139,41 @@ export default async function Home() {
 
   return (
     // WHY: Cambiamos a un flex layout con 'h-screen' y 'overflow-hidden' para fijar la sidebar a la izquierda y permitir que solo el contenido principal haga scroll.
-    <div className="flex min-h-screen bg-slate-50 text-slate-900 overflow-hidden">
-      
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden">
+
       {/* SIDEBAR NAVIGATION (Desktop) */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 bg-slate-50 px-4 py-8 justify-between shrink-0 h-screen">
+      <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4 py-8 justify-between shrink-0 h-screen">
         <div className="space-y-8">
-          <div className="px-4 font-black text-2xl text-slate-900 tracking-tighter">
+          <div className="px-4 font-black text-2xl text-slate-900 dark:text-white tracking-tighter">
             Finance<span className="text-emerald-600">Tracker</span>
           </div>
 
           <nav className="space-y-2">
-            <Link href="/" className="flex items-center gap-3 px-4 py-3 bg-slate-200/50 text-slate-900 rounded-xl font-semibold transition-colors">
+            <Link href="/" className="flex items-center gap-3 px-4 py-3 bg-slate-200/50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl font-semibold transition-colors">
               <LayoutDashboard size={20} />
               Dashboard
             </Link>
-            <Link href="/edit-transactions" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
+            <Link href="/edit-transactions" className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white rounded-xl font-medium transition-colors">
               <ArrowLeftRight size={20} />
               {translate("dashboard.transactions")}
             </Link>
-            <Link href="/categories" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
+            <Link href="/categories" className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white rounded-xl font-medium transition-colors">
               <Tag size={20} />
               {translate("dashboard.categories")}
             </Link>
-            <Link href="/statistics" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
+            <Link href="/statistics" className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white rounded-xl font-medium transition-colors">
               <BarChart3 size={20} />
               {translate("dashboard.reports")}
             </Link>
-            <Link href="/settings" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 hover:text-slate-900 rounded-xl font-medium transition-colors">
+            <Link href="/settings" className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white rounded-xl font-medium transition-colors">
               <Settings size={20} />
               {translate("dashboard.settings")}
             </Link>
           </nav>
         </div>
-        
-        <div className="px-4">
+
+        <div className="px-4 space-y-2">
+          <ThemeToggle />
           <LogoutButton />
         </div>
       </aside>
@@ -179,7 +181,7 @@ export default async function Home() {
       {/* MAIN CONTENT */}
       <main className="flex-1 p-4 md:p-8 overflow-y-auto h-screen">
         <div className="max-w-6xl mx-auto space-y-8">
-          
+
           {/* HEADER SECTION */}
           <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
@@ -187,8 +189,8 @@ export default async function Home() {
                 {translate("dashboard.title")}
               </h1>
               <p className="text-slate-500 text-sm">
-                  {translate("dashboard.welcome", { name: usernameToShow })}
-                  {translate("dashboard.summary")}
+                {translate("dashboard.welcome", { name: usernameToShow })}
+                {translate("dashboard.summary")}
               </p>
             </div>
 
@@ -264,8 +266,8 @@ export default async function Home() {
                         {getCategoryIcon(t.kind, t.type)}
                         <span
                           className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${t.kind === "income"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-rose-100 text-rose-700"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-rose-100 text-rose-700"
                             }`}
                         >
                           {t.kind}
@@ -277,8 +279,8 @@ export default async function Home() {
                       <td className="px-6 py-4 text-slate-500">{t.date}</td>
                       <td
                         className={`px-6 py-4 text-right font-semibold ${t.kind === "income"
-                            ? "text-emerald-600"
-                            : "text-rose-600"
+                          ? "text-emerald-600"
+                          : "text-rose-600"
                           }`}
                       >
                         {t.kind === "income" ? "+" : "-"}{" "}
