@@ -126,7 +126,7 @@ export default function NewTransactionPage() {
   const dynamicCategories = categories.filter(cat => cat.type === type);
 
   return (
-    <main className="min-h-screen bg-slate-50 p-4 md:p-8">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-8">
 
       <Toaster position="top-right" />
       <div className="max-w-2xl mx-auto">
@@ -141,9 +141,9 @@ export default function NewTransactionPage() {
           {t("common.backToDashboard")}
         </button>
 
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-200/60 overflow-hidden">
-          <div className="p-8 border-b border-slate-100 bg-white">
-            <h1 className="text-2xl font-bold text-slate-900">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200/60 dark:border-slate-800 overflow-hidden">
+          <div className="p-8 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
               {t("common.newTransaction")}
             </h1>
             <p className="text-slate-500 mt-1">
@@ -153,7 +153,7 @@ export default function NewTransactionPage() {
 
           <form onSubmit={handleSubmit} className="p-8 space-y-8">
             {/* TYPE TOGGLE */}
-            <div className="flex p-1.5 bg-slate-100 rounded-2xl">
+            <div className="flex p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl">
               {(["expense", "income"] as const).map((opt) => (
                 <button
                   key={opt}
@@ -169,14 +169,14 @@ export default function NewTransactionPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* AMOUNT */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <DollarSign size={16} className="text-indigo-500" /> {t("common.amount")}
                 </label>
                 <input
                   required
                   type="number"
                   step="0.01"
-                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-lg text-slate-900 placeholder:text-slate-400"
+                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-lg text-slate-900 placeholder:text-slate-400"
                   placeholder="0.00"
                   value={formData.amount}
                   onChange={(e) =>
@@ -187,12 +187,12 @@ export default function NewTransactionPage() {
 
               {/* CURRENCY */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Globe size={16} className="text-indigo-500" /> {t("transactions.table.currency")}
                 </label>
                 <div className="relative">
                   <select
-                    className="w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-slate-900"
+                    className="w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-slate-900"
                     value={formData.currency}
                     onChange={(e) =>
                       setFormData({ ...formData, currency: e.target.value })
@@ -214,13 +214,13 @@ export default function NewTransactionPage() {
 
             {/* PAYMENT METHOD */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <CreditCard size={16} className="text-indigo-500" /> {t("transactions.table.paymentMethod")}
               </label>
               <div className="relative">
                 <select
                   required
-                  className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                  className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
                   value={formData.paymentMethod}
                   onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
                 >
@@ -237,13 +237,13 @@ export default function NewTransactionPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* CATEGORY DROPDOWN */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Tag size={16} className="text-indigo-500" /> {t("common.category")}
                 </label>
                 <div className="relative">
                   <select
                     required
-                    className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                    className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
                     value={formData.categoryId}
                     onChange={(e) =>
                       setFormData({ ...formData, categoryId: e.target.value })
@@ -269,13 +269,13 @@ export default function NewTransactionPage() {
 
               {/* DATE */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Calendar size={16} className="text-indigo-500" /> {t("common.date")}
                 </label>
                 <input
                   required
                   type="date"
-                  className="text-slate-900 w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                  className="text-slate-900 w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
                   value={formData.date}
                   onChange={(e) =>
                     setFormData({ ...formData, date: e.target.value })
@@ -286,13 +286,13 @@ export default function NewTransactionPage() {
 
             {/* DESCRIPTION */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <FileText size={16} className="text-indigo-500" /> {t("common.description")}
               </label>
               <textarea
                 rows={3}
                 placeholder="Add a note..."
-                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400"
+                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })

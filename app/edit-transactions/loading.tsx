@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <main className="min-h-screen bg-slate-50 p-4 md:p-8 animate-pulse">
+    <main className="min-h-screen bg-slate-50 p-4 md:p-8 animate-pulse dark:bg-slate-950">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="h-5 w-36 bg-slate-200 rounded-lg" />
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">

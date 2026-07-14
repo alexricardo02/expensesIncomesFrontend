@@ -83,19 +83,19 @@ export default function ExportMenu() {
             <button
                 onClick={() => setOpen(!open)}
                 disabled={loading}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-semibold shadow-sm cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 dark:text-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-400 transition-colors font-semibold shadow-sm cursor-pointer"
             >
                 <Download size={18} /> {t("common.export")}
             </button>
             {open && (
-                <div className="absolute right-0 mt-2 w-44 bg-white border border-slate-100 rounded-xl shadow-lg z-10 overflow-hidden">
-                    <button onClick={() => handleExport("csv")} className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-slate-50 text-slate-700 cursor-pointer">
+                <div className="absolute right-0 mt-2 w-44 bg-white border border-slate-100 rounded-xl shadow-lg z-10 overflow-hidden dark:bg-slate-900 dark:border-slate-800">
+                    <button onClick={() => handleExport("csv")} className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-slate-50 text-slate-700 cursor-pointer dark:hover:bg-slate-800 dark:text-slate-300">
                         <FileText size={16} /> CSV
                     </button>
-                    <button onClick={() => handleExport("xlsx")} className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-slate-50 text-slate-700 cursor-pointer">
+                    <button onClick={() => handleExport("xlsx")} className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-slate-50 text-slate-700 cursor-pointer dark:hover:bg-slate-800 dark:text-slate-300">
                         <FileSpreadsheet size={16} /> Excel
                     </button>
-                    <button onClick={() => handleExport("pdf")} className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-slate-50 text-slate-700 cursor-pointer">
+                    <button onClick={() => handleExport("pdf")} className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-slate-50 text-slate-700 cursor-pointer dark:hover:bg-slate-800 dark:text-slate-300">
                         <FileType size={16} /> PDF
                     </button>
                 </div>

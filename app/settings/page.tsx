@@ -127,8 +127,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
-      <Toaster position="top-right" />
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 md:p-8">      <Toaster position="top-right" />
       <div className="max-w-2xl mx-auto space-y-6">
         <button
           onClick={() => router.push("/")}
@@ -138,13 +137,13 @@ export default function SettingsPage() {
           Back to Dashboard
         </button>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="p-6 border-b border-slate-100 flex items-center gap-3">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+          <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
             <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
               <SettingsIcon size={20} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">{t("settings.title")}</h1>
+              <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">{t("settings.title")}</h1>
               <p className="text-slate-500 text-sm">{t("settings.subtitle")}</p>
             </div>
           </div>
@@ -185,7 +184,7 @@ export default function SettingsPage() {
           </div>
 
           {/* Delete account */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
             <div className="p-6">
               <h2 className="font-semibold text-rose-700 mb-1">{t("settings.deleteTitle")}</h2>
               <p className="text-sm text-slate-500 mb-4">{t("settings.deleteDesc")}</p>
@@ -199,7 +198,7 @@ export default function SettingsPage() {
           </div>
 
           { }
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
             <div className="p-6">
               <h2 className="font-semibold text-slate-800 mb-1">{t("settings.languageTitle")}</h2>
               <p className="text-sm text-slate-500 mb-4">{t("settings.languageDesc")}</p>
@@ -226,7 +225,7 @@ export default function SettingsPage() {
           </div>
 
           { }
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
             <div className="p-4 bg-amber-50 border-b border-amber-100 text-amber-700 text-sm font-medium flex items-center gap-2">
               <AlertTriangle size={16} />
               {t("settings.underDev")}
@@ -297,7 +296,7 @@ export default function SettingsPage() {
                 value={deletePassword}
                 onChange={(e) => setDeletePassword(e.target.value)}
                 placeholder="••••••••"
-                className="text-slate-900 w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none"
+                className="text-slate-900 dark:text-slate-100 w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none"
                 autoFocus
               />
             </div>

@@ -183,7 +183,7 @@ export default function ImportPage() {
       <select
         value={map[field]}
         onChange={(e) => setMap({ ...map, [field]: e.target.value })}
-        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm"
+        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
       >
         <option value="">-- none --</option>
         {headers.map((h) => <option key={h} value={h}>{h}</option>)}
@@ -192,20 +192,20 @@ export default function ImportPage() {
   );
 
   return (
-    <main className="min-h-screen bg-slate-50 p-4 md:p-8 text-slate-900">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-8 text-slate-900 dark:text-slate-100">
       <Toaster position="top-right" />
       <div className="max-w-3xl mx-auto space-y-6">
         <button onClick={() => router.push("/")} className="flex items-center text-slate-500 hover:text-slate-800 text-sm">
           <ArrowLeft size={18} className="mr-2" /> {t("import.backToDashboard")}
         </button>
 
-        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-6">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm p-6 space-y-6">
           <div>
-            <h1 className="text-xl font-bold flex items-center gap-2"><Upload size={20} className="text-indigo-600" /> {t("import.title")}</h1>
+            <h1 className="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-50"><Upload size={20} className="text-indigo-600" /> {t("import.title")}</h1>
             <p className="text-slate-500 text-sm mt-1">{t("import.subtitle")}</p>
           </div>
 
-          <label className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 bg-indigo-50 text-indigo-700 border-2 border-dashed border-indigo-200 rounded-xl text-sm font-semibold cursor-pointer hover:bg-indigo-100 hover:border-indigo-300 transition-colors">
+          <label className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 bg-indigo-50 text-indigo-700 border-2 border-dashed border-indigo-200 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border-indigo-800 dark:hover:bg-indigo-500/20 rounded-xl text-sm font-semibold cursor-pointer hover:bg-indigo-100 hover:border-indigo-300 transition-colors">
             <Upload size={18} />
             {rows.length > 0 ? t("import.changeCsvFile") : t("import.chooseCsvFile")}
             <input type="file" accept=".csv" onChange={handleFile} className="hidden" />
@@ -217,7 +217,7 @@ export default function ImportPage() {
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.columnSeparator")}</label>
                   <select value={delimiter} onChange={(e) => setDelimiter(e.target.value as Delimiter)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                     <option value="auto">{t("import.autoDetect")}</option>
                     <option value=",">{t("import.comma")}</option>
                     <option value=";">{t("import.semicolon")}</option>
@@ -227,7 +227,7 @@ export default function ImportPage() {
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.amountFormat")}</label>
                   <select value={kindMode} onChange={(e) => setKindMode(e.target.value as KindMode)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                     <option value="signed">{t("import.signed")}</option>
                     <option value="separate">{t("import.separate")}</option>
                   </select>
@@ -235,7 +235,7 @@ export default function ImportPage() {
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.dateFormat")}</label>
                   <select value={dateFmt} onChange={(e) => setDateFmt(e.target.value as DateFmt)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                     <option value="YYYY-MM-DD">YYYY-MM-DD</option>
                     <option value="DD/MM/YYYY">DD/MM/YYYY</option>
                     <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -273,13 +273,13 @@ export default function ImportPage() {
 
                   {currencyMode === "fixed" ? (
                     <select value={defaultCurrency} onChange={(e) => setDefaultCurrency(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                       {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
                   ) : (
                     <div className="flex items-center gap-2">
                       <select value={map.currencyCol} onChange={(e) => setMap({ ...map, currencyCol: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                         <option value="">{t("import.selectColumn")}</option>
                         {headers.map((h) => <option key={h} value={h}>{h}</option>)}
                       </select>
@@ -295,7 +295,7 @@ export default function ImportPage() {
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.paymentMethod")}</label>
                   <select value={defaultPaymentMethod} onChange={(e) => setDefaultPaymentMethod(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                     {PAYMENT_METHODS.map((p) => <option key={p} value={p}>{p.replace("_", " ")}</option>)}
                   </select>
                 </div>
