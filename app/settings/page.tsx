@@ -137,7 +137,7 @@ export default function SettingsPage() {
           Back to Dashboard
         </button>
 
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
           <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
             <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
               <SettingsIcon size={20} />
@@ -184,7 +184,7 @@ export default function SettingsPage() {
           </div>
 
           {/* Delete account */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-6">
               <h2 className="font-semibold text-rose-700 mb-1">{t("settings.deleteTitle")}</h2>
               <p className="text-sm text-slate-500 mb-4">{t("settings.deleteDesc")}</p>
@@ -198,7 +198,7 @@ export default function SettingsPage() {
           </div>
 
           { }
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-6">
               <h2 className="font-semibold text-slate-800 mb-1">{t("settings.languageTitle")}</h2>
               <p className="text-sm text-slate-500 mb-4">{t("settings.languageDesc")}</p>
@@ -225,7 +225,7 @@ export default function SettingsPage() {
           </div>
 
           { }
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-4 bg-amber-50 border-b border-amber-100 text-amber-700 text-sm font-medium flex items-center gap-2">
               <AlertTriangle size={16} />
               {t("settings.underDev")}
