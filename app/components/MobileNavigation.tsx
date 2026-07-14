@@ -8,7 +8,6 @@ import {
   BarChart3,
   LayoutDashboard,
   Menu,
-  PlusCircle,
   Settings,
   Tag,
   X,
@@ -29,11 +28,9 @@ export default function MobileNavigation() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navItems: MobileNavItem[] = [
-    { href: "/", label: t("dashboard.title"), icon: <LayoutDashboard size={20} /> },
-    { href: "/edit-transactions", label: t("dashboard.transactions"), icon: <ArrowLeftRight size={20} /> },
-    { href: "/new-transaction", label: t("common.newTransaction"), icon: <PlusCircle size={20} /> },
-    { href: "/categories", label: t("dashboard.categories"), icon: <Tag size={20} /> },
-    { href: "/statistics", label: t("dashboard.reports"), icon: <BarChart3 size={20} /> },
+    { href: "/", label: t("dashboard.title"), icon: <LayoutDashboard size={22} /> },
+    { href: "/edit-transactions", label: t("dashboard.transactions"), icon: <ArrowLeftRight size={22} /> },
+    { href: "/statistics", label: t("dashboard.reports"), icon: <BarChart3 size={22} /> },
   ];
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
@@ -41,7 +38,7 @@ export default function MobileNavigation() {
   return (
     <>
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md shadow-[0_-8px_30px_rgba(15,23,42,0.08)] md:hidden">
-        <div className="grid grid-cols-6 gap-1 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
+        <div className="grid grid-cols-4 gap-2 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
           {navItems.map((item) => {
             const active = isActive(item.href);
 
@@ -50,14 +47,14 @@ export default function MobileNavigation() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className={`flex flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-semibold transition-colors ${
+                aria-label={item.label}
+                className={`flex min-h-12 min-w-12 items-center justify-center rounded-2xl transition-colors ${
                   active
                     ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
                     : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
                 }`}
               >
                 {item.icon}
-                <span className="truncate w-full text-center leading-none">{item.label}</span>
               </Link>
             );
           })}
@@ -65,11 +62,10 @@ export default function MobileNavigation() {
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
-            className="flex flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-semibold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors"
-            aria-label="Open menu"
+            className="flex min-h-12 min-w-12 items-center justify-center rounded-2xl text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors"
+            aria-label={t("common.menu")}
           >
             <Menu size={20} />
-            <span className="truncate w-full text-center leading-none">Menu</span>
           </button>
         </div>
       </nav>
@@ -101,12 +97,12 @@ export default function MobileNavigation() {
 
             <div className="grid gap-2 mb-4">
               <Link
-                href="/statistics"
+                href="/categories"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
-                <BarChart3 size={18} />
-                {t("dashboard.reports")}
+                <Tag size={18} />
+                {t("dashboard.categories")}
               </Link>
               <Link
                 href="/settings"
