@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpCircle, ArrowDownCircle, Wallet} from "lucide-react";
+import { ArrowUpCircle, ArrowDownCircle, Wallet } from "lucide-react";
 import BalanceChart from "./BalanceChart";
 import { formatCurrency } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -18,7 +18,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
 
   const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   const lastMonthStr = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth() + 1).padStart(2, "0")}`;
-  
+
 
   const incomes = transactions.filter((t) => t.kind === "income");
   const expenses = transactions.filter((t) => t.kind === "expense");
@@ -35,8 +35,8 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
   const lastMonthExpenses = sumConverted(expenses.filter((t) => t.date.startsWith(lastMonthStr)));
   const totalBalanceLastMonth = lastMonthIncomes - lastMonthExpenses;
 
-  const monthlyKPIPercentage = totalBalanceLastMonth === 0 
-    ? 0 
+  const monthlyKPIPercentage = totalBalanceLastMonth === 0
+    ? 0
     : ((totalBalanceThisMonth * 100) / totalBalanceLastMonth - 100) / 100;
 
   const expensesMonthlyPercentage = lastMonthExpenses === 0
@@ -46,15 +46,15 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
   return (
     <>
       {/* SUMMARY CARDS */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-        <div className="col-span-2 md:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="col-span-2 lg:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
               {/* WHY: Unifying icon size across all desktop KPI cards establishes visual harmony. */}
               <Wallet size={20} />
             </div>
             {/* WHY: Standardizing tracking and base size prevents readability issues across breakpoints. */}
-            <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">
               {t("dashboard.kpis.totalBalance")}
             </span>
           </div>
@@ -64,7 +64,9 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
               <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight truncate">
                 {formatCurrency(totalBalance, targetCurrency, true)}
               </h2>
-              <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${monthlyKPIPercentage >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+              <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap ${monthlyKPIPercentage >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+
+
                 {monthlyKPIPercentage >= 0 ? "+" : ""}{monthlyKPIPercentage.toFixed(1)}% {t("dashboard.kpis.vsLastMonth")}
               </span>
             </div>
@@ -74,7 +76,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
           </div>
         </div>
 
-        <div className="col-span-2 md:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+        <div className="col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
           {/* WHY: Grouping the icon and label on the left standardizes the header layout across all cards instead of mixing space-between alignments. */}
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0">
@@ -89,7 +91,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
           </h2>
         </div>
 
-        <div className="col-span-2 md:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+        <div className="col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-rose-50 text-rose-600 rounded-lg shrink-0">
               <ArrowDownCircle size={20} />
@@ -101,7 +103,9 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
           <h2 className="text-2xl md:text-3xl font-bold text-rose-600 tracking-tight truncate">
             {formatCurrency(totalExpenses, targetCurrency, true)}
           </h2>
-          <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${expensesMonthlyPercentage <= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+          <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap ${expensesMonthlyPercentage <= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+
+
             {expensesMonthlyPercentage >= 0 ? "+" : ""}{expensesMonthlyPercentage.toFixed(1)}% {t("dashboard.kpis.vsLastMonth")}
           </span>
         </div>
