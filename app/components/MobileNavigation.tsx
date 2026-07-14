@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -28,10 +28,6 @@ export default function MobileNavigation() {
   const { t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
-
   const navItems: MobileNavItem[] = [
     { href: "/", label: t("dashboard.title"), icon: <LayoutDashboard size={20} /> },
     { href: "/edit-transactions", label: t("dashboard.transactions"), icon: <ArrowLeftRight size={20} /> },
@@ -53,6 +49,7 @@ export default function MobileNavigation() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setMenuOpen(false)}
                 className={`flex flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-semibold transition-colors ${
                   active
                     ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
@@ -105,6 +102,7 @@ export default function MobileNavigation() {
             <div className="grid gap-2 mb-4">
               <Link
                 href="/statistics"
+                onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
                 <BarChart3 size={18} />
@@ -112,6 +110,7 @@ export default function MobileNavigation() {
               </Link>
               <Link
                 href="/settings"
+                onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
                 <Settings size={18} />
