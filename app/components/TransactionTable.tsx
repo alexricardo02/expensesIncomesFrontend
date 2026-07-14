@@ -201,7 +201,7 @@ export default function TransactionTable({
     <>
       <Toaster position="top-right" />
       {/* --- SECCIÓN DE FILTROS --- */}
-      <div className="bg-slate-50 p-6 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+      <div className="bg-slate-50 dark:bg-slate-950 p-6 border-b border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
         {/* Filtro Tipo */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
@@ -210,7 +210,7 @@ export default function TransactionTable({
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           >
             <option value="all">{t("transactions.filter.allTypes")}</option>
             <option value="income">{t("transactions.filter.income")}</option>
@@ -226,7 +226,7 @@ export default function TransactionTable({
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           >
             <option value="all">{t("transactions.filter.allCategories")}</option>
             {uniqueCategoryNames.map((catName) => (
@@ -246,7 +246,7 @@ export default function TransactionTable({
             type="date"
             value={filterDate}
             onChange={(e) => setFilterDate(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           />
         </div>
 
@@ -260,7 +260,7 @@ export default function TransactionTable({
             placeholder="0.00"
             value={filterMinAmount}
             onChange={(e) => setFilterMinAmount(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           />
         </div>
 
@@ -281,7 +281,7 @@ export default function TransactionTable({
       {/* --- VISTA DESKTOP (TABLA) --- */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse">
-          <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
+          <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-sm uppercase">
             <tr>
               <th className="px-6 py-4 font-medium">{t("transactions.table.type")}</th>
               <th className="px-6 py-4 font-medium">{t("transactions.table.category")}</th>
@@ -291,16 +291,16 @@ export default function TransactionTable({
               <th className="px-6 py-4 font-medium text-right">{t("transactions.table.actions")}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 text-slate-700">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
             {filteredTransactions.map((tx) => (
-              <tr key={tx.displayId} className="hover:bg-slate-50/50 transition-colors group">
+              <tr key={tx.displayId} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors group">
                 <td className="px-6 py-4">
                   <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${tx.kind === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
                     {tx.kind}
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="font-medium text-slate-900">
+                  <span className="font-medium text-slate-900 dark:text-slate-100">
                     {tx.typeName || tx.type || t("common.uncategorized")}
                   </span>
                 </td>
@@ -338,12 +338,12 @@ export default function TransactionTable({
           const isExpanded = expandedId === tx.displayId;
           const isIncome = tx.kind === "income";
           return (
-            <div key={tx.displayId} className="bg-white">
+            <div key={tx.displayId} className="bg-white dark:bg-slate-900">
               <div onClick={() => toggleAccordion(tx.displayId)} className="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50">
                 <div className="flex items-center gap-3">
                   <div className={`w-2 h-2 rounded-full ${isIncome ? "bg-emerald-500" : "bg-rose-500"}`} />
                   <div>
-                    <p className="font-bold text-slate-900">{tx.typeName || tx.type}</p>
+                    <p className="font-bold text-slate-900 dark:text-slate-100">{tx.typeName || tx.type}</p>
                     <p className="text-xs text-slate-500">{tx.date}</p>
                   </div>
                 </div>
@@ -360,15 +360,15 @@ export default function TransactionTable({
                 </div>
               </div>
               {isExpanded && (
-                <div className="px-4 pb-4 pt-2 bg-slate-50/50 border-t border-slate-50 animate-in slide-in-from-top-2 duration-200">
+                <div className="px-4 pb-4 pt-2 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-50 dark:border-slate-800 animate-in slide-in-from-top-2 duration-200">
                   <p className="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">
                     {t("transactions.table.actions")}
                   </p>
                   <div className="grid grid-cols-2 gap-3">
-                    <button onClick={() => openEditModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-indigo-600 font-bold shadow-sm active:scale-95 transition-transform">
+                    <button onClick={() => openEditModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-indigo-600 dark:text-indigo-400 font-bold shadow-sm active:scale-95 transition-transform">
                       <Pencil size={18} /> {t("transactions.table.edit")}
                     </button>
-                    <button onClick={() => openDeleteModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white border border-rose-100 rounded-xl text-rose-600 font-bold shadow-sm active:scale-95 transition-transform">
+                    <button onClick={() => openDeleteModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 border border-rose-100 dark:border-rose-900/40 rounded-xl text-rose-600 dark:text-rose-400 font-bold shadow-sm active:scale-95 transition-transform">
                       <Trash2 size={18} /> {t("transactions.table.delete")}
                     </button>
                   </div>
@@ -382,9 +382,9 @@ export default function TransactionTable({
       {/* --- MODAL DE EDICIÓN --- */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-              <h3 className="text-xl font-bold text-slate-900">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50">
                 {t("transactions.table.modalTitle", { type: selectedTransaction?.kind || t("common.type") })}
               </h3>
               <button
@@ -407,7 +407,7 @@ export default function TransactionTable({
                     type="number"
                     step="0.01"
                     defaultValue={selectedTransaction?.amount}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
@@ -420,7 +420,7 @@ export default function TransactionTable({
                   <select
                     name="currency"
                     defaultValue={selectedTransaction?.currency}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
                     {CURRENCIES.map((c) => (
                       <option key={c} value={c}>
@@ -438,7 +438,7 @@ export default function TransactionTable({
                   <select
                     name="paymentMethod"
                     defaultValue={selectedTransaction?.paymentMethod || "CASH"}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
                     <option value="CASH">Cash</option>
                     <option value="CREDIT_CARD">Credit Card</option>
@@ -457,7 +457,7 @@ export default function TransactionTable({
                 <select
                   name="categoryId" // IMPORTANTE: Ahora mapeamos a 'categoryId'
                   defaultValue={defaultCategoryId}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   required
                 >
                   <option value="" disabled>{t("transactions.table.selectCategory")}</option>
@@ -478,7 +478,7 @@ export default function TransactionTable({
                   name="date"
                   type="date"
                   defaultValue={selectedTransaction?.date}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   required
                 />
               </div>
@@ -492,7 +492,7 @@ export default function TransactionTable({
                   name="description"
                   rows={2}
                   defaultValue={selectedTransaction?.description}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                 />
               </div>
 
@@ -500,7 +500,7 @@ export default function TransactionTable({
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="flex-1 py-3 px-4 border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="flex-1 py-3 px-4 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 >
                   {t("common.cancel")}
                 </button>
@@ -519,22 +519,22 @@ export default function TransactionTable({
       {/* MODAL DE CONFIRMACIÓN DE BORRADO */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="p-8 text-center">
               <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 text-rose-600 mb-4">
                 <AlertTriangle size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 mb-2">
                 {t("transactions.table.deleteTitle")}
               </h3>
-              <p className="text-slate-500">
+              <p className="text-slate-500 dark:text-slate-400">
                 {t("transactions.table.deleteDescription", { type: selectedTransaction?.kind || t("common.type") })}
               </p>
             </div>
-            <div className="bg-slate-50 p-4 flex gap-3">
+            <div className="bg-slate-50 dark:bg-slate-800 p-4 flex gap-3">
               <button
                 onClick={closeModal}
-                className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                className="flex-1 py-3 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 Cancel
               </button>

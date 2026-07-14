@@ -19,12 +19,12 @@ export default function TransactionList({ transactions }: { transactions: any[] 
   };
 
   return (
-    <div className="divide-y divide-slate-100">
+    <div className="divide-y divide-slate-100 dark:divide-slate-800">
       {transactions.map((tx) => {
         const isExpanded = expandedId === tx.displayId;
         const isIncome = tx.kind === "income";
         return (
-          <div key={tx.displayId} className="hover:bg-slate-50/50 transition-colors">
+          <div key={tx.displayId} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
             <div className="px-4 py-4 flex items-center cursor-pointer justify-between" onClick={() => toggleRow(tx.displayId)}>
               <div className="w-14 shrink-0 mr-3">
                 <span className={`inline-block w-full text-center py-1 rounded-full text-[9px] font-bold uppercase ${isIncome ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
@@ -32,7 +32,7 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                 </span>
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-center">
-                <p className="font-semibold text-slate-800 text-[13px] text-left truncate leading-snug">
+                <p className="font-semibold text-slate-800 dark:text-slate-100 text-[13px] text-left truncate leading-snug">
                   {tx.typeName || tx.type || t("common.uncategorized")}
                 </p>
                 <p className="text-slate-400 text-[11px] text-left leading-none mt-0.5">{tx.date}</p>
@@ -49,14 +49,14 @@ export default function TransactionList({ transactions }: { transactions: any[] 
               </div>
             </div>
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? "max-height-40 opacity-100 pb-4" : "max-h-0 opacity-0"}`}>
-              <div className="px-6 pt-2 grid grid-cols-2 gap-y-3 text-xs border-t border-slate-50 mt-1">
+              <div className="px-6 pt-2 grid grid-cols-2 gap-y-3 text-xs border-t border-slate-50 dark:border-slate-800 mt-1">
                 <div>
                   <p className="text-slate-400 uppercase font-semibold">{t("common.date")}</p>
-                  <p className="text-slate-700">{tx.date}</p>
+                  <p className="text-slate-700 dark:text-slate-300">{tx.date}</p>
                 </div>
                 <div>
                   <p className="text-slate-400 uppercase font-semibold">{t("common.fullAmount")}</p>
-                  <p className="text-slate-700 font-mono">{tx.amount} {tx.currency}</p>
+                  <p className="text-slate-700 dark:text-slate-300 font-mono">{tx.amount} {tx.currency}</p>
                 </div>
                 <div>
                   <p className="text-slate-400 uppercase font-semibold">{t("common.status")}</p>
