@@ -74,7 +74,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
           </div>
         </div>
 
-        <div className="hidden md:block bg-white p-6 rounded-2xl shadow-sm border border-slate-100 min-w-0">
+        <div className="col-span-2 md:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
           {/* WHY: Grouping the icon and label on the left standardizes the header layout across all cards instead of mixing space-between alignments. */}
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0">
@@ -89,12 +89,12 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
           </h2>
         </div>
 
-        <div className="hidden md:block bg-white p-6 rounded-2xl shadow-sm border border-slate-100 min-w-0">
+        <div className="col-span-2 md:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-rose-50 text-rose-600 rounded-lg shrink-0">
               <ArrowDownCircle size={20} />
             </div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider truncate">
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider truncate">
               Expenses
             </span>
           </div>
