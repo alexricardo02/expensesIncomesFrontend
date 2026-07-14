@@ -23,6 +23,7 @@ import { fetchWithRetry } from "@/lib/serverFetch";
 import { redirect } from "next/navigation";
 import { getTranslation, type Locale } from "@/lib/i18n/translations";
 import ThemeToggle from "./components/ThemeToggle";
+import MobileNavigation from "@/app/components/MobileNavigation";
 export const maxDuration = 60;
 
 
@@ -179,7 +180,7 @@ export default async function Home() {
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto h-screen">
+      <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8 overflow-y-auto h-screen">
         <div className="max-w-6xl mx-auto space-y-8">
 
           {/* HEADER SECTION */}
@@ -290,6 +291,7 @@ export default async function Home() {
             </div>
           </section>
         </div>
+        <MobileNavigation />
       </main>
     </div>
   );

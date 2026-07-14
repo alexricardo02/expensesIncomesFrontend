@@ -107,35 +107,6 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
         </div>
       </div>
 
-      {/* MOBILE income/expense row */}
-      <div className="grid grid-cols-2 gap-4 md:hidden">
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg shrink-0">
-              <ArrowUpCircle size={16} />
-            </div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider truncate">
-              {t("dashboard.kpis.income")}
-            </span>
-          </div>
-          <h2 className="text-xl font-bold text-emerald-600 tracking-tight truncate">
-            {formatCurrency(totalIncomes, targetCurrency, true)}
-          </h2>
-        </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="p-1.5 bg-rose-50 text-rose-600 rounded-lg shrink-0">
-              <ArrowDownCircle size={16} />
-            </div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider truncate">
-              Expenses
-            </span>
-          </div>
-          <h2 className="text-xl font-bold text-rose-600 tracking-tight truncate">
-            {formatCurrency(totalExpenses, targetCurrency, true)}
-          </h2>
-        </div>
-      </div>
     </>
   );
 }
