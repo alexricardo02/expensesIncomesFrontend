@@ -206,6 +206,13 @@ export default async function Home() {
                 </Link>
 
                 <ExportMenu />
+
+                <Link href="/new-transaction" className="w-full col-span-2 md:col-span-1 md:w-auto">
+                  <button className="flex items-center justify-center w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-100 cursor-pointer">
+                    <PlusCircle size={20} />
+                    {translate("common.newTransaction")}
+                  </button>
+                </Link>
               </div>
             </div>
           </header>

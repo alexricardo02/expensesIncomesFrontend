@@ -128,7 +128,7 @@ export default function SettingsPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 md:p-8">      <Toaster position="top-right" />
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-2xl mx-auto space-y-8 md:space-y-10">
         <button
           onClick={() => router.push("/")}
           className="flex items-center text-slate-500 hover:text-slate-800 group transition-colors cursor-pointer"
@@ -148,7 +148,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-6">
             <div>
               <h2 className="font-semibold text-slate-800 mb-1">{t("settings.currencyTitle")}</h2>
               <p className="text-sm text-slate-500 mb-4">{t("settings.currencyDesc")}</p>

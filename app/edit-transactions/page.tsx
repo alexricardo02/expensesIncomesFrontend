@@ -3,7 +3,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import TransactionTable from "../components/TransactionTable";
-import ExportMenu from "../components/ExportMenu";
 import { cookies } from "next/headers"
 import { getUsdArsRate } from "@/lib/exchangeRate";
 import { fetchWithRetry } from "@/lib/serverFetch";
@@ -99,7 +98,6 @@ export default async function EditTransactionsPage() {
             />
             {t("common.backToDashboard")}
           </Link>
-          <ExportMenu />
         </div>
 
         {/* RECENT ACTIVITY TABLE */}
