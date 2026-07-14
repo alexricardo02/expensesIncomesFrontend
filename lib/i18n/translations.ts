@@ -24,6 +24,7 @@ export const translations = {
       downloaded: "Downloaded!",
       exportFailed: "Could not export data",
       import: "Import",
+      menu: "Menu",
       settings: "Settings",
       categories: "Categories",
       viewAll: "View all",
@@ -198,6 +199,7 @@ export const translations = {
       income: "Income",
     },
     statistics: {
+      filters: "Filters",
       backToDashboard: "Back to Dashboard",
       thisMonth: "This Month",
       lastMonth: "Last Month",
@@ -376,6 +378,7 @@ export const translations = {
       downloaded: "¡Descargado!",
       exportFailed: "No se pudieron exportar los datos",
       import: "Importar",
+      menu: "Menú",
       settings: "Configuración",
       categories: "Categorías",
       viewAll: "Ver todo",
@@ -552,6 +555,7 @@ export const translations = {
       income: "Ingreso",
     },
     statistics: {
+      filters: "Filtros",
       backToDashboard: "Volver al panel",
       thisMonth: "Este mes",
       lastMonth: "Mes pasado",
@@ -734,6 +738,7 @@ export const translations = {
       downloaded: "Heruntergeladen!",
       exportFailed: "Daten konnten nicht exportiert werden",
       import: "Importieren",
+      menu: "Menü",
       settings: "Einstellungen",
       categories: "Kategorien",
       viewAll: "Alle anzeigen",
@@ -910,6 +915,7 @@ export const translations = {
       income: "Einnahme",
     },
     statistics: {
+      filters: "Filter",
       backToDashboard: "Zurück zum Dashboard",
       thisMonth: "Diesen Monat",
       lastMonth: "Letzten Monat",

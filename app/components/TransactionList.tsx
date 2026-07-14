@@ -55,8 +55,8 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                   <p className="text-slate-700 dark:text-slate-300">{tx.date}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 uppercase font-semibold">{t("common.fullAmount")}</p>
-                  <p className="text-slate-700 dark:text-slate-300 font-mono">{tx.amount} {tx.currency}</p>
+                  <p className="text-slate-400 uppercase font-semibold">{t("transactions.table.paymentMethod")}</p>
+                  <p className="text-slate-700 dark:text-slate-300">{tx.paymentMethod?.replace("_", " ") || t("common.na")}</p>
                 </div>
                 <div>
                   <p className="text-slate-400 uppercase font-semibold">{t("common.status")}</p>

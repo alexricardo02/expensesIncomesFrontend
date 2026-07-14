@@ -24,6 +24,7 @@ import { redirect } from "next/navigation";
 import { getTranslation, type Locale } from "@/lib/i18n/translations";
 import ThemeToggle from "./components/ThemeToggle";
 import MobileNavigation from "@/app/components/MobileNavigation";
+import ExportMenu from "./components/ExportMenu";
 export const maxDuration = 60;
 
 
@@ -195,9 +196,8 @@ export default async function Home() {
               </p>
             </div>
 
-            {/* WHY: Las acciones secundarias se movieron a la Sidebar, dejando la cabecera limpia solo para la inserción de datos (Import/New). */}
             <div className="w-full md:w-auto mt-4 md:mt-0">
-              <div className="flex flex-col md:flex-row gap-3 md:items-center w-full">
+              <div className="grid grid-cols-2 gap-3 md:flex md:flex-row md:gap-4 md:items-center w-full">
                 <Link href="/import" className="w-full md:w-auto">
                   <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors font-semibold shadow-sm cursor-pointer">
                     <Upload size={20} />
@@ -205,12 +205,7 @@ export default async function Home() {
                   </button>
                 </Link>
 
-                <Link href="/new-transaction" className="w-full md:w-auto">
-                  <button className="flex items-center justify-center w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-100 cursor-pointer">
-                    <PlusCircle size={20} />
-                    {translate("common.newTransaction")}
-                  </button>
-                </Link>
+                <ExportMenu />
               </div>
             </div>
           </header>

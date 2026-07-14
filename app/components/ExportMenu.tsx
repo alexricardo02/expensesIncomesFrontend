@@ -79,11 +79,11 @@ export default function ExportMenu() {
     };
 
     return (
-        <div className="relative">
+        <div className="relative w-full">
             <button
                 onClick={() => setOpen(!open)}
                 disabled={loading}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 dark:text-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-400 transition-colors font-semibold shadow-sm cursor-pointer"
+                className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 dark:text-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-400 transition-colors font-semibold shadow-sm cursor-pointer"
             >
                 <Download size={18} /> {t("common.export")}
             </button>

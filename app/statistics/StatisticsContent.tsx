@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, PieChart as PieIcon, TrendingUp, Calendar, Filter, Activity } from "lucide-react";
+import { ArrowLeft, PieChart as PieIcon, TrendingUp, Calendar, Filter, Activity, ChevronDown } from "lucide-react";
 import { Pie, Doughnut, Line, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS, ArcElement, Tooltip, Legend,
@@ -18,6 +19,7 @@ export default function StatisticsContent({ data }: { data: any }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useLanguage();
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   if (!data) return <div className="p-8 text-center text-slate-500">{t("statistics.noData")}</div>;
 
@@ -84,6 +86,46 @@ export default function StatisticsContent({ data }: { data: any }) {
     }]
   };
 
+  const filtersContent = (
+    <>
+      <div className="flex flex-wrap gap-2 items-center">
+        <Filter size={16} className="text-slate-400 mr-2" />
+        <button onClick={() => handlePillClick("thisMonth")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.thisMonth")}</button>
+        <button onClick={() => handlePillClick("lastMonth")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.lastMonth")}</button>
+        <button onClick={() => handlePillClick("last3Months")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.last3Months")}</button>
+        <button onClick={() => handlePillClick("thisYear")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.thisYear")}</button>
+        <button onClick={() => updateFilter({ startDate: null, endDate: null })} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.allTime")}</button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <input type="date" value={data.currentParams.startDate || ""} onChange={(e) => updateFilter({ startDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
+        <input type="date" value={data.currentParams.endDate || ""} onChange={(e) => updateFilter({ endDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
+
+        <select value={data.currentParams.type || "ALL"} onChange={(e) => updateFilter({ type: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
+          <option value="ALL">{t("statistics.allTypes")}</option>
+          <option value="INCOME">{t("statistics.onlyIncomes")}</option>
+          <option value="EXPENSE">{t("statistics.onlyExpenses")}</option>
+        </select>
+
+        <select value={data.currentParams.categoryId || ""} onChange={(e) => updateFilter({ categoryId: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
+          <option value="">{t("statistics.allCategories")}</option>
+          {data.categories?.map((c: any) => (
+            <option key={c.categoryId} value={c.categoryId}>{c.name}</option>
+          ))}
+        </select>
+
+        <select value={data.currentParams.paymentMethod || ""} onChange={(e) => updateFilter({ paymentMethod: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
+          <option value="">{t("statistics.allMethods")}</option>
+          <option value="CASH">{t("statistics.cash")}</option>
+          <option value="CREDIT_CARD">{t("statistics.creditCard")}</option>
+          <option value="DEBIT_CARD">{t("statistics.debitCard")}</option>
+          <option value="BANK_TRANSFER">{t("statistics.bankTransfer")}</option>
+          <option value="OTHER">{t("statistics.other")}</option>
+        </select>
+      </div>
+    </>
+  );
+
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-8 text-slate-900 dark:text-slate-100">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -93,41 +135,32 @@ export default function StatisticsContent({ data }: { data: any }) {
           {t("statistics.backToDashboard")}
         </button>
 
-        {/* CONTROLES Y FILTROS */}
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-6">          <div className="flex flex-wrap gap-2 items-center">
-          <Filter size={16} className="text-slate-400 mr-2" />
-          <button onClick={() => handlePillClick("thisMonth")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.thisMonth")}</button>
-          <button onClick={() => handlePillClick("lastMonth")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.lastMonth")}</button>
-          <button onClick={() => handlePillClick("last3Months")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.last3Months")}</button>
-          <button onClick={() => handlePillClick("thisYear")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.thisYear")}</button>
-          <button onClick={() => updateFilter({ startDate: null, endDate: null })} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.allTime")}</button>
-        </div>
+        <div className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-4 md:space-y-6">
+          <div className="md:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileFiltersOpen((open) => !open)}
+              className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-700 dark:text-slate-200 font-semibold"
+              aria-expanded={mobileFiltersOpen}
+              aria-controls="statistics-mobile-filters"
+            >
+              <span className="flex items-center gap-2">
+                <Filter size={16} className="text-emerald-600" />
+                {t("statistics.filters")}
+              </span>
+              <ChevronDown size={16} className={`transition-transform duration-200 ${mobileFiltersOpen ? "rotate-180" : ""}`} />
+            </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <input type="date" value={data.currentParams.startDate || ""} onChange={(e) => updateFilter({ startDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
-            <input type="date" value={data.currentParams.endDate || ""} onChange={(e) => updateFilter({ endDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
+            <div
+              id="statistics-mobile-filters"
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${mobileFiltersOpen ? "max-h-[1000px] opacity-100 mt-4" : "max-h-0 opacity-0"}`}
+            >
+              <div className="space-y-6">{filtersContent}</div>
+            </div>
+          </div>
 
-            <select value={data.currentParams.type || "ALL"} onChange={(e) => updateFilter({ type: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
-              <option value="ALL">{t("statistics.allTypes")}</option>
-              <option value="INCOME">{t("statistics.onlyIncomes")}</option>
-              <option value="EXPENSE">{t("statistics.onlyExpenses")}</option>
-            </select>
-
-            <select value={data.currentParams.categoryId || ""} onChange={(e) => updateFilter({ categoryId: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
-              <option value="">{t("statistics.allCategories")}</option>
-              {data.categories?.map((c: any) => (
-                <option key={c.categoryId} value={c.categoryId}>{c.name}</option>
-              ))}
-            </select>
-
-            <select value={data.currentParams.paymentMethod || ""} onChange={(e) => updateFilter({ paymentMethod: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
-              <option value="">{t("statistics.allMethods")}</option>
-              <option value="CASH">{t("statistics.cash")}</option>
-              <option value="CREDIT_CARD">{t("statistics.creditCard")}</option>
-              <option value="DEBIT_CARD">{t("statistics.debitCard")}</option>
-              <option value="BANK_TRANSFER">{t("statistics.bankTransfer")}</option>
-              <option value="OTHER">{t("statistics.other")}</option>
-            </select>
+          <div className="hidden md:block space-y-6">
+            {filtersContent}
           </div>
         </div>
 
