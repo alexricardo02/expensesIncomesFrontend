@@ -26,13 +26,13 @@ async function proxy(request: NextRequest, path: string[]) {
 
   const buffer = await backendResponse.arrayBuffer();
 
-  // 2. Clonamos las cabeceras originales (para conservar el Content-Type de PDF/Excel)
+  // WHY: Preserve the backend headers so binary downloads keep their original content type.
   const responseHeaders = new Headers(backendResponse.headers);
-  // Eliminamos esta cabecera para evitar errores de codificación en navegadores
+  // WHY: Remove content-encoding so browsers do not try to decode an already buffered response.
   responseHeaders.delete("content-encoding"); 
   responseHeaders.delete("content-length");
-  
-  // 3. Creamos la respuesta pasándole los bytes crudos
+
+  // WHY: Return the raw bytes unchanged so exported files are not corrupted.
   const response = new NextResponse(buffer, { 
     status: backendResponse.status,
     headers: responseHeaders 
@@ -40,7 +40,7 @@ async function proxy(request: NextRequest, path: string[]) {
 
   const setCookieHeader = backendResponse.headers.get("set-cookie");
   if (setCookieHeader) {
-    // Requerido para propagar la cookie HttpOnly al navegador a través de Next.js Server
+    // WHY: Forward the HttpOnly cookie through the proxy response so the browser receives it.
     response.headers.set("set-cookie", setCookieHeader);
   }
   return response;
@@ -67,7 +67,7 @@ export async function DELETE(
   const token = req.cookies.get('auth_token')?.value;
   const body = await req.json().catch(() => ({})); 
 
-  // WHY: Next.js 15 requiere resolver asíncronamente los parámetros de la URL
+  // WHY: Next.js 15 resolves route params asynchronously, so we await them before building the DELETE request.
   const resolvedParams = await params;
 
   return fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${resolvedParams.path.join('/')}`, {

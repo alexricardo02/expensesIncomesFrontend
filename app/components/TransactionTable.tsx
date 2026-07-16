@@ -44,7 +44,6 @@ export default function TransactionTable({
       if (!token) return;
 
       try {
-        // Usamos la URL de incomes pero reemplazamos la ruta para apuntar a categories
         const baseUrl = process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') || 'http://localhost:8080/api/categories';
 
         const response = await fetch("/api/categories", { credentials: "include" });
@@ -111,11 +110,9 @@ export default function TransactionTable({
     const userProfile = profileStr ? JSON.parse(profileStr) : null;
     const realUserId = userProfile?.userId || 1;
 
-    // 1. Capturamos los datos directamente del formulario
     const formData = new FormData(e.currentTarget);
     const kind = selectedTransaction.kind;
 
-    // Obtenemos el ID real (quitando el prefijo 'in-' o 'ex-')
     const realId =
       selectedTransaction.incomeId ||
       selectedTransaction.expenseId ||
@@ -200,9 +197,7 @@ export default function TransactionTable({
   return (
     <>
       <Toaster position="top-right" />
-      {/* --- SECCIÓN DE FILTROS --- */}
       <div className="bg-slate-50 dark:bg-slate-950 p-6 border-b border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
-        {/* Filtro Tipo */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <Filter size={14} /> {t("transactions.filter.type")}
@@ -218,7 +213,6 @@ export default function TransactionTable({
           </select>
         </div>
 
-        {/* Filtro Categoría (Ahora Dinámico) */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <Tag size={14} /> Category
@@ -237,7 +231,6 @@ export default function TransactionTable({
           </select>
         </div>
 
-        {/* Filtro Fecha */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <Calendar size={14} /> {t("transactions.filter.date")}
@@ -250,7 +243,6 @@ export default function TransactionTable({
           />
         </div>
 
-        {/* Filtro Monto Mínimo */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
             <DollarSign size={14} /> {t("transactions.filter.minAmount")}
@@ -264,7 +256,6 @@ export default function TransactionTable({
           />
         </div>
 
-        {/* Botón Limpiar */}
         <button
           onClick={() => {
             setFilterType("all");
@@ -278,7 +269,6 @@ export default function TransactionTable({
         </button>
       </div>
 
-      {/* --- VISTA DESKTOP (TABLA) --- */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-sm uppercase">
@@ -332,7 +322,6 @@ export default function TransactionTable({
         </table>
       </div>
 
-      {/* --- VISTA MÓVIL (ACORDEÓN) --- */}
       <div className="md:hidden divide-y divide-slate-100">
         {filteredTransactions.map((tx) => {
           const isExpanded = expandedId === tx.displayId;
@@ -379,7 +368,6 @@ export default function TransactionTable({
         })}
       </div>
 
-      {/* --- MODAL DE EDICIÓN --- */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
@@ -397,7 +385,6 @@ export default function TransactionTable({
 
             <form onSubmit={handleSave} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                {/* AMOUNT */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">
                     {t("common.amount")}
@@ -412,7 +399,6 @@ export default function TransactionTable({
                   />
                 </div>
 
-                {/* CURRENCY */}
                 <div>
                   <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                     <Globe size={14} /> {t("transactions.table.currency")}
@@ -430,7 +416,6 @@ export default function TransactionTable({
                   </select>
                 </div>
 
-                {/* PAYMENT METHOD */}
                 <div>
                   <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                     <CreditCard size={14} /> {t("transactions.table.paymentMethod")}
@@ -449,13 +434,12 @@ export default function TransactionTable({
                 </div>
               </div>
 
-              {/* CATEGORY DINÁMICO */}
               <div>
                 <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                   <Tag size={14} /> {t("transactions.table.category")}
                 </label>
                 <select
-                  name="categoryId" // IMPORTANTE: Ahora mapeamos a 'categoryId'
+                  name="categoryId"
                   defaultValue={defaultCategoryId}
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   required
@@ -469,7 +453,6 @@ export default function TransactionTable({
                 </select>
               </div>
 
-              {/* DATE */}
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">
                   {t("transactions.table.date")}
@@ -483,7 +466,6 @@ export default function TransactionTable({
                 />
               </div>
 
-              {/* DESCRIPTION */}
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">
                   {t("common.description")}
@@ -516,7 +498,6 @@ export default function TransactionTable({
         </div>
       )}
 
-      {/* MODAL DE CONFIRMACIÓN DE BORRADO */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">

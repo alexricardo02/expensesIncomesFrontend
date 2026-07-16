@@ -16,7 +16,6 @@ export default function ImpressumPage() {
           <h1 className="text-2xl font-bold">{t("legal.impressumTitle")}</h1>
 
           <section className="space-y-1 text-sm text-slate-700">
-            {/* Aktualisiert von TMG auf das aktuelle DDG für maximale Compliance-Qualität im Portfolio */}
             <h2 className="font-semibold text-slate-900">{t("legal.impressumSubtitle")}</h2>
             <p>{t("legal.name")}</p>
             <p>{t("legal.address")}</p>

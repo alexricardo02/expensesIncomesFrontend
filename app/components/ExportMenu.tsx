@@ -31,7 +31,6 @@ export default function ExportMenu() {
                     pdf: "application/pdf",
                 };
 
-                // Abrimos la ventana nativa "Guardar como..."
                 const handle = await (window as any).showSaveFilePicker({
                     suggestedName: `transactions.${format}`,
                     types: [
@@ -44,14 +43,13 @@ export default function ExportMenu() {
                     ],
                 });
 
-                // Escribimos los bytes del archivo directamente en la ruta elegida por el usuario
                 const writable = await handle.createWritable();
                 await writable.write(blob);
                 await writable.close();
 
                 toast.success("Downloaded!", { id: toastId });
             }
-            // 🔄 OPCIÓN B: Fallback tradicional para navegadores sin soporte completo (Safari / Firefox)
+            // WHY: Use the anchor-download fallback for browsers that do not support the File System Access API.
             else {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
@@ -65,9 +63,8 @@ export default function ExportMenu() {
                 toast.success("Downloaded!", { id: toastId });
             }
         } catch (error: any) {
-            // 💡 Detalle de UX: Si el usuario presiona "Cancelar" en la ventana de Guardar Como,
-            // la API arroja un error de tipo 'AbortError'. Lo capturamos para que no muestre un toast de error falso.
             if (error.name === "AbortError") {
+                // WHY: Treat AbortError as user cancelation so we do not show a false failure toast.
                 toast.dismiss(toastId);
             } else {
                 console.error("Error exporting:", error);

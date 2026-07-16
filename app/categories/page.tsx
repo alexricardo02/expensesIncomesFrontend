@@ -20,7 +20,6 @@ export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useLanguage();
 
-  // Smart URL: Tries to use an environment variable; if it doesn't exist, it adapts the incomes URL
   const API_URL = "/api/categories";
 
   const fetchCategories = async () => {
@@ -64,8 +63,8 @@ export default function CategoriesPage() {
 
       if (res.ok) {
         toast.success(t("categories.createSuccess"), { id: toastId });
-        setName(""); // Clear the input
-        fetchCategories(); // Reload the list
+        setName("");
+        fetchCategories();
       } else {
         const err = await res.json();
         toast.error(err.message || t("categories.createError"), { id: toastId });
@@ -86,7 +85,7 @@ export default function CategoriesPage() {
 
       if (res.ok) {
         toast.success(t("categories.deleteSuccess"), { id: toastId });
-        fetchCategories(); // Reload the list
+        fetchCategories();
       } else {
         toast.error(t("categories.deleteError"), { id: toastId });
       }
@@ -100,7 +99,6 @@ export default function CategoriesPage() {
       <Toaster position="top-right" />
 
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header and Back Button */}
         <div className="flex items-center gap-4 mb-8">
           <Link
             href="/"
@@ -117,7 +115,6 @@ export default function CategoriesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          {/* LEFT PANEL: FORM */}
           <div className="md:col-span-1">
             <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
               <PlusCircle size={18} className="text-indigo-500" /> New
@@ -156,7 +153,6 @@ export default function CategoriesPage() {
             </div>
           </div>
 
-          {/* RIGHT PANEL: CATEGORIES LIST */}
           <div className="md:col-span-2">
             <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
               {isLoading ? (

@@ -183,7 +183,6 @@ export default function SettingsPage() {
             </button>
           </div>
 
-          {/* Delete account */}
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-6">
               <h2 className="font-semibold text-rose-700 mb-1">{t("settings.deleteTitle")}</h2>
@@ -197,7 +196,6 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          { }
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-6">
               <h2 className="font-semibold text-slate-800 mb-1">{t("settings.languageTitle")}</h2>
@@ -224,7 +222,6 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          { }
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-4 bg-amber-50 border-b border-amber-100 text-amber-700 text-sm font-medium flex items-center gap-2">
               <AlertTriangle size={16} />
@@ -232,7 +229,6 @@ export default function SettingsPage() {
             </div>
 
             <div className="p-6 space-y-6">
-              {/* Change password */}
               <div>
                 <h2 className="font-semibold text-slate-800 mb-1">{t("settings.passwordTitle")}</h2>
                 <p className="text-sm text-slate-500 mb-4">{t("settings.passwordDesc")}</p>

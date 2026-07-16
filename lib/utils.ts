@@ -1,4 +1,3 @@
-// src/lib/utils.ts
 
 export const formatCurrency = (value: number, currency: string, compact: boolean = false, useCode: boolean = false): string => {
   const locales: Record<string, string> = {

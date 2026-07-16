@@ -90,10 +90,6 @@ async function getTransactions(): Promise<any[] | { transactions: any[]; coldSta
 }
 
 
-/**
- * The Home component renders the main dashboard page, showing the user's total balance,
- * their recent income and expenses, and a list of their recent transactions.
- */
 export default async function Home() {
   const result = await getTransactions();
 
@@ -140,10 +136,9 @@ export default async function Home() {
   };
 
   return (
-    // WHY: Cambiamos a un flex layout con 'h-screen' y 'overflow-hidden' para fijar la sidebar a la izquierda y permitir que solo el contenido principal haga scroll.
+    // WHY: Use a fixed-height flex layout so the sidebar stays fixed and only the main content scrolls.
     <div className="flex min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden">
 
-      {/* SIDEBAR NAVIGATION (Desktop) */}
       <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4 py-8 justify-between shrink-0 h-screen">
         <div className="space-y-8">
           <div className="px-4 font-black text-2xl text-slate-900 dark:text-white tracking-tighter">
@@ -180,11 +175,9 @@ export default async function Home() {
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
       <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8 overflow-y-auto h-screen">
         <div className="max-w-6xl mx-auto space-y-8">
 
-          {/* HEADER SECTION */}
           <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
@@ -225,7 +218,6 @@ export default async function Home() {
             </div>
           )}
 
-          {/* RECENT ACTIVITY TABLE */}
           <section className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
             <div className="p-6 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">

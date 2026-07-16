@@ -35,7 +35,6 @@ export default function RegisterPage() {
       return;
     }
 
-    // 1. Limpiamos con seguridad (agregué email que faltaba limpiar)
     const cleanUsername = username ? username.trim().toLowerCase() : "";
     const cleanEmail = email ? email.trim().toLowerCase() : "";
     const cleanPassword = password ? password.trim() : "";
@@ -50,7 +49,6 @@ export default function RegisterPage() {
       const res = await fetch("/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // 2. ¡EL ARREGLO ESTÁ AQUÍ! 
         body: JSON.stringify({
           username: cleanUsername,
           email: cleanEmail,
@@ -59,7 +57,7 @@ export default function RegisterPage() {
       });
 
       if (!res.ok) {
-        // Capturamos el error JSON de Java si existe, si no, como texto
+        // WHY: The backend may return JSON or plain text, so we parse JSON defensively and fall back to a generic error.
         const data = await res.json().catch(() => null);
         throw new Error(data?.message || t("common.error"));
       }
@@ -154,7 +152,6 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            {/* Password requirements */}
             {password.length > 0 && (
               <ul className="mt-3 space-y-1.5">
                 {passwordRules.map((rule) => {

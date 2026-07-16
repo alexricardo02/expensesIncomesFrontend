@@ -23,7 +23,6 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    // 1. Limpiamos con seguridad
     const cleanUsername = username ? username.trim().toLowerCase() : "";
     const cleanPassword = password ? password.trim() : "";
 
@@ -36,7 +35,7 @@ export default function LoginPage() {
     try {
       const res = await fetch(`/api/users/login`, {
         method: "POST",
-        credentials: "include", // Esencial para que el navegador acepte la cookie del proxy
+        credentials: "include", // WHY: The proxy sets the auth cookie, so the request must include credentials.
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: cleanUsername, password: cleanPassword }),
       });

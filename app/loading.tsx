@@ -2,7 +2,6 @@ export default function Loading() {
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8 animate-pulse">
-        {/* Header skeleton */}
         <div className="flex items-center justify-between">
           <div>
             <div className="h-8 w-56 bg-slate-200 rounded-xl mb-2" />
@@ -15,7 +14,6 @@ export default function Loading() {
           </div>
         </div>
 
-        {/* Cards skeleton */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
@@ -25,7 +23,6 @@ export default function Loading() {
           ))}
         </div>
 
-        {/* Table skeleton */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-50">
             <div className="h-5 w-40 bg-slate-200 rounded-lg" />

@@ -12,7 +12,6 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-// Registrar módulos de Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,10 +22,9 @@ ChartJS.register(
 );
 
 export default function BalanceChart({ transactions, isPositive }: { transactions: any[], isPositive: boolean }) {
-  // 1. Procesar datos: Ordenar por fecha y calcular saldo acumulado
   const sortedData = [...transactions]
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(-10); // Tomamos los últimos 10 puntos para el gráfico
+    .slice(-10);
 
   const currentBalance = 0;
   const labels = sortedData.map((t) => t.date);
@@ -53,8 +51,8 @@ export default function BalanceChart({ transactions, isPositive }: { transaction
           return gradient;
         },
         fill: true,
-        tension: 0.4, // Curvatura de la línea
-        pointRadius: 0, // Ocultar puntos para look de sparkline
+        tension: 0.4,
+        pointRadius: 0,
         borderWidth: 3,
       },
     ],

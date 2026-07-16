@@ -164,7 +164,6 @@ export default function StatisticsContent({ data }: { data: any }) {
           </div>
         </div>
 
-        {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-emerald-50 dark:bg-emerald-500/10 p-6 rounded-3xl">
             <p className="text-emerald-700 font-semibold text-sm">{t("statistics.totalIncomes")}</p>
@@ -180,7 +179,6 @@ export default function StatisticsContent({ data }: { data: any }) {
           </div>
         </div>
 
-        {/* CHARTS GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
           <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2">
@@ -212,7 +210,6 @@ export default function StatisticsContent({ data }: { data: any }) {
             </div>
           </div>
 
-          {/* FIX: Nuevo Gráfico de Barras */}
           <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2 flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50">{t("statistics.expensesComparison")}</h3>
             <div className="w-full h-72">
@@ -228,7 +225,6 @@ export default function StatisticsContent({ data }: { data: any }) {
           </div>
 
         </div>
-        {/* FIX: Vista de Libro Mayor (Ledger) solicitada por el usuario */}
         <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 mt-8">
           <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2">
             <Calendar size={20} className="text-indigo-500" /> {t("statistics.ledger")}

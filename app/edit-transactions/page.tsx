@@ -40,16 +40,17 @@ if (incomesRes.coldStart || expensesRes.coldStart) return { coldStart: true };
       ...incomes.map((i: any) => ({
         ...i,
         kind: "income",
-        // Usamos i.id o i.incomeId según devuelva tu ResponseDTO
         displayId: `in-${i.id || i.incomeId}`,
-        typeName: i.categoryName || "Uncategorized", // ADD THIS
+        // WHY: The backend may return either id or incomeId depending on the DTO, so we support both.
+        typeName: i.categoryName || "Uncategorized",
         type: i.categoryName || "Uncategorized",
       })),
       ...expenses.map((e: any) => ({
         ...e,
         kind: "expense",
         displayId: `ex-${e.id || e.expenseId}`,
-        typeName: e.categoryName || "Uncategorized", // ADD THIS
+        // WHY: The backend may return either id or expenseId depending on the DTO, so we support both.
+        typeName: e.categoryName || "Uncategorized",
         type: e.categoryName || "Uncategorized",
       })),
     ];
@@ -63,10 +64,6 @@ if (incomesRes.coldStart || expensesRes.coldStart) return { coldStart: true };
   }
 }
 
-/**
- * The Home component renders the main dashboard page, showing the user's total balance,
- * their recent income and expenses, and a list of their recent transactions.
- */
 export default async function EditTransactionsPage() {
 
   const cookieStore = await cookies();
@@ -100,7 +97,6 @@ export default async function EditTransactionsPage() {
           </Link>
         </div>
 
-        {/* RECENT ACTIVITY TABLE */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden dark:bg-slate-900 dark:border-slate-800">
           {isColdStart ? (
             <div className="p-10 text-center text-amber-700 bg-amber-50 font-medium">

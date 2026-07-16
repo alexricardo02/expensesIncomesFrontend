@@ -83,7 +83,6 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
       return acc;
     }, {});
 
-    // Balance Over Time Calculation
     const balanceMap = new Map();
     [
       ...processIncomes, 
@@ -93,8 +92,7 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
       balanceMap.set(t.date, (balanceMap.get(t.date) || 0) + val);
     });
 
-    // WHY: Using .reduce() instead of .map() with an external variable avoids React immutability 
-    // linter errors and adheres to purely functional programming standards.
+    // WHY: Using reduce here avoids an external mutable accumulator and keeps the calculation functional.
     const balanceOverTime = Array.from(balanceMap.entries())
       .sort(([dateA], [dateB]) => new Date(dateA as string).getTime() - new Date(dateB as string).getTime())
       .reduce((acc: { date: string, balance: number }[], [date, dailyNet]) => {
@@ -106,7 +104,6 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
         return acc;
       }, []);
 
-    // Daily Average Calculation
     const dates = [...processIncomes, ...processExpenses].map(t => new Date(t.date).getTime());
     const daysDiff = dates.length > 0 
       ? Math.max(1, Math.ceil((Math.max(...dates) - Math.min(...dates)) / (1000 * 60 * 60 * 24)))

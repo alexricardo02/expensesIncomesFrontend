@@ -49,7 +49,7 @@ export default function NewTransactionPage() {
     amount: "",
     currency: "USD",
     date: new Date().toISOString().split("T")[0],
-    categoryId: "", // <-- AHORA GUARDAMOS EL ID
+    categoryId: "",
     description: "",
     paymentMethod: "DEBIT_CARD"
   });
@@ -72,7 +72,8 @@ export default function NewTransactionPage() {
     const token = Cookies.get("auth_token");
     const profileStr = Cookies.get("user_profile");
     const userProfile = profileStr ? JSON.parse(profileStr) : null;
-    const realUserId = userProfile?.userId || 1; // Fallback por seguridad
+    // WHY: Fall back to user ID 1 when the profile cookie is unavailable.
+    const realUserId = userProfile?.userId || 1;
     const selectedCategory = dynamicCategories.find(c => c.categoryId.toString() === formData.categoryId);
 
     const transactionData: any = {
@@ -90,10 +91,9 @@ export default function NewTransactionPage() {
 
       const res = await fetch(endpoint, {
         method: "POST",
-        credentials: "include", // <-- Agrega esto
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          // Borra la línea de "Authorization: Bearer..."
         },
         body: JSON.stringify(transactionData),
       });
@@ -122,7 +122,6 @@ export default function NewTransactionPage() {
     }
   };
 
-  // Select which categories to show based on the toggle
   const dynamicCategories = categories.filter(cat => cat.type === type);
 
   return (
@@ -152,7 +151,6 @@ export default function NewTransactionPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="p-8 space-y-8">
-            {/* TYPE TOGGLE */}
             <div className="flex p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl">
               {(["expense", "income"] as const).map((opt) => (
                 <button
@@ -167,7 +165,6 @@ export default function NewTransactionPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* AMOUNT */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <DollarSign size={16} className="text-indigo-500" /> {t("common.amount")}
@@ -185,7 +182,6 @@ export default function NewTransactionPage() {
                 />
               </div>
 
-              {/* CURRENCY */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Globe size={16} className="text-indigo-500" /> {t("transactions.table.currency")}
@@ -212,7 +208,6 @@ export default function NewTransactionPage() {
               </div>
             </div>
 
-            {/* PAYMENT METHOD */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <CreditCard size={16} className="text-indigo-500" /> {t("transactions.table.paymentMethod")}
@@ -235,7 +230,6 @@ export default function NewTransactionPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* CATEGORY DROPDOWN */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Tag size={16} className="text-indigo-500" /> {t("common.category")}
@@ -249,7 +243,6 @@ export default function NewTransactionPage() {
                       setFormData({ ...formData, categoryId: e.target.value })
                     }
                   >
-                    {/* Sustituir las opciones estáticas por este bloque dinámico */}
                     <option value="" disabled>
                       {isLoadingCategories ? t("common.loading") : t("transactions.table.selectCategory")}
                     </option>
@@ -258,7 +251,6 @@ export default function NewTransactionPage() {
                         {cat.name}
                       </option>
                     ))}
-                    {/* Fin del bloque dinámico */}
                   </select>
                   <ChevronDown
                     className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-900"
@@ -267,7 +259,6 @@ export default function NewTransactionPage() {
                 </div>
               </div>
 
-              {/* DATE */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Calendar size={16} className="text-indigo-500" /> {t("common.date")}
@@ -284,7 +275,6 @@ export default function NewTransactionPage() {
               </div>
             </div>
 
-            {/* DESCRIPTION */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <FileText size={16} className="text-indigo-500" /> {t("common.description")}
