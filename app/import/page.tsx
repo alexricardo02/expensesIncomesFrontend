@@ -34,6 +34,32 @@ function parseNumber(raw: string): number | null {
   return isNaN(n) ? null : n;
 }
 
+const HeaderSelect = ({ 
+  label, 
+  field, 
+  map, 
+  setMap, 
+  headers 
+}: { 
+  label: string; 
+  field: string; 
+  map: Record<string, string>; 
+  setMap: React.Dispatch<React.SetStateAction<Record<string, string>>>; 
+  headers: string[]; 
+}) => (
+  <div>
+    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{label}</label>
+    <select
+      value={map[field]}
+      onChange={(e) => setMap({ ...map, [field]: e.target.value })}
+      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
+    >
+      <option value="">-- none --</option>
+      {headers.map((h) => <option key={h} value={h}>{h}</option>)}
+    </select>
+  </div>
+);
+
 export default function ImportPage() {
   const router = useRouter();
   const { t } = useLanguage();
@@ -177,20 +203,6 @@ export default function ImportPage() {
     }
   };
 
-  const HeaderSelect = ({ label, field }: { label: string; field: string }) => (
-    <div>
-      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{label}</label>
-      <select
-        value={map[field]}
-        onChange={(e) => setMap({ ...map, [field]: e.target.value })}
-        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
-      >
-        <option value="">-- none --</option>
-        {headers.map((h) => <option key={h} value={h}>{h}</option>)}
-      </select>
-    </div>
-  );
-
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-8 text-slate-900 dark:text-slate-100">
       <Toaster position="top-right" />
@@ -244,15 +256,15 @@ export default function ImportPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <HeaderSelect label={t("import.dateColumn")} field="date" />
-                <HeaderSelect label={t("import.descriptionColumn")} field="description" />
-                <HeaderSelect label={t("import.categoryColumn")} field="category" />
+                <HeaderSelect label={t("import.dateColumn")} field="date" map={map} setMap={setMap} headers={headers} />
+                <HeaderSelect label={t("import.descriptionColumn")} field="description" map={map} setMap={setMap} headers={headers} />
+                <HeaderSelect label={t("import.categoryColumn")} field="category" map={map} setMap={setMap} headers={headers} />
                 {kindMode === "signed" ? (
-                  <HeaderSelect label={t("import.amountColumn")} field="amount" />
+                  <HeaderSelect label={t("import.amountColumn")} field="amount" map={map} setMap={setMap} headers={headers} />
                 ) : (
                   <>
-                    <HeaderSelect label={t("import.chargesColumn")} field="chargeCol" />
-                    <HeaderSelect label={t("import.creditsColumn")} field="creditCol" />
+                    <HeaderSelect label={t("import.chargesColumn")} field="chargeCol" map={map} setMap={setMap} headers={headers} />
+                    <HeaderSelect label={t("import.creditsColumn")} field="creditCol" map={map} setMap={setMap} headers={headers} />
                   </>
                 )}
               </div>
