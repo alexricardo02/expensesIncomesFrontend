@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Trash2, ArrowLeft, Tag, PlusCircle, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
@@ -22,7 +22,7 @@ export default function CategoriesPage() {
 
   const API_URL = "/api/categories";
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const res = await fetch(API_URL, {
         credentials: "include",
@@ -31,16 +31,16 @@ export default function CategoriesPage() {
         const data = await res.json();
         setCategories(data);
       }
-    } catch (error) {
+    } catch {
       toast.error("Error loading categories");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
