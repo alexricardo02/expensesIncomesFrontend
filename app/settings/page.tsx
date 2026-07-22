@@ -131,7 +131,7 @@ export default function SettingsPage() {
       <div className="max-w-2xl mx-auto space-y-8 md:space-y-10">
         <button
           onClick={() => router.push("/")}
-          className="flex items-center text-slate-500 hover:text-slate-800 group transition-colors cursor-pointer"
+          className="flex items-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 group transition-colors cursor-pointer"
         >
           <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
           Back to Dashboard
@@ -144,14 +144,14 @@ export default function SettingsPage() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">{t("settings.title")}</h1>
-              <p className="text-slate-500 text-sm">{t("settings.subtitle")}</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">{t("settings.subtitle")}</p>
             </div>
           </div>
 
           <div className="p-6 space-y-6">
             <div>
-              <h2 className="font-semibold text-slate-800 mb-1">{t("settings.currencyTitle")}</h2>
-              <p className="text-sm text-slate-500 mb-4">{t("settings.currencyDesc")}</p>
+              <h2 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">{t("settings.currencyTitle")}</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("settings.currencyDesc")}</p>
 
               {loading ? (
                 <div className="h-12 bg-slate-100 rounded-xl animate-pulse" />
@@ -185,8 +185,8 @@ export default function SettingsPage() {
 
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-6">
-              <h2 className="font-semibold text-rose-700 mb-1">{t("settings.deleteTitle")}</h2>
-              <p className="text-sm text-slate-500 mb-4">{t("settings.deleteDesc")}</p>
+              <h2 className="font-semibold text-rose-700 dark:text-rose-300 mb-1">{t("settings.deleteTitle")}</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("settings.deleteDesc")}</p>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
                 className="w-full py-3 bg-rose-50 text-rose-600 font-bold rounded-xl hover:bg-rose-100 transition-colors cursor-pointer"
@@ -198,8 +198,8 @@ export default function SettingsPage() {
 
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-6">
-              <h2 className="font-semibold text-slate-800 mb-1">{t("settings.languageTitle")}</h2>
-              <p className="text-sm text-slate-500 mb-4">{t("settings.languageDesc")}</p>
+              <h2 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">{t("settings.languageTitle")}</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("settings.languageDesc")}</p>
               <div className="grid grid-cols-3 gap-3">
                 {LANGUAGES.map((l) => (
                   <button
@@ -230,8 +230,8 @@ export default function SettingsPage() {
 
             <div className="p-6 space-y-6">
               <div>
-                <h2 className="font-semibold text-slate-800 mb-1">{t("settings.passwordTitle")}</h2>
-                <p className="text-sm text-slate-500 mb-4">{t("settings.passwordDesc")}</p>
+                <h2 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">{t("settings.passwordTitle")}</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("settings.passwordDesc")}</p>
                 <button
                   disabled
                   className="w-full py-3 bg-slate-100 text-slate-400 font-bold rounded-xl cursor-not-allowed"

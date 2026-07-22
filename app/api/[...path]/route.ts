@@ -7,10 +7,15 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function proxy(request: NextRequest, path: string[]) {
   const targetUrl = `${BACKEND_URL}/${path.join("/")}${request.nextUrl.search}`;
+  const token = request.cookies.get("auth_token")?.value;
 
   const headers = new Headers(request.headers);
   headers.delete("host");
   headers.delete("content-length");
+
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
 
   const init: RequestInit = {
     method: request.method,

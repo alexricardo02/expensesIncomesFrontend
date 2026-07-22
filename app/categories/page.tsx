@@ -109,7 +109,7 @@ export default function CategoriesPage() {
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">              <LayoutGrid className="text-indigo-600" /> My Categories
             </h1>
-            <p className="text-slate-500 text-sm">Manage your income and expense classes</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Manage your income and expense classes</p>
           </div>
         </div>
 
@@ -121,7 +121,7 @@ export default function CategoriesPage() {
             </h2>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("categories.nameLabel")}</label>
+                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">{t("categories.nameLabel")}</label>
                   <input
                     type="text"
                     value={name}
@@ -133,11 +133,11 @@ export default function CategoriesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("categories.typeLabel")}</label>
+                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">{t("categories.typeLabel")}</label>
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
                     <option value="expense">Expense</option>
                     <option value="income">Income</option>
