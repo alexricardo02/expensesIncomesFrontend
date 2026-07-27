@@ -3,7 +3,7 @@
 import { useState} from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { Lock, User, AlertCircle, Eye, EyeOff, Info } from "lucide-react";
+import { Lock, User, AlertCircle, Eye, EyeOff, Info, Wallet } from "lucide-react";
 import LegalFooter from "../components/LegalFooter";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -59,12 +59,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-slate-50 to-slate-50 flex items-center justify-center p-4">
 
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">{t("auth.login.title")}</h1>
-          <p className="text-slate-500 mt-2">{t("auth.login.subtitle")}</p>
+      <div className="max-w-md w-full">
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-2 text-2xl font-black tracking-tight text-slate-900">
+            <Wallet className="text-emerald-600" size={28} />
+            Finance<span className="text-emerald-600">Tracker</span>
+          </div>
+          <p className="text-slate-500 mt-2 text-sm">Take control of your money, one transaction at a time.</p>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+        <div className="text-center mb-6">
+          <h1 className="text-xl font-bold text-slate-900">{t("auth.login.title")}</h1>
+          <p className="text-slate-500 mt-1 text-sm">{t("auth.login.subtitle")}</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -158,6 +167,7 @@ export default function LoginPage() {
         </div>
         
         <LegalFooter />
+        </div>
       </div>
     </div>
   );
