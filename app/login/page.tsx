@@ -3,7 +3,7 @@
 import { useState} from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { Lock, User, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Lock, User, AlertCircle, Eye, EyeOff, Info } from "lucide-react";
 import LegalFooter from "../components/LegalFooter";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -140,6 +140,23 @@ export default function LoginPage() {
             </button>
           </p>
         </form>
+
+        <div className="mt-6 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          <Info size={18} className="mt-0.5 shrink-0" />
+          <div className="space-y-1.5">
+            <p className="font-semibold">Service notice</p>
+            <p>
+              During July, this app will be unavailable due to an outage with one of its
+              external services (not an issue with the app itself). Normal service will
+              resume on August 1st.
+            </p>
+            <p className="text-amber-700">
+              Also note: this is a portfolio project running on free-tier hosting, so it
+              may occasionally load slowly (cold starts).
+            </p>
+          </div>
+        </div>
+        
         <LegalFooter />
       </div>
     </div>
