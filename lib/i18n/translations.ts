@@ -79,7 +79,7 @@ export const translations = {
     },
     auth: {
       login: {
-        title: "Welcome",
+        title: "Login",
         subtitle: "Manage your finances securely",
         userLabel: "User",
         passwordLabel: "Password",
@@ -433,7 +433,7 @@ export const translations = {
     },
     auth: {
       login: {
-        title: "Bienvenido",
+        title: "Iniciar Sesión",
         subtitle: "Gestiona tus finanzas de forma segura",
         userLabel: "Usuario",
         passwordLabel: "Contraseña",
@@ -793,7 +793,7 @@ export const translations = {
     },
     auth: {
       login: {
-        title: "Willkommen",
+        title: "Einloggen",
         subtitle: "Verwalte deine Finanzen sicher",
         userLabel: "Benutzer",
         passwordLabel: "Passwort",

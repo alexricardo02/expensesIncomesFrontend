@@ -73,7 +73,6 @@ export default function LoginPage() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
         <div className="text-center mb-6">
           <h1 className="text-xl font-bold text-slate-900">{t("auth.login.title")}</h1>
-          <p className="text-slate-500 mt-1 text-sm">{t("auth.login.subtitle")}</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
