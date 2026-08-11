@@ -154,12 +154,7 @@ export default function LoginPage() {
           <div className="space-y-1.5">
             <p className="font-semibold">Service notice</p>
             <p>
-              During July, this app will be unavailable due to an outage with one of its
-              external services (not an issue with the app itself). Normal service will
-              resume on August 1st.
-            </p>
-            <p className="text-amber-700">
-              Also note: this is a portfolio project running on free-tier hosting, so it
+              This is a portfolio project running on free-tier hosting, so it
               may occasionally load slowly (cold starts).
             </p>
           </div>

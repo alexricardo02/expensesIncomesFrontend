@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Locale, getTranslation } from "./translations";
 
@@ -25,6 +26,7 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children, initialLocale }: { children: React.ReactNode; initialLocale?: Locale }) {
+  const router = useRouter();
   const [locale, setLocaleState] = useState<Locale>(() => {
     if (initialLocale) return initialLocale;
     if (typeof window === "undefined") return "en";
@@ -34,14 +36,22 @@ export function LanguageProvider({ children, initialLocale }: { children: React.
   });
 
   useEffect(() => {
+    if (initialLocale && SUPPORTED.includes(initialLocale)) {
+      setLocaleState(initialLocale);
+    }
+  }, [initialLocale]);
+
+  const setLocale = useCallback((l: Locale) => {
+    if (!SUPPORTED.includes(l)) return;
+    setLocaleState(l);
+    Cookies.set(COOKIE_NAME, l, { expires: 365, path: "/", sameSite: "lax" });
+    router.refresh();
+  }, [router]);
+
+  useEffect(() => {
     const resolvedLocale = initialLocale || locale;
     Cookies.set(COOKIE_NAME, resolvedLocale, { expires: 365, path: "/" });
   }, [initialLocale, locale]);
-
-  const setLocale = useCallback((l: Locale) => {
-    setLocaleState(l);
-    Cookies.set(COOKIE_NAME, l, { expires: 365, path: "/" });
-  }, []);
 
   const t = useCallback((path: string, params?: Record<string, string | number>): string => {
     const translated = getTranslation(path, locale, params);
