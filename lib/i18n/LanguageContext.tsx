@@ -27,6 +27,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children, initialLocale }: { children: React.ReactNode; initialLocale?: Locale }) {
   const router = useRouter();
+  const [prevInitialLocale, setPrevInitialLocale] = useState(initialLocale);
   const [locale, setLocaleState] = useState<Locale>(() => {
     if (initialLocale) return initialLocale;
     if (typeof window === "undefined") return "en";
@@ -35,11 +36,10 @@ export function LanguageProvider({ children, initialLocale }: { children: React.
     return saved && SUPPORTED.includes(saved) ? saved : detectLocale();
   });
 
-  useEffect(() => {
-    if (initialLocale && SUPPORTED.includes(initialLocale)) {
-      setLocaleState(initialLocale);
-    }
-  }, [initialLocale]);
+  if (initialLocale && initialLocale !== prevInitialLocale && SUPPORTED.includes(initialLocale)) {
+    setPrevInitialLocale(initialLocale);
+    setLocaleState(initialLocale);
+  }
 
   const setLocale = useCallback((l: Locale) => {
     if (!SUPPORTED.includes(l)) return;
@@ -47,11 +47,6 @@ export function LanguageProvider({ children, initialLocale }: { children: React.
     Cookies.set(COOKIE_NAME, l, { expires: 365, path: "/", sameSite: "lax" });
     router.refresh();
   }, [router]);
-
-  useEffect(() => {
-    const resolvedLocale = initialLocale || locale;
-    Cookies.set(COOKIE_NAME, resolvedLocale, { expires: 365, path: "/" });
-  }, [initialLocale, locale]);
 
   const t = useCallback((path: string, params?: Record<string, string | number>): string => {
     const translated = getTranslation(path, locale, params);
