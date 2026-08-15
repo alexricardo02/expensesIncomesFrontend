@@ -37,7 +37,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
 
   const monthlyKPIPercentage = totalBalanceLastMonth === 0
     ? 0
-    : ((totalBalanceThisMonth * 100) / totalBalanceLastMonth - 100) / 100;
+    : (totalBalanceThisMonth / totalBalanceLastMonth - 1) * 100;
 
   const expensesMonthlyPercentage = lastMonthExpenses === 0
     ? 0

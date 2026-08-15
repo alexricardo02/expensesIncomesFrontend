@@ -63,7 +63,7 @@ export default function NewTransactionPage() {
     }
 
     if (isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
-      toast.error(t("common.amount"));
+      toast.error(t("common.invalidAmount"));
       return;
     }
 

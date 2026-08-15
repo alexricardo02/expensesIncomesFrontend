@@ -44,8 +44,6 @@ export default function TransactionTable({
       if (!token) return;
 
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL_INCOMES?.replace('/incomes', '/categories') || 'http://localhost:8080/api/categories';
-
         const response = await fetch("/api/categories", { credentials: "include" });
 
         if (response.ok) {
@@ -65,7 +63,8 @@ export default function TransactionTable({
     const matchesType = filterType === "all" || t.kind === filterType;
     const matchesCategory = filterCategory === "all" || (t.typeName || t.type) === filterCategory;
     const matchesDate = filterDate === "" || t.date === filterDate;
-    const matchesAmount = filterMinAmount === "" || t.amount >= parseFloat(filterMinAmount);
+    const parsedMin = parseFloat(filterMinAmount);
+    const matchesAmount = filterMinAmount === "" || (!isNaN(parsedMin) && t.amount >= parsedMin);
 
     return matchesType && matchesCategory && matchesDate && matchesAmount;
   });
@@ -107,8 +106,9 @@ export default function TransactionTable({
     }
 
     const profileStr = Cookies.get("user_profile");
-    const userProfile = profileStr ? JSON.parse(profileStr) : null;
-    const realUserId = userProfile?.userId || 1;
+    let userProfile = null;
+    try { userProfile = profileStr ? JSON.parse(profileStr) : null; } catch {}
+    const realUserId = userProfile?.userId ?? 1;
 
     const formData = new FormData(e.currentTarget);
     const kind = selectedTransaction.kind;

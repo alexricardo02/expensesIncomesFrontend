@@ -308,7 +308,6 @@ export default function SettingsPage() {
                 disabled={deleting}
                 className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 disabled:opacity-50 transition-colors cursor-pointer"
               >
-                {deleting ? "Deleting..." : "Delete Account"}
                 {deleting ? t("settings.deletingLabel") : t("settings.deleteAccountLabel")}
               </button>
             </div>

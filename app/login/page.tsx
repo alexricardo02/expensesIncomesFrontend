@@ -46,8 +46,6 @@ export default function LoginPage() {
         throw new Error(data.message || t("auth.login.errors.invalidCredentials"));
       }
 
-      const fourteenMinutes = 14 / (24 * 60);
-
       Cookies.set("user_profile", JSON.stringify(data), { expires: 7, path: '/' });
       
       router.push("/");

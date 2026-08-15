@@ -56,6 +56,7 @@ export const translations = {
       backendOffline: "Backend is offline or unreachable.",
       expiredSession: "Expired session. Please, try again.",
       required: "Required",
+      invalidAmount: "Invalid amount. Please enter a positive number.",
     },
     dashboard: {
       transactions: "Transactions",
@@ -410,6 +411,7 @@ export const translations = {
       backendOffline: "El backend está fuera de línea o no es alcanzable.",
       expiredSession: "La sesión expiró. Inténtalo de nuevo.",
       required: "Requerido",
+      invalidAmount: "Monto inválido. Por favor ingresa un número positivo.",
     },
     dashboard: {
       transactions: "Transacciones",
@@ -770,6 +772,7 @@ export const translations = {
       backendOffline: "Das Backend ist offline oder nicht erreichbar.",
       expiredSession: "Die Sitzung ist abgelaufen. Bitte erneut versuchen.",
       required: "Erforderlich",
+      invalidAmount: "Ungültiger Betrag. Bitte gib eine positive Zahl ein.",
     },
     dashboard: {
       transactions: "Transaktionen",
