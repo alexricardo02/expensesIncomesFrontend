@@ -53,7 +53,7 @@ export default function StatisticsContent({ data }: { data: any }) {
     updateFilter({ startDate: start || null, endDate: end || null });
   };
 
-  const colors = ["#6366f1", "#14b8a6", "#f59e0b", "#ec4899", "#8b5cf6", "#10b981", "#f43f5e"];
+  const colors = ["#10b981", "#14b8a6", "#059669", "#34d399", "#047857", "#0d9488", "#6ee7b7"];
 
   const buildChartData = (sourceData: any) => ({
     labels: sourceData ? Object.keys(sourceData) : [],
@@ -69,8 +69,8 @@ export default function StatisticsContent({ data }: { data: any }) {
     datasets: [{
       label: "Accumulated Balance",
       data: data.balanceOverTime?.map((b: any) => b.balance) || [],
-      borderColor: "#6366f1",
-      backgroundColor: "rgba(99, 102, 241, 0.1)",
+      borderColor: "#10b981",
+      backgroundColor: "rgba(16, 185, 129, 0.1)",
       fill: true,
       tension: 0.4,
     }]
@@ -81,7 +81,7 @@ export default function StatisticsContent({ data }: { data: any }) {
     datasets: [{
       label: "Expenses",
       data: data.expensesByCategory ? Object.values(data.expensesByCategory) : [],
-      backgroundColor: "#6366f1",
+      backgroundColor: "#10b981",
       borderRadius: 4,
     }]
   };
@@ -130,7 +130,7 @@ export default function StatisticsContent({ data }: { data: any }) {
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-8 text-slate-900 dark:text-slate-100">
       <div className="max-w-6xl mx-auto space-y-8">
 
-        <button onClick={() => router.push("/")} className="flex items-center text-slate-500 hover:text-indigo-600 transition-colors group">
+        <button onClick={() => router.push("/")} className="flex items-center text-slate-500 hover:text-emerald-600 transition-colors group">
           <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
           {t("statistics.backToDashboard")}
         </button>
@@ -173,16 +173,16 @@ export default function StatisticsContent({ data }: { data: any }) {
             <p className="text-rose-700 font-semibold text-sm">{t("statistics.totalExpenses")}</p>
             <h2 className="text-3xl font-bold text-rose-600 mt-2">{formatCurrency(data.totalOut, currency, true)}</h2>
           </div>
-          <div className="bg-indigo-50 dark:bg-indigo-500/10 p-6 rounded-3xl">
-            <p className="text-indigo-700 font-semibold text-sm flex items-center gap-2"><Activity size={16} /> {t("statistics.dailyAverage")}</p>
-            <h2 className="text-3xl font-bold text-indigo-600 mt-2">{formatCurrency(data.dailyAverage, currency, true)}</h2>
+          <div className="bg-emerald-50/70 dark:bg-emerald-500/10 p-6 rounded-3xl border border-emerald-100/50 dark:border-emerald-900/30">
+            <p className="text-emerald-800 dark:text-emerald-300 font-semibold text-sm flex items-center gap-2"><Activity size={16} /> {t("statistics.dailyAverage")}</p>
+            <h2 className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mt-2">{formatCurrency(data.dailyAverage, currency, true)}</h2>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
           <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2">
-            <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2"><TrendingUp size={20} className="text-indigo-500" /> {t("statistics.accumulatedBalance")}</h3>
+            <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2"><TrendingUp size={20} className="text-emerald-500" /> {t("statistics.accumulatedBalance")}</h3>
             <div className="w-full h-72">
               <Line data={lineChartData} options={{
                 maintainAspectRatio: false,
@@ -227,7 +227,7 @@ export default function StatisticsContent({ data }: { data: any }) {
         </div>
         <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 mt-8">
           <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2">
-            <Calendar size={20} className="text-indigo-500" /> {t("statistics.ledger")}
+            <Calendar size={20} className="text-emerald-500" /> {t("statistics.ledger")}
           </h3>
 
           {data.transactions && data.transactions.length > 0 ? (

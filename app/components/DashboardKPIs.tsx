@@ -48,7 +48,7 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="col-span-2 lg:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
+            <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg shrink-0">
               {/* WHY: Unifying icon size across all desktop KPI cards establishes visual harmony. */}
               <Wallet size={20} />
             </div>

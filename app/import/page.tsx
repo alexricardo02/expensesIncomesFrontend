@@ -213,11 +213,11 @@ export default function ImportPage() {
 
         <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm p-6 space-y-6">
           <div>
-            <h1 className="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-50"><Upload size={20} className="text-indigo-600" /> {t("import.title")}</h1>
+            <h1 className="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-50"><Upload size={20} className="text-emerald-600" /> {t("import.title")}</h1>
             <p className="text-slate-500 text-sm mt-1">{t("import.subtitle")}</p>
           </div>
 
-          <label className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 bg-indigo-50 text-indigo-700 border-2 border-dashed border-indigo-200 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border-indigo-800 dark:hover:bg-indigo-500/20 rounded-xl text-sm font-semibold cursor-pointer hover:bg-indigo-100 hover:border-indigo-300 transition-colors">
+          <label className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 bg-emerald-50 text-emerald-700 border-2 border-dashed border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-800 dark:hover:bg-emerald-500/20 rounded-xl text-sm font-semibold cursor-pointer hover:bg-emerald-100 hover:border-emerald-300 transition-colors">
             <Upload size={18} />
             {rows.length > 0 ? t("import.changeCsvFile") : t("import.chooseCsvFile")}
             <input type="file" accept=".csv" onChange={handleFile} className="hidden" />
@@ -274,11 +274,11 @@ export default function ImportPage() {
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.currencySource")}</label>
                   <div className="flex p-1 bg-slate-100 rounded-xl mb-2 w-fit">
                     <button type="button" onClick={() => setCurrencyMode("fixed")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "fixed" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500"}`}>
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "fixed" ? "bg-white text-emerald-600 shadow-sm" : "text-slate-500"}`}>
                       {t("import.fixedCurrency")}
                     </button>
                     <button type="button" onClick={() => setCurrencyMode("column")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "column" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500"}`}>
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "column" ? "bg-white text-emerald-600 shadow-sm" : "text-slate-500"}`}>
                       {t("import.fromColumn")}
                     </button>
                   </div>
@@ -318,7 +318,7 @@ export default function ImportPage() {
               <button
                 onClick={handleImport}
                 disabled={submitting}
-                className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                className="w-full py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {submitting ? t("import.importing") : `${t("import.importButton")} ${rows.length}`}
               </button>

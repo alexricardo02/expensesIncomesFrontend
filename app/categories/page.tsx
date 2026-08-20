@@ -108,12 +108,12 @@ export default function CategoriesPage() {
         <div className="flex items-center gap-4 mb-8">
           <Link
             href="/"
-            className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-200 dark:hover:border-indigo-800 transition-colors"
+            className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors"
           >
             <ArrowLeft size={20} />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">              <LayoutGrid className="text-indigo-600" /> My Categories
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">              <LayoutGrid className="text-emerald-600" /> My Categories
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm">Manage your income and expense classes</p>
           </div>
@@ -123,7 +123,7 @@ export default function CategoriesPage() {
 
           <div className="md:col-span-1">
             <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-              <PlusCircle size={18} className="text-indigo-500" /> New
+              <PlusCircle size={18} className="text-emerald-500" /> New
             </h2>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
@@ -133,7 +133,7 @@ export default function CategoriesPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder={t("categories.namePlaceholder")}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                     maxLength={30}
                     required
                   />
@@ -143,7 +143,7 @@ export default function CategoriesPage() {
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                   >
                     <option value="expense">Expense</option>
                     <option value="income">Income</option>
@@ -151,7 +151,7 @@ export default function CategoriesPage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm active:scale-95"
+                  className="w-full py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-sm active:scale-95 cursor-pointer"
                 >
                   {t("categories.save")}
                 </button>

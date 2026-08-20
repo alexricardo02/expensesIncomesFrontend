@@ -111,6 +111,7 @@ export const translations = {
         creating: "Creating account...",
         policyRequired: "You must accept the Privacy Policy to register.",
         emptyFields: "Please complete all fields.",
+        invalidEmail: "Please enter a valid email address (e.g. name@domain.com).",
         passwordRules: {
           minLength: "At least 8 characters",
           uppercase: "At least one uppercase letter",
@@ -467,6 +468,7 @@ export const translations = {
         policyRequired:
           "Debes aceptar la Política de privacidad para registrarte.",
         emptyFields: "Por favor, completa todos los campos.",
+        invalidEmail: "Por favor, ingresa un correo electrónico válido (ej. nombre@dominio.com).",
         passwordRules: {
           minLength: "Al menos 8 caracteres",
           uppercase: "Al menos una letra mayúscula",
@@ -828,6 +830,7 @@ export const translations = {
         policyRequired:
           "Du musst die Datenschutzerklärung akzeptieren, um dich zu registrieren.",
         emptyFields: "Bitte fülle alle Felder aus.",
+        invalidEmail: "Bitte gib eine gültige E-Mail-Adresse ein (z. B. name@domain.com).",
         passwordRules: {
           minLength: "Mindestens 8 Zeichen",
           uppercase: "Mindestens ein Großbuchstabe",

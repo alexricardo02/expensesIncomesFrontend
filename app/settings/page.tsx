@@ -139,7 +139,7 @@ export default function SettingsPage() {
 
         <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
           <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
               <SettingsIcon size={20} />
             </div>
             <div>
@@ -162,7 +162,7 @@ export default function SettingsPage() {
                       key={c.code}
                       onClick={() => setSelected(c.code)}
                       className={`flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${selected === c.code
-                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                        ? "border-emerald-500 bg-emerald-50 text-emerald-700"
                         : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                         }`}
                     >
@@ -177,7 +177,7 @@ export default function SettingsPage() {
             <button
               onClick={handleSave}
               disabled={saving || loading || selected === currentCurrency}
-              className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="w-full py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               {saving ? t("settings.saving") : t("settings.saveChanges")}
             </button>
@@ -210,7 +210,7 @@ export default function SettingsPage() {
                       router.refresh();
                     }}
                     className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${locale === l.code
-                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-700"
                       : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                       }`}
                   >

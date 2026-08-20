@@ -57,7 +57,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-slate-50 to-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-slate-50 to-slate-50 flex items-center justify-center p-4">
 
       <div className="max-w-md w-full">
         <div className="text-center mb-6">
@@ -89,7 +89,7 @@ export default function LoginPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
                 placeholder={t("auth.login.usernamePlaceholder")}
                 required
               />
@@ -104,7 +104,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="text-slate-900 w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                className="text-slate-900 w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
                 placeholder={t("auth.login.passwordPlaceholder")}
                 required
               />
@@ -122,7 +122,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => router.push("/forgot-password")}
-              className="text-sm text-indigo-600 font-medium hover:underline cursor-pointer"
+              className="text-sm text-emerald-600 font-medium hover:underline cursor-pointer"
             >
               {t("auth.login.forgotPassword")}
             </button>
@@ -131,7 +131,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 disabled:opacity-50 cursor-pointer"
+            className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-100 disabled:opacity-50 cursor-pointer"
           >
             {loading ? t("auth.login.loggingIn") : t("auth.login.submit")}
           </button>
@@ -140,7 +140,7 @@ export default function LoginPage() {
             {t("auth.login.registerPrompt")} {" "}
             <button
               onClick={() => router.push("/register")}
-              className="text-indigo-600 font-semibold hover:underline cursor-pointer"
+              className="text-emerald-600 font-semibold hover:underline cursor-pointer"
             >
               {t("auth.login.register")}
             </button>

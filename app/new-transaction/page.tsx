@@ -157,7 +157,7 @@ export default function NewTransactionPage() {
                   key={opt}
                   type="button"
                   onClick={() => { setType(opt); setFormData({ ...formData, categoryId: "" }); }}
-                  className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === opt ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                  className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === opt ? "bg-white text-emerald-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
                 >
                   {t(`common.${opt}`)}
                 </button>
@@ -167,13 +167,13 @@ export default function NewTransactionPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <DollarSign size={16} className="text-indigo-500" /> {t("common.amount")}
+                  <DollarSign size={16} className="text-emerald-500" /> {t("common.amount")}
                 </label>
                 <input
                   required
                   type="number"
                   step="0.01"
-                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-lg text-slate-900 placeholder:text-slate-400"
+                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium text-lg text-slate-900 placeholder:text-slate-400"
                   placeholder="0.00"
                   value={formData.amount}
                   onChange={(e) =>
@@ -184,11 +184,11 @@ export default function NewTransactionPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <Globe size={16} className="text-indigo-500" /> {t("transactions.table.currency")}
+                  <Globe size={16} className="text-emerald-500" /> {t("transactions.table.currency")}
                 </label>
                 <div className="relative">
                   <select
-                    className="w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-slate-900"
+                    className="w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium text-slate-900"
                     value={formData.currency}
                     onChange={(e) =>
                       setFormData({ ...formData, currency: e.target.value })
@@ -210,12 +210,12 @@ export default function NewTransactionPage() {
 
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                <CreditCard size={16} className="text-indigo-500" /> {t("transactions.table.paymentMethod")}
+                <CreditCard size={16} className="text-emerald-500" /> {t("transactions.table.paymentMethod")}
               </label>
               <div className="relative">
                 <select
                   required
-                  className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                  className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium"
                   value={formData.paymentMethod}
                   onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
                 >
@@ -232,12 +232,12 @@ export default function NewTransactionPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <Tag size={16} className="text-indigo-500" /> {t("common.category")}
+                  <Tag size={16} className="text-emerald-500" /> {t("common.category")}
                 </label>
                 <div className="relative">
                   <select
                     required
-                    className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                    className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium"
                     value={formData.categoryId}
                     onChange={(e) =>
                       setFormData({ ...formData, categoryId: e.target.value })
@@ -261,12 +261,12 @@ export default function NewTransactionPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <Calendar size={16} className="text-indigo-500" /> {t("common.date")}
+                  <Calendar size={16} className="text-emerald-500" /> {t("common.date")}
                 </label>
                 <input
                   required
                   type="date"
-                  className="text-slate-900 w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium"
+                  className="text-slate-900 w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium"
                   value={formData.date}
                   onChange={(e) =>
                     setFormData({ ...formData, date: e.target.value })
@@ -277,12 +277,12 @@ export default function NewTransactionPage() {
 
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                <FileText size={16} className="text-indigo-500" /> {t("common.description")}
+                <FileText size={16} className="text-emerald-500" /> {t("common.description")}
               </label>
               <textarea
                 rows={3}
                 placeholder="Add a note..."
-                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400"
+                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -292,7 +292,7 @@ export default function NewTransactionPage() {
 
             <button
               type="submit"
-              className="cursor-pointer w-full flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all text-lg"
+              className="cursor-pointer w-full flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-emerald-200 active:scale-[0.98] transition-all text-lg"
             >
               <Save size={22} />
               {t("common.save")}

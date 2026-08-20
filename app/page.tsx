@@ -201,7 +201,7 @@ export default async function Home() {
                 <ExportMenu />
 
                 <Link href="/new-transaction" className="w-full col-span-2 md:col-span-1 md:w-auto">
-                  <button className="flex items-center justify-center w-full gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 dark:shadow-none cursor-pointer">                    <PlusCircle size={20} />
+                  <button className="flex items-center justify-center w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-100 dark:shadow-none cursor-pointer">                    <PlusCircle size={20} />
                     {translate("common.newTransaction")}
                   </button>
                 </Link>
@@ -224,7 +224,7 @@ export default async function Home() {
                 <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-50">{translate("dashboard.recentActivity")}</h3>
               </div>
               <Link href="/edit-transactions">
-                <button className="text-indigo-600 text-sm font-medium hover:underline cursor-pointer">
+                <button className="text-emerald-600 text-sm font-medium hover:underline cursor-pointer">
                   {translate("common.viewAll")}
                 </button>
               </Link>
