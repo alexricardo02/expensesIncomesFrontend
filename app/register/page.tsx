@@ -12,17 +12,17 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [acceptedPolicy, setAcceptedPolicy] = useState(false);
   const { t } = useLanguage();
   const router = useRouter();
 
-  const isEmailValid = isValidEmail(email);
   const isPasswordValid = PASSWORD_RULES.every((rule) => rule.test(password));
   const isFormValid =
     username.trim().length > 0 &&
-    isEmailValid &&
+    email.trim().length > 0 &&
     isPasswordValid &&
     acceptedPolicy;
 
@@ -30,6 +30,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setEmailError("");
 
     if (!acceptedPolicy) {
       setError(t("auth.register.policyRequired"));
@@ -48,7 +49,7 @@ export default function RegisterPage() {
     }
 
     if (!isValidEmail(cleanEmail)) {
-      setError(t("auth.register.invalidEmail"));
+      setEmailError(t("auth.register.invalidEmail"));
       setLoading(false);
       return;
     }
@@ -109,7 +110,7 @@ export default function RegisterPage() {
           <form onSubmit={handleRegister} className="space-y-5">
             {error && (
               <div className="bg-rose-50 text-rose-600 p-3 rounded-lg flex items-center text-sm border border-rose-100">
-                <AlertCircle size={18} className="mr-2" />
+                <AlertCircle size={18} className="mr-2 shrink-0" />
                 {error}
               </div>
             )}
@@ -140,12 +141,25 @@ export default function RegisterPage() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (emailError) setEmailError("");
+                  }}
+                  className={`text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border rounded-xl focus:ring-2 transition-all outline-none ${
+                    emailError
+                      ? "border-rose-400 focus:ring-rose-500 focus:border-rose-500"
+                      : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
+                  }`}
                   placeholder={t("auth.register.emailPlaceholder")}
                   required
                 />
               </div>
+              {emailError && (
+                <div className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-rose-600 animate-in fade-in duration-200">
+                  <AlertCircle size={14} className="shrink-0 text-rose-600" />
+                  <span>{emailError}</span>
+                </div>
+              )}
             </div>
 
             <div>
@@ -221,14 +235,6 @@ export default function RegisterPage() {
                 .
               </label>
             </div>
-
-            {/* Email format warning message below checkbox */}
-            {email.length > 0 && !isEmailValid && (
-              <div className="bg-amber-50 text-amber-700 p-3 rounded-xl flex items-center text-xs border border-amber-200 gap-2 animate-in fade-in duration-200">
-                <AlertCircle size={16} className="shrink-0 text-amber-600" />
-                <span>{t("auth.register.invalidEmail")}</span>
-              </div>
-            )}
 
             <button
               type="submit"
