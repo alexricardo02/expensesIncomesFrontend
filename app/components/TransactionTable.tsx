@@ -205,7 +205,7 @@ export default function TransactionTable({
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
           >
             <option value="all">{t("transactions.filter.allTypes")}</option>
             <option value="income">{t("transactions.filter.income")}</option>
@@ -214,13 +214,13 @@ export default function TransactionTable({
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2">
-            <Tag size={14} /> {t("common.category")}
+          <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
+            <Tag size={14} /> Category
           </label>
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
           >
             <option value="all">{t("transactions.filter.allCategories")}</option>
             {uniqueCategoryNames.map((catName) => (
@@ -239,7 +239,7 @@ export default function TransactionTable({
             type="date"
             value={filterDate}
             onChange={(e) => setFilterDate(e.target.value)}
-            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
           />
         </div>
 
@@ -252,7 +252,7 @@ export default function TransactionTable({
             placeholder="0.00"
             value={filterMinAmount}
             onChange={(e) => setFilterMinAmount(e.target.value)}
-            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
           />
         </div>
 
@@ -308,18 +308,10 @@ export default function TransactionTable({
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button
-                      onClick={() => openEditModal(tx)}
-                      aria-label={t("common.edit")}
-                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-800 dark:hover:text-indigo-400 rounded-lg cursor-pointer transition-colors"
-                    >
+                    <button onClick={() => openEditModal(tx)} className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg cursor-pointer">
                       <Pencil size={18} />
                     </button>
-                    <button
-                      onClick={() => openDeleteModal(tx)}
-                      aria-label={t("common.delete")}
-                      className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-800 dark:hover:text-rose-400 rounded-lg cursor-pointer transition-colors"
-                    >
+                    <button onClick={() => openDeleteModal(tx)} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer">
                       <Trash2 size={18} />
                     </button>
                   </div>
@@ -330,34 +322,22 @@ export default function TransactionTable({
         </table>
       </div>
 
-      <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+      <div className="md:hidden divide-y divide-slate-100">
         {filteredTransactions.map((tx) => {
           const isExpanded = expandedId === tx.displayId;
           const isIncome = tx.kind === "income";
           return (
             <div key={tx.displayId} className="bg-white dark:bg-slate-900">
-              <div
-                onClick={() => toggleAccordion(tx.displayId)}
-                role="button"
-                tabIndex={0}
-                aria-expanded={isExpanded}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    toggleAccordion(tx.displayId);
-                  }
-                }}
-                className="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50 dark:active:bg-slate-800/60 focus-visible:bg-slate-50 dark:focus-visible:bg-slate-800/60 outline-none transition-colors"
-              >
+              <div onClick={() => toggleAccordion(tx.displayId)} className="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50">
                 <div className="flex items-center gap-3">
                   <div className={`w-2 h-2 rounded-full ${isIncome ? "bg-emerald-500" : "bg-rose-500"}`} />
                   <div>
                     <p className="font-bold text-slate-900 dark:text-slate-100">{tx.typeName || tx.type}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{tx.date}</p>
+                    <p className="text-xs text-slate-500">{tx.date}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`font-bold ${isIncome ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
+                  <span className={`font-bold ${isIncome ? "text-emerald-600" : "text-rose-600"}`}>
                     {isIncome ? "+" : "-"}{" "}
                     {(() => {
                       const safeAmount = tx.amountPrimaryCurrency ?? tx.amountPrimary ?? tx.amount;
@@ -369,15 +349,15 @@ export default function TransactionTable({
                 </div>
               </div>
               {isExpanded && (
-                <div className="px-4 pb-4 pt-2 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 animate-in slide-in-from-top-2 duration-200">
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 uppercase font-bold tracking-widest text-[10px]">
+                <div className="px-4 pb-4 pt-2 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-50 dark:border-slate-800 animate-in slide-in-from-top-2 duration-200">
+                  <p className="text-xs text-slate-400 mb-4 uppercase font-bold tracking-widest">
                     {t("transactions.table.actions")}
                   </p>
                   <div className="grid grid-cols-2 gap-3">
-                    <button onClick={() => openEditModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-indigo-600 dark:text-indigo-400 font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer">
+                    <button onClick={() => openEditModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold shadow-sm active:scale-95 transition-transform cursor-pointer">
                       <Pencil size={18} /> {t("transactions.table.edit")}
                     </button>
-                    <button onClick={() => openDeleteModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 border border-rose-100 dark:border-rose-900/40 rounded-xl text-rose-600 dark:text-rose-400 font-bold shadow-sm hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer">
+                    <button onClick={() => openDeleteModal(tx)} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 border border-rose-100 dark:border-rose-900/40 rounded-xl text-rose-600 dark:text-rose-400 font-bold shadow-sm active:scale-95 transition-transform cursor-pointer">
                       <Trash2 size={18} /> {t("transactions.table.delete")}
                     </button>
                   </div>
@@ -406,7 +386,7 @@ export default function TransactionTable({
             <form onSubmit={handleSave} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">
                     {t("common.amount")}
                   </label>
                   <input
@@ -414,19 +394,19 @@ export default function TransactionTable({
                     type="number"
                     step="0.01"
                     defaultValue={selectedTransaction?.amount}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1 flex items-center gap-1">
+                  <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                     <Globe size={14} /> {t("transactions.table.currency")}
                   </label>
                   <select
                     name="currency"
                     defaultValue={selectedTransaction?.currency}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                   >
                     {CURRENCIES.map((c) => (
                       <option key={c} value={c}>
@@ -437,13 +417,13 @@ export default function TransactionTable({
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1 flex items-center gap-1">
+                  <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                     <CreditCard size={14} /> {t("transactions.table.paymentMethod")}
                   </label>
                   <select
                     name="paymentMethod"
                     defaultValue={selectedTransaction?.paymentMethod || "CASH"}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                   >
                     <option value="CASH">Cash</option>
                     <option value="CREDIT_CARD">Credit Card</option>
@@ -455,13 +435,13 @@ export default function TransactionTable({
               </div>
 
               <div>
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1 flex items-center gap-1">
+                <label className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-1">
                   <Tag size={14} /> {t("transactions.table.category")}
                 </label>
                 <select
                   name="categoryId"
                   defaultValue={defaultCategoryId}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                   required
                 >
                   <option value="" disabled>{t("transactions.table.selectCategory")}</option>
@@ -474,27 +454,27 @@ export default function TransactionTable({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
                   {t("transactions.table.date")}
                 </label>
                 <input
                   name="date"
                   type="date"
                   defaultValue={selectedTransaction?.date}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
                   {t("common.description")}
                 </label>
                 <textarea
                   name="description"
                   rows={2}
                   defaultValue={selectedTransaction?.description}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                 />
               </div>
 
@@ -508,7 +488,7 @@ export default function TransactionTable({
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-xl font-semibold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                  className="flex-1 py-3 px-4 bg-emerald-600 rounded-xl font-semibold text-white hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Save size={18} /> {t("transactions.table.saveChanges")}
                 </button>
@@ -520,9 +500,9 @@ export default function TransactionTable({
 
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200 border border-slate-100 dark:border-slate-800">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="p-8 text-center">
-              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 mb-4">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 text-rose-600 mb-4">
                 <AlertTriangle size={32} />
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 mb-2">
@@ -532,16 +512,16 @@ export default function TransactionTable({
                 {t("transactions.table.deleteDescription", { type: selectedTransaction?.kind || t("common.type") })}
               </p>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-800/80 p-4 flex gap-3">
+            <div className="bg-slate-50 dark:bg-slate-800 p-4 flex gap-3">
               <button
                 onClick={closeModal}
-                className="flex-1 py-3 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="flex-1 py-3 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
-                {t("common.cancel")}
+                Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 rounded-xl font-semibold text-white transition-colors cursor-pointer shadow-sm"
+                className="flex-1 py-3 px-4 bg-rose-600 rounded-xl font-semibold text-white hover:bg-rose-700 transition-colors cursor-pointer"
               >
                 {t("common.delete")}
               </button>

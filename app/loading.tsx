@@ -10,7 +10,7 @@ export default function Loading() {
           <div className="flex gap-3">
             <div className="h-10 w-24 bg-slate-200 rounded-xl" />
             <div className="h-10 w-32 bg-slate-200 rounded-xl" />
-            <div className="h-10 w-40 bg-indigo-100 rounded-xl" />
+            <div className="h-10 w-40 bg-emerald-100 rounded-xl" />
           </div>
         </div>
 

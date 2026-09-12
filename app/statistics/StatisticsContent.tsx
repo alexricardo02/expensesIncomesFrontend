@@ -53,7 +53,7 @@ export default function StatisticsContent({ data }: { data: any }) {
     updateFilter({ startDate: start || null, endDate: end || null });
   };
 
-  const colors = ["#6366f1", "#14b8a6", "#f59e0b", "#ec4899", "#8b5cf6", "#10b981", "#f43f5e"];
+  const colors = ["#10b981", "#14b8a6", "#059669", "#34d399", "#047857", "#0d9488", "#6ee7b7"];
 
   const buildChartData = (sourceData: any) => ({
     labels: sourceData ? Object.keys(sourceData) : [],
@@ -69,8 +69,8 @@ export default function StatisticsContent({ data }: { data: any }) {
     datasets: [{
       label: "Accumulated Balance",
       data: data.balanceOverTime?.map((b: any) => b.balance) || [],
-      borderColor: "#6366f1",
-      backgroundColor: "rgba(99, 102, 241, 0.1)",
+      borderColor: "#10b981",
+      backgroundColor: "rgba(16, 185, 129, 0.1)",
       fill: true,
       tension: 0.4,
     }]
@@ -81,7 +81,7 @@ export default function StatisticsContent({ data }: { data: any }) {
     datasets: [{
       label: "Expenses",
       data: data.expensesByCategory ? Object.values(data.expensesByCategory) : [],
-      backgroundColor: "#6366f1",
+      backgroundColor: "#10b981",
       borderRadius: 4,
     }]
   };
@@ -90,31 +90,31 @@ export default function StatisticsContent({ data }: { data: any }) {
     <>
       <div className="flex flex-wrap gap-2 items-center">
         <Filter size={16} className="text-slate-400 mr-2" />
-        <button onClick={() => handlePillClick("thisMonth")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold cursor-pointer transition-colors">{t("statistics.thisMonth")}</button>
-        <button onClick={() => handlePillClick("lastMonth")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold cursor-pointer transition-colors">{t("statistics.lastMonth")}</button>
-        <button onClick={() => handlePillClick("last3Months")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold cursor-pointer transition-colors">{t("statistics.last3Months")}</button>
-        <button onClick={() => handlePillClick("thisYear")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold cursor-pointer transition-colors">{t("statistics.thisYear")}</button>
-        <button onClick={() => updateFilter({ startDate: null, endDate: null })} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold cursor-pointer transition-colors">{t("statistics.allTime")}</button>
+        <button onClick={() => handlePillClick("thisMonth")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.thisMonth")}</button>
+        <button onClick={() => handlePillClick("lastMonth")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.lastMonth")}</button>
+        <button onClick={() => handlePillClick("last3Months")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.last3Months")}</button>
+        <button onClick={() => handlePillClick("thisYear")} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.thisYear")}</button>
+        <button onClick={() => updateFilter({ startDate: null, endDate: null })} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-semibold">{t("statistics.allTime")}</button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <input type="date" value={data.currentParams.startDate || ""} onChange={(e) => updateFilter({ startDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" />
-        <input type="date" value={data.currentParams.endDate || ""} onChange={(e) => updateFilter({ endDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" />
+        <input type="date" value={data.currentParams.startDate || ""} onChange={(e) => updateFilter({ startDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
+        <input type="date" value={data.currentParams.endDate || ""} onChange={(e) => updateFilter({ endDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
 
-        <select value={data.currentParams.type || "ALL"} onChange={(e) => updateFilter({ type: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer">
+        <select value={data.currentParams.type || "ALL"} onChange={(e) => updateFilter({ type: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
           <option value="ALL">{t("statistics.allTypes")}</option>
           <option value="INCOME">{t("statistics.onlyIncomes")}</option>
           <option value="EXPENSE">{t("statistics.onlyExpenses")}</option>
         </select>
 
-        <select value={data.currentParams.categoryId || ""} onChange={(e) => updateFilter({ categoryId: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer">
+        <select value={data.currentParams.categoryId || ""} onChange={(e) => updateFilter({ categoryId: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
           <option value="">{t("statistics.allCategories")}</option>
           {data.categories?.map((c: any) => (
             <option key={c.categoryId} value={c.categoryId}>{c.name}</option>
           ))}
         </select>
 
-        <select value={data.currentParams.paymentMethod || ""} onChange={(e) => updateFilter({ paymentMethod: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer">
+        <select value={data.currentParams.paymentMethod || ""} onChange={(e) => updateFilter({ paymentMethod: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
           <option value="">{t("statistics.allMethods")}</option>
           <option value="CASH">{t("statistics.cash")}</option>
           <option value="CREDIT_CARD">{t("statistics.creditCard")}</option>
@@ -127,10 +127,10 @@ export default function StatisticsContent({ data }: { data: any }) {
   );
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-8 pb-24 md:pb-8 text-slate-900 dark:text-slate-100">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-8 text-slate-900 dark:text-slate-100">
       <div className="max-w-6xl mx-auto space-y-8">
 
-        <button onClick={() => router.push("/")} className="flex items-center text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors group cursor-pointer">
+        <button onClick={() => router.push("/")} className="flex items-center text-slate-500 hover:text-emerald-600 transition-colors group">
           <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
           {t("statistics.backToDashboard")}
         </button>
@@ -165,24 +165,24 @@ export default function StatisticsContent({ data }: { data: any }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40 p-6 rounded-3xl">
-            <p className="text-emerald-700 dark:text-emerald-400 font-semibold text-sm">{t("statistics.totalIncomes")}</p>
-            <h2 className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">{formatCurrency(data.totalIn, currency, true)}</h2>
+          <div className="bg-emerald-50 dark:bg-emerald-500/10 p-6 rounded-3xl">
+            <p className="text-emerald-700 font-semibold text-sm">{t("statistics.totalIncomes")}</p>
+            <h2 className="text-3xl font-bold text-emerald-600 mt-2">{formatCurrency(data.totalIn, currency, true)}</h2>
           </div>
-          <div className="bg-rose-50 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-800/40 p-6 rounded-3xl">
-            <p className="text-rose-700 dark:text-rose-400 font-semibold text-sm">{t("statistics.totalExpenses")}</p>
-            <h2 className="text-3xl font-bold text-rose-600 dark:text-rose-400 mt-2">{formatCurrency(data.totalOut, currency, true)}</h2>
+          <div className="bg-rose-50 dark:bg-rose-500/10 p-6 rounded-3xl">
+            <p className="text-rose-700 font-semibold text-sm">{t("statistics.totalExpenses")}</p>
+            <h2 className="text-3xl font-bold text-rose-600 mt-2">{formatCurrency(data.totalOut, currency, true)}</h2>
           </div>
-          <div className="bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-800/40 p-6 rounded-3xl">
-            <p className="text-indigo-700 dark:text-indigo-400 font-semibold text-sm flex items-center gap-2"><Activity size={16} /> {t("statistics.dailyAverage")}</p>
-            <h2 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">{formatCurrency(data.dailyAverage, currency, true)}</h2>
+          <div className="bg-emerald-50/70 dark:bg-emerald-500/10 p-6 rounded-3xl border border-emerald-100/50 dark:border-emerald-900/30">
+            <p className="text-emerald-800 dark:text-emerald-300 font-semibold text-sm flex items-center gap-2"><Activity size={16} /> {t("statistics.dailyAverage")}</p>
+            <h2 className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mt-2">{formatCurrency(data.dailyAverage, currency, true)}</h2>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
           <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2">
-            <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2"><TrendingUp size={20} className="text-indigo-500" /> {t("statistics.accumulatedBalance")}</h3>
+            <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2"><TrendingUp size={20} className="text-emerald-500" /> {t("statistics.accumulatedBalance")}</h3>
             <div className="w-full h-72">
               <Line data={lineChartData} options={{
                 maintainAspectRatio: false,
@@ -227,31 +227,30 @@ export default function StatisticsContent({ data }: { data: any }) {
         </div>
         <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 mt-8">
           <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2">
-            <Calendar size={20} className="text-indigo-500" /> {t("statistics.ledger")}
+            <Calendar size={20} className="text-emerald-500" /> {t("statistics.ledger")}
           </h3>
 
           {data.transactions && data.transactions.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-xs uppercase tracking-wider text-slate-600 dark:text-slate-300 font-semibold">
-                    <th className="pb-3 pr-4">{t("statistics.tableHeaders.date")}</th>
-                    <th className="pb-3 pr-4">{t("statistics.tableHeaders.description")}</th>
-                    <th className="pb-3 pr-4">{t("statistics.tableHeaders.category")}</th>
-                    <th className="pb-3 pr-4">{t("statistics.tableHeaders.method")}</th>
-                    <th className="pb-3 text-right">{t("statistics.tableHeaders.amount")}</th>
+                  <tr className="border-b border-slate-200 dark:border-slate-800 text-sm text-slate-500 dark:text-slate-400">
+                    <th className="pb-3 pr-4 font-medium">{t("statistics.tableHeaders.date")}</th>
+                    <th className="pb-3 pr-4 font-medium">{t("statistics.tableHeaders.description")}</th>
+                    <th className="pb-3 pr-4 font-medium">{t("statistics.tableHeaders.category")}</th>
+                    <th className="pb-3 pr-4 font-medium">{t("statistics.tableHeaders.method")}</th>
+                    <th className="pb-3 font-medium text-right">{t("statistics.tableHeaders.amount")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.transactions.map((tx: any, idx: number) => (
-                    <tr key={idx} className="border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                      <td className="py-3 pr-4 text-sm whitespace-nowrap text-slate-600 dark:text-slate-400">{tx.date}</td>
-                      <td className="py-3 pr-4 text-sm font-medium text-slate-800 dark:text-slate-200">{tx.description || t("common.na")}</td>
-                      <td className="py-3 pr-4 text-sm">
-                        <span className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs font-medium">{tx.categoryName}</span>
+                    <tr key={idx} className="border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">                      <td className="py-3 pr-4 text-sm whitespace-nowrap">{tx.date}</td>
+                      <td className="py-3 pr-4 text-sm font-medium text-slate-700 dark:text-slate-300">{tx.description || t("common.na")}</td>
+                      <td className="py-3 pr-4 text-sm text-slate-500">
+                        <span className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded-md text-xs">{tx.categoryName}</span>
                       </td>
-                      <td className="py-3 pr-4 text-sm text-slate-600 dark:text-slate-400">{tx.paymentMethod?.replace('_', ' ')}</td>
-                      <td className={`py-3 text-sm font-semibold text-right whitespace-nowrap ${tx.type === 'INCOME' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'}`}>
+                      <td className="py-3 pr-4 text-sm text-slate-500">{tx.paymentMethod?.replace('_', ' ')}</td>
+                      <td className={`py-3 text-sm font-semibold text-right whitespace-nowrap ${tx.type === 'INCOME' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'}`}>
                         {tx.type === 'INCOME' ? '+ ' : '- '}
                         {(() => {
                           return formatCurrency(tx.amount, tx.currency, false, true);

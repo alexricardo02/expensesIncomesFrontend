@@ -101,32 +101,30 @@ export default function CategoriesPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 md:p-8 pb-24 md:pb-8">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 md:p-8">
       <Toaster position="top-right" />
 
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4 mb-8">
           <Link
             href="/"
-            className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-200 dark:hover:border-indigo-800 transition-colors"
+            className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors"
           >
             <ArrowLeft size={20} />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">
-              <LayoutGrid className="text-indigo-600 dark:text-indigo-400" /> {t("categories.title")}
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">              <LayoutGrid className="text-emerald-600" /> My Categories
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">{t("categories.subtitle")}</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Manage your income and expense classes</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           <div className="md:col-span-1">
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <PlusCircle size={18} className="text-indigo-500" /> {t("categories.new")}
-              </h2>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <PlusCircle size={18} className="text-emerald-500" /> New
+            </h2>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">{t("categories.nameLabel")}</label>
@@ -135,7 +133,7 @@ export default function CategoriesPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder={t("categories.namePlaceholder")}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                     maxLength={30}
                     required
                   />
@@ -145,15 +143,15 @@ export default function CategoriesPage() {
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                   >
-                    <option value="expense">{t("categories.expense")}</option>
-                    <option value="income">{t("categories.income")}</option>
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
                   </select>
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm cursor-pointer"
+                  className="w-full py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-sm active:scale-95 cursor-pointer"
                 >
                   {t("categories.save")}
                 </button>
@@ -162,35 +160,31 @@ export default function CategoriesPage() {
           </div>
 
           <div className="md:col-span-2">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
               {isLoading ? (
-                <div className="p-8 text-center text-slate-500 dark:text-slate-400">{t("categories.loading")}</div>
+                <div className="p-8 text-center text-slate-400">{t("categories.loading")}</div>
               ) : categories.length === 0 ? (
-                <div className="p-8 text-center text-slate-500 dark:text-slate-400">
+                <div className="p-8 text-center text-slate-400">
                   <Tag size={32} className="mx-auto mb-3 opacity-50" />
                   {t("categories.emptyState")}
                 </div>
               ) : (
-                <ul className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {categories.map((cat) => (
-                    <li key={cat.categoryId} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${cat.type === "income" ? "bg-emerald-500" : "bg-rose-500"}`} />
-                        <div>
-                          <p className="font-bold text-slate-800 dark:text-slate-100">{cat.name}</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">{cat.type}</p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => handleDelete(cat.categoryId)}
-                        aria-label="Delete category"
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-800 dark:hover:text-rose-400 rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 cursor-pointer"
-                        title="Delete category"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </li>
-                  ))}
+                <ul className="divide-y divide-slate-100 dark:divide-slate-800">                  {categories.map((cat) => (
+                  <li key={cat.categoryId} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">                      <div className="flex items-center gap-3">
+                    <div className={`w-2 h-2 rounded-full ${cat.type === "income" ? "bg-emerald-500" : "bg-rose-500"}`} />
+                    <div>
+                      <p className="font-bold text-slate-800 dark:text-slate-100">{cat.name}</p>                          <p className="text-xs text-slate-400 uppercase tracking-wider">{cat.type}</p>
+                    </div>
+                  </div>
+                    <button
+                      onClick={() => handleDelete(cat.categoryId)}
+                      className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                      title="Delete category"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </li>
+                ))}
                 </ul>
               )}
             </div>

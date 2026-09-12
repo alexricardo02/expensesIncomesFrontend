@@ -72,14 +72,14 @@ export default function DatenschutzPage() {
               <li>
                 Löschung deines Kontos und aller zugehörigen Daten — jederzeit
                 selbstständig unter{" "}
-                <Link href="/settings" className="text-indigo-600 hover:underline">
+                <Link href="/settings" className="text-emerald-600 hover:underline">
                   Einstellungen → Konto löschen
                 </Link>
               </li>
               <li>
                 Datenübertragbarkeit — Export deiner Transaktionen als CSV, Excel
                 oder PDF unter{" "}
-                <Link href="/edit-transactions" className="text-indigo-600 hover:underline">
+                <Link href="/edit-transactions" className="text-emerald-600 hover:underline">
                   Exportieren
                 </Link>
               </li>
