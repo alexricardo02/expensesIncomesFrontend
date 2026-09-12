@@ -7,6 +7,8 @@
 
 A full-stack personal finance dashboard for tracking incomes and expenses. Built with Next.js, featuring JWT-based authentication, interactive charts, full transaction management, and a responsive mobile-first design.
 
+![Overview](Overview.png)
+
 🌍 **Live:** [expenses-incomes-frontend.vercel.app](https://expenses-incomes-frontend.vercel.app)  
 🔗 **Backend API:** [finance-tracker-backend](https://github.com/alexricardo02/finance-tracker-backend)
 
