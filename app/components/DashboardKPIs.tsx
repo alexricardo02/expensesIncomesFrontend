@@ -46,26 +46,21 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
   return (
     <>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        <div className="col-span-2 lg:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+        <div className="col-span-2 lg:col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
-              {/* WHY: Unifying icon size across all desktop KPI cards establishes visual harmony. */}
+            <div className="p-2 bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
               <Wallet size={20} />
             </div>
-            {/* WHY: Standardizing tracking and base size prevents readability issues across breakpoints. */}
-            <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">
               {t("dashboard.kpis.totalBalance")}
             </span>
           </div>
           <div className="flex items-end justify-between gap-2">
             <div className="flex-1 min-w-0">
-              {/* WHY: Aligning font weights and increasing size matches the secondary KPI cards. truncate prevents layout breaks on large numbers. */}
               <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight truncate">
                 {formatCurrency(totalBalance, targetCurrency, true)}
               </h2>
-              <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap ${monthlyKPIPercentage >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
-
-
+              <span className={`inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap ${monthlyKPIPercentage >= 0 ? "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400" : "bg-rose-50 dark:bg-rose-500/15 text-rose-700 dark:text-rose-400"}`}>
                 {monthlyKPIPercentage >= 0 ? "+" : ""}{monthlyKPIPercentage.toFixed(1)}% {t("dashboard.kpis.vsLastMonth")}
               </span>
             </div>
@@ -75,36 +70,33 @@ export default function DashboardKPIs({ transactions }: { transactions: any[] })
           </div>
         </div>
 
-        <div className="col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-          {/* WHY: Grouping the icon and label on the left standardizes the header layout across all cards instead of mixing space-between alignments. */}
+        <div className="col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0">
+            <div className="p-2 bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 rounded-lg shrink-0">
               <ArrowUpCircle size={20} />
             </div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider truncate">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">
               {t("dashboard.kpis.incomes")}
             </span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-emerald-600 tracking-tight truncate">
+          <h2 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight truncate">
             {formatCurrency(totalIncomes, targetCurrency, true)}
           </h2>
         </div>
 
-        <div className="col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+        <div className="col-span-1 bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-rose-50 text-rose-600 rounded-lg shrink-0">
+            <div className="p-2 bg-rose-50 dark:bg-rose-500/15 text-rose-600 dark:text-rose-400 rounded-lg shrink-0">
               <ArrowDownCircle size={20} />
             </div>
-            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider truncate">
-              Expenses
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">
+              {t("dashboard.kpis.expenses")}
             </span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-rose-600 tracking-tight truncate">
+          <h2 className="text-2xl md:text-3xl font-bold text-rose-600 dark:text-rose-400 tracking-tight truncate">
             {formatCurrency(totalExpenses, targetCurrency, true)}
           </h2>
-          <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap ${expensesMonthlyPercentage <= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
-
-
+          <span className={`inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap ${expensesMonthlyPercentage <= 0 ? "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400" : "bg-rose-50 dark:bg-rose-500/15 text-rose-700 dark:text-rose-400"}`}>
             {expensesMonthlyPercentage >= 0 ? "+" : ""}{expensesMonthlyPercentage.toFixed(1)}% {t("dashboard.kpis.vsLastMonth")}
           </span>
         </div>

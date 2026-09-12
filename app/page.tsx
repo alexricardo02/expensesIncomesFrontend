@@ -183,7 +183,7 @@ export default async function Home() {
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
                 {translate("dashboard.title")}
               </h1>
-              <p className="text-slate-400 dark:text-slate-400 text-sm">
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
                 {translate("dashboard.welcome", { name: usernameToShow })}
                 {translate("dashboard.summary")}
               </p>
@@ -192,7 +192,7 @@ export default async function Home() {
             <div className="w-full md:w-auto mt-4 md:mt-0">
               <div className="grid grid-cols-2 gap-3 md:flex md:flex-row md:gap-4 md:items-center w-full">
                 <Link href="/import" className="w-full md:w-auto">
-                  <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors font-semibold shadow-sm cursor-pointer">
+                  <button className="flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors font-semibold shadow-sm cursor-pointer">
                     <Upload size={20} />
                     {translate("common.import")}
                   </button>
@@ -201,7 +201,8 @@ export default async function Home() {
                 <ExportMenu />
 
                 <Link href="/new-transaction" className="w-full col-span-2 md:col-span-1 md:w-auto">
-                  <button className="flex items-center justify-center w-full gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-100 dark:shadow-none cursor-pointer">                    <PlusCircle size={20} />
+                  <button className="flex items-center justify-center w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-900/10 dark:shadow-none cursor-pointer">
+                    <PlusCircle size={20} />
                     {translate("common.newTransaction")}
                   </button>
                 </Link>
@@ -212,19 +213,19 @@ export default async function Home() {
           <DashboardKPIs transactions={transactions} />
 
           {isColdStart && (
-            <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 mt-6 rounded-xl text-center font-medium shadow-sm">
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-300 p-4 mt-6 rounded-xl text-center font-medium shadow-sm">
               {translate("dashboard.coldStart")}
             </div>
           )}
 
-          <section className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
-            <div className="p-6 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 overflow-hidden">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <History className="text-slate-400" size={20} />
+                <History className="text-slate-500 dark:text-slate-400" size={20} />
                 <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-50">{translate("dashboard.recentActivity")}</h3>
               </div>
               <Link href="/edit-transactions">
-                <button className="text-indigo-600 text-sm font-medium hover:underline cursor-pointer">
+                <button className="text-indigo-600 dark:text-indigo-400 text-sm font-semibold hover:underline cursor-pointer">
                   {translate("common.viewAll")}
                 </button>
               </Link>
@@ -234,7 +235,7 @@ export default async function Home() {
               {recentTransactions.length > 0 ? (
                 <TransactionList transactions={recentTransactions} />
               ) : (
-                <div className="p-10 text-center text-slate-400">
+                <div className="p-10 text-center text-slate-500 dark:text-slate-400">
                   {translate("common.noTransactions")}
                 </div>
               )}
@@ -242,23 +243,23 @@ export default async function Home() {
 
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-sm uppercase">
+                <thead className="bg-slate-50 dark:bg-slate-800/70 text-slate-600 dark:text-slate-300 text-xs uppercase tracking-wider font-semibold">
                   <tr>
-                    <th className="px-6 py-4 font-medium">{translate("common.type")}</th>
-                    <th className="px-6 py-4 font-medium">{translate("common.category")}</th>
-                    <th className="px-6 py-4 font-medium">{translate("common.date")}</th>
-                    <th className="px-6 py-4 font-medium text-right">{translate("common.amount")}</th>
+                    <th className="px-6 py-4 font-semibold">{translate("common.type")}</th>
+                    <th className="px-6 py-4 font-semibold">{translate("common.category")}</th>
+                    <th className="px-6 py-4 font-semibold">{translate("common.date")}</th>
+                    <th className="px-6 py-4 font-semibold text-right">{translate("common.amount")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                   {recentTransactions.map((t) => (
-                    <tr key={t.displayId} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                    <tr key={t.displayId} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors">
                       <td className="px-6 py-4 flex items-center gap-3">
                         {getCategoryIcon(t.kind, t.type)}
                         <span
-                          className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${t.kind === "income"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-rose-100 text-rose-700"
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${t.kind === "income"
+                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300"
+                            : "bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-300"
                             }`}
                         >
                           {t.kind}
@@ -270,8 +271,8 @@ export default async function Home() {
                       <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{t.date}</td>
                       <td
                         className={`px-6 py-4 text-right font-semibold ${t.kind === "income"
-                          ? "text-emerald-600"
-                          : "text-rose-600"
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-rose-600 dark:text-rose-400"
                           }`}
                       >
                         {t.kind === "income" ? "+" : "-"}{" "}

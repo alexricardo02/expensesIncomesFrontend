@@ -57,39 +57,39 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-slate-50 to-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-slate-50 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center p-4">
 
       <div className="max-w-md w-full">
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 text-2xl font-black tracking-tight text-slate-900">
-            <Wallet className="text-emerald-600" size={28} />
-            Finance<span className="text-emerald-600">Tracker</span>
+          <div className="inline-flex items-center gap-2 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50">
+            <Wallet className="text-emerald-600 dark:text-emerald-400" size={28} />
+            Finance<span className="text-emerald-600 dark:text-emerald-400">Tracker</span>
           </div>
-          <p className="text-slate-500 mt-2 text-sm">Take control of your money, one transaction at a time.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">Take control of your money, one transaction at a time.</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 border border-slate-100 dark:border-slate-800">
         <div className="text-center mb-6">
-          <h1 className="text-xl font-bold text-slate-900">{t("auth.login.title")}</h1>
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">{t("auth.login.title")}</h1>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
           {error && (
-            <div className="bg-rose-50 text-rose-600 p-3 rounded-lg flex items-center text-sm border border-rose-100">
+            <div className="bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 p-3 rounded-lg flex items-center text-sm border border-rose-100 dark:border-rose-900/50">
               <AlertCircle size={18} className="mr-2" />
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">{t("auth.login.userLabel")}</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t("auth.login.userLabel")}</label>
             <div className="relative">
-              <User className="absolute left-3 top-3 text-slate-400" size={20} />
+              <User className="absolute left-3 top-3 text-slate-400 dark:text-slate-500" size={20} />
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                className="text-slate-900 dark:text-slate-100 w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all outline-none"
                 placeholder={t("auth.login.usernamePlaceholder")}
                 required
               />
@@ -97,21 +97,22 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">{t("auth.login.passwordLabel")}</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t("auth.login.passwordLabel")}</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 text-slate-400" size={20} />
+              <Lock className="absolute left-3 top-3 text-slate-400 dark:text-slate-500" size={20} />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="text-slate-900 w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                className="text-slate-900 dark:text-slate-100 w-full pl-10 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all outline-none"
                 placeholder={t("auth.login.passwordPlaceholder")}
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 cursor-pointer transition-colors"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -122,7 +123,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => router.push("/forgot-password")}
-              className="text-sm text-indigo-600 font-medium hover:underline cursor-pointer"
+              className="text-sm text-indigo-600 dark:text-indigo-400 font-medium hover:underline cursor-pointer"
             >
               {t("auth.login.forgotPassword")}
             </button>
@@ -131,23 +132,23 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 disabled:opacity-50 cursor-pointer"
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 dark:shadow-none disabled:opacity-50 cursor-pointer"
           >
             {loading ? t("auth.login.loggingIn") : t("auth.login.submit")}
           </button>
 
-          <p className="text-center text-sm text-slate-500 mt-6">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
             {t("auth.login.registerPrompt")} {" "}
             <button
               onClick={() => router.push("/register")}
-              className="text-indigo-600 font-semibold hover:underline cursor-pointer"
+              className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
             >
               {t("auth.login.register")}
             </button>
           </p>
         </form>
 
-        <div className="mt-6 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+        <div className="mt-6 flex gap-3 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/30 p-4 text-sm text-amber-800 dark:text-amber-300">
           <Info size={18} className="mt-0.5 shrink-0" />
           <div className="space-y-1.5">
             <p className="font-semibold">Service notice</p>

@@ -40,3 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .aider*
+
+.agents/
+/agents
+agents
+.antigravity
+antigravity
+/antigravity
+design-system
+/design-system
+design-system/
+.design-system
+
