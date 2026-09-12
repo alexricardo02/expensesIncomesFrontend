@@ -137,9 +137,9 @@ export default function SettingsPage() {
           Back to Dashboard
         </button>
 
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
           <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+            <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">
               <SettingsIcon size={20} />
             </div>
             <div>
@@ -154,7 +154,7 @@ export default function SettingsPage() {
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("settings.currencyDesc")}</p>
 
               {loading ? (
-                <div className="h-12 bg-slate-100 rounded-xl animate-pulse" />
+                <div className="h-12 bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse" />
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {CURRENCIES.map((c) => (
@@ -162,8 +162,8 @@ export default function SettingsPage() {
                       key={c.code}
                       onClick={() => setSelected(c.code)}
                       className={`flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${selected === c.code
-                        ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                        ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500"
+                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700/50"
                         }`}
                     >
                       {c.code}
@@ -183,20 +183,20 @@ export default function SettingsPage() {
             </button>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-6">
               <h2 className="font-semibold text-rose-700 dark:text-rose-300 mb-1">{t("settings.deleteTitle")}</h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("settings.deleteDesc")}</p>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="w-full py-3 bg-rose-50 text-rose-600 font-bold rounded-xl hover:bg-rose-100 transition-colors cursor-pointer"
+                className="w-full py-3 bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 font-bold rounded-xl hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors cursor-pointer"
               >
                 {t("settings.deleteButton")}
               </button>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
             <div className="p-6">
               <h2 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">{t("settings.languageTitle")}</h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("settings.languageDesc")}</p>
@@ -210,8 +210,8 @@ export default function SettingsPage() {
                       router.refresh();
                     }}
                     className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-colors cursor-pointer ${locale === l.code
-                      ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                      : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500"
+                      : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700/50"
                       }`}
                   >
                     {l.label}
@@ -222,8 +222,8 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
-            <div className="p-4 bg-amber-50 border-b border-amber-100 text-amber-700 text-sm font-medium flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-6 md:mb-8 last:mb-0">
+            <div className="p-4 bg-amber-50 dark:bg-amber-950/40 border-b border-amber-100 dark:border-amber-900/50 text-amber-700 dark:text-amber-300 text-sm font-medium flex items-center gap-2">
               <AlertTriangle size={16} />
               {t("settings.underDev")}
             </div>
@@ -234,7 +234,7 @@ export default function SettingsPage() {
                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("settings.passwordDesc")}</p>
                 <button
                   disabled
-                  className="w-full py-3 bg-slate-100 text-slate-400 font-bold rounded-xl cursor-not-allowed"
+                  className="w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-bold rounded-xl cursor-not-allowed"
                 >
                   {t("settings.changePassword")}
                 </button>
@@ -242,12 +242,12 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="p-6 border-t border-slate-100 flex justify-center gap-4 text-xs text-slate-400">
-            <Link href="/impressum" className="hover:text-slate-600 hover:underline">
+          <div className="p-6 border-t border-slate-100 dark:border-slate-800 flex justify-center gap-4 text-xs text-slate-400">
+            <Link href="/impressum" className="hover:text-slate-600 dark:hover:text-slate-300 hover:underline">
               Impressum
             </Link>
             <span>|</span>
-            <Link href="/datenschutzerklarung" className="hover:text-slate-600 hover:underline">
+            <Link href="/datenschutzerklarung" className="hover:text-slate-600 dark:hover:text-slate-300 hover:underline">
               Datenschutzerklärung
             </Link>
           </div>
@@ -256,16 +256,16 @@ export default function SettingsPage() {
 
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in duration-200">
             <div className="p-8 text-center">
-              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 text-rose-600 mb-4">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 mb-4">
                 <AlertTriangle size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">{t("settings.deleteConfirmTitle")}</h3>
-              <p className="text-slate-500">{t("settings.deleteConfirmDesc")}</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 mb-2">{t("settings.deleteConfirmTitle")}</h3>
+              <p className="text-slate-500 dark:text-slate-400">{t("settings.deleteConfirmDesc")}</p>
             </div>
-            <div className="bg-slate-50 p-4 flex gap-3">
-              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer">
+            <div className="bg-slate-50 dark:bg-slate-800 p-4 flex gap-3">
+              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
                 {t("settings.cancel")}
               </button>
               <button
@@ -281,13 +281,17 @@ export default function SettingsPage() {
 
       {showDeletePassword && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100">
-              <h3 className="text-lg font-bold text-slate-900">{t("settings.deleteConfirmPasswordTitle")}</h3>
-              <p className="text-sm text-slate-500 mt-1">{t("settings.deleteConfirmPasswordDesc")}</p>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in duration-200">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">{t("settings.deleteConfirmPasswordTitle")}</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{t("settings.deleteConfirmPasswordDesc")}</p>
             </div>
             <div className="p-6">
+              <label htmlFor="delete-account-password" className="sr-only">
+                {t("settings.deleteConfirmPasswordTitle")}
+              </label>
               <input
+                id="delete-account-password"
                 type="password"
                 value={deletePassword}
                 onChange={(e) => setDeletePassword(e.target.value)}
@@ -296,10 +300,10 @@ export default function SettingsPage() {
                 autoFocus
               />
             </div>
-            <div className="bg-slate-50 p-4 flex gap-3">
+            <div className="bg-slate-50 dark:bg-slate-800 p-4 flex gap-3">
               <button
                 onClick={() => { setShowDeletePassword(false); setDeletePassword(""); }}
-                className="flex-1 py-3 px-4 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                className="flex-1 py-3 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 {t("settings.cancel")}
               </button>

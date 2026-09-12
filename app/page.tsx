@@ -212,19 +212,19 @@ export default async function Home() {
           <DashboardKPIs transactions={transactions} />
 
           {isColdStart && (
-            <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 mt-6 rounded-xl text-center font-medium shadow-sm">
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 dark:bg-amber-950/40 dark:border-amber-900/50 dark:text-amber-300 p-4 mt-6 rounded-xl text-center font-medium shadow-sm">
               {translate("dashboard.coldStart")}
             </div>
           )}
 
-          <section className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+          <section className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
             <div className="p-6 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <History className="text-slate-400" size={20} />
                 <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-50">{translate("dashboard.recentActivity")}</h3>
               </div>
               <Link href="/edit-transactions">
-                <button className="text-emerald-600 text-sm font-medium hover:underline cursor-pointer">
+                <button className="text-emerald-600 dark:text-emerald-400 text-sm font-medium hover:underline cursor-pointer">
                   {translate("common.viewAll")}
                 </button>
               </Link>
@@ -257,8 +257,8 @@ export default async function Home() {
                         {getCategoryIcon(t.kind, t.type)}
                         <span
                           className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${t.kind === "income"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-rose-100 text-rose-700"
+                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
+                            : "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300"
                             }`}
                         >
                           {t.kind}
@@ -269,9 +269,9 @@ export default async function Home() {
                       </td>
                       <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{t.date}</td>
                       <td
-                        className={`px-6 py-4 text-right font-semibold ${t.kind === "income"
-                          ? "text-emerald-600"
-                          : "text-rose-600"
+                        className={`px-6 py-4 text-right font-semibold tabular-nums ${t.kind === "income"
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-rose-600 dark:text-rose-400"
                           }`}
                       >
                         {t.kind === "income" ? "+" : "-"}{" "}

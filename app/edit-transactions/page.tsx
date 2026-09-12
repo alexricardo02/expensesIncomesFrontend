@@ -97,9 +97,9 @@ export default async function EditTransactionsPage() {
           </Link>
         </div>
 
-        <section className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden dark:bg-slate-900 dark:border-slate-800">
+        <section className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden dark:bg-slate-900 dark:border-slate-800">
           {isColdStart ? (
-            <div className="p-10 text-center text-amber-700 bg-amber-50 font-medium">
+            <div className="p-10 text-center text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 font-medium">
               {t("statistics.coldStart")}
             </div>
           ) : (

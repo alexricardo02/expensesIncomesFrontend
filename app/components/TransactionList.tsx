@@ -50,7 +50,7 @@ export default function TransactionList({ transactions }: { transactions: any[] 
                 <p className="text-slate-500 dark:text-slate-400 text-[11px] text-left leading-none mt-0.5">{tx.date}</p>
               </div>
               <div className="flex items-center gap-2 ml-2 shrink-0">
-                <div className={`text-right text-[13px] font-bold whitespace-nowrap ${isIncome ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
+                <div className={`text-right text-[13px] font-bold whitespace-nowrap tabular-nums ${isIncome ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
                   {isIncome ? "+ " : "- "} {(() => {
                     const safeAmount = tx.amountPrimaryCurrency ?? tx.amountPrimary ?? tx.amount;
                     const safeCurrency = tx.primaryCurrency ?? tx.currency ?? "USD";

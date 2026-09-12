@@ -140,8 +140,8 @@ export default function NewTransactionPage() {
           {t("common.backToDashboard")}
         </button>
 
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200/60 dark:border-slate-800 overflow-hidden">
-          <div className="p-8 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/60 dark:border-slate-800 overflow-hidden">
+          <div className="p-6 md:p-8 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
               {t("common.newTransaction")}
             </h1>
@@ -150,30 +150,31 @@ export default function NewTransactionPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-8 space-y-8">
-            <div className="flex p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl">
+          <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
+            <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
               {(["expense", "income"] as const).map((opt) => (
                 <button
                   key={opt}
                   type="button"
                   onClick={() => { setType(opt); setFormData({ ...formData, categoryId: "" }); }}
-                  className={`cursor-pointer flex-1 py-3 rounded-xl font-semibold capitalize transition-all duration-200 ${type === opt ? "bg-white text-emerald-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                  className={`cursor-pointer flex-1 py-2.5 rounded-lg font-semibold capitalize transition-all duration-200 ${type === opt ? "bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
                 >
                   {t(`common.${opt}`)}
                 </button>
               ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label htmlFor="tx-amount" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <DollarSign size={16} className="text-emerald-500" /> {t("common.amount")}
                 </label>
                 <input
+                  id="tx-amount"
                   required
                   type="number"
                   step="0.01"
-                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium text-lg text-slate-900 placeholder:text-slate-400"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium text-base text-slate-900 placeholder:text-slate-400 tabular-nums"
                   placeholder="0.00"
                   value={formData.amount}
                   onChange={(e) =>
@@ -182,13 +183,14 @@ export default function NewTransactionPage() {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+              <div className="space-y-1.5">
+                <label htmlFor="tx-currency" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Globe size={16} className="text-emerald-500" /> {t("transactions.table.currency")}
                 </label>
                 <div className="relative">
                   <select
-                    className="w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium text-slate-900"
+                    id="tx-currency"
+                    className="w-full appearance-none px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium text-slate-900"
                     value={formData.currency}
                     onChange={(e) =>
                       setFormData({ ...formData, currency: e.target.value })
@@ -208,14 +210,15 @@ export default function NewTransactionPage() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <div className="space-y-1.5">
+              <label htmlFor="tx-payment-method" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <CreditCard size={16} className="text-emerald-500" /> {t("transactions.table.paymentMethod")}
               </label>
               <div className="relative">
                 <select
+                  id="tx-payment-method"
                   required
-                  className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium"
+                  className="text-slate-900 w-full appearance-none px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                   value={formData.paymentMethod}
                   onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
                 >
@@ -225,19 +228,20 @@ export default function NewTransactionPage() {
                   <option value="BANK_TRANSFER">Bank Transfer</option>
                   <option value="OTHER">Other</option>
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-900" size={18} />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" size={18} />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label htmlFor="tx-category" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Tag size={16} className="text-emerald-500" /> {t("common.category")}
                 </label>
                 <div className="relative">
                   <select
+                    id="tx-category"
                     required
-                    className="text-slate-900 w-full appearance-none px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium"
+                    className="text-slate-900 w-full appearance-none px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                     value={formData.categoryId}
                     onChange={(e) =>
                       setFormData({ ...formData, categoryId: e.target.value })
@@ -253,20 +257,21 @@ export default function NewTransactionPage() {
                     ))}
                   </select>
                   <ChevronDown
-                    className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-900"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400"
                     size={18}
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+              <div className="space-y-1.5">
+                <label htmlFor="tx-date" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Calendar size={16} className="text-emerald-500" /> {t("common.date")}
                 </label>
                 <input
+                  id="tx-date"
                   required
                   type="date"
-                  className="text-slate-900 w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium"
+                  className="text-slate-900 w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                   value={formData.date}
                   onChange={(e) =>
                     setFormData({ ...formData, date: e.target.value })
@@ -275,14 +280,15 @@ export default function NewTransactionPage() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <div className="space-y-1.5">
+              <label htmlFor="tx-description" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <FileText size={16} className="text-emerald-500" /> {t("common.description")}
               </label>
               <textarea
+                id="tx-description"
                 rows={3}
                 placeholder="Add a note..."
-                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -292,9 +298,9 @@ export default function NewTransactionPage() {
 
             <button
               type="submit"
-              className="cursor-pointer w-full flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-emerald-200 active:scale-[0.98] transition-all text-lg"
+              className="cursor-pointer w-full flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-md shadow-emerald-200 dark:shadow-none transition-colors text-base"
             >
-              <Save size={22} />
+              <Save size={20} />
               {t("common.save")}
             </button>
           </form>

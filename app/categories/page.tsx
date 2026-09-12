@@ -122,13 +122,15 @@ export default function CategoriesPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           <div className="md:col-span-1">
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-              <PlusCircle size={18} className="text-emerald-500" /> New
-            </h2>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <PlusCircle size={18} className="text-emerald-500" /> New
+              </h2>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">{t("categories.nameLabel")}</label>
+                  <label htmlFor="category-name" className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">{t("categories.nameLabel")}</label>
                   <input
+                    id="category-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -139,8 +141,9 @@ export default function CategoriesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">{t("categories.typeLabel")}</label>
+                  <label htmlFor="category-type" className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">{t("categories.typeLabel")}</label>
                   <select
+                    id="category-type"
                     value={type}
                     onChange={(e) => setType(e.target.value)}
                     className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
@@ -151,7 +154,7 @@ export default function CategoriesPage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-sm active:scale-95 cursor-pointer"
+                  className="w-full py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-sm cursor-pointer"
                 >
                   {t("categories.save")}
                 </button>
@@ -160,7 +163,7 @@ export default function CategoriesPage() {
           </div>
 
           <div className="md:col-span-2">
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
               {isLoading ? (
                 <div className="p-8 text-center text-slate-400">{t("categories.loading")}</div>
               ) : categories.length === 0 ? (
@@ -169,22 +172,26 @@ export default function CategoriesPage() {
                   {t("categories.emptyState")}
                 </div>
               ) : (
-                <ul className="divide-y divide-slate-100 dark:divide-slate-800">                  {categories.map((cat) => (
-                  <li key={cat.categoryId} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">                      <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${cat.type === "income" ? "bg-emerald-500" : "bg-rose-500"}`} />
-                    <div>
-                      <p className="font-bold text-slate-800 dark:text-slate-100">{cat.name}</p>                          <p className="text-xs text-slate-400 uppercase tracking-wider">{cat.type}</p>
-                    </div>
-                  </div>
-                    <button
-                      onClick={() => handleDelete(cat.categoryId)}
-                      className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
-                      title="Delete category"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </li>
-                ))}
+                <ul className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {categories.map((cat) => (
+                    <li key={cat.categoryId} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${cat.type === "income" ? "bg-emerald-500" : "bg-rose-500"}`} />
+                        <div>
+                          <p className="font-bold text-slate-800 dark:text-slate-100">{cat.name}</p>
+                          <p className="text-xs text-slate-400 uppercase tracking-wider">{cat.type}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleDelete(cat.categoryId)}
+                        aria-label={`Delete category ${cat.name}`}
+                        className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 focus:opacity-100 cursor-pointer"
+                        title="Delete category"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>

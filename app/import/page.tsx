@@ -48,8 +48,9 @@ const HeaderSelect = ({
   headers: string[]; 
 }) => (
   <div>
-    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{label}</label>
+    <label htmlFor={`map-${field}`} className="block text-xs font-bold text-slate-500 uppercase mb-1">{label}</label>
     <select
+      id={`map-${field}`}
       value={map[field]}
       onChange={(e) => setMap({ ...map, [field]: e.target.value })}
       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
@@ -211,10 +212,10 @@ export default function ImportPage() {
           <ArrowLeft size={18} className="mr-2" /> {t("import.backToDashboard")}
         </button>
 
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm p-6 space-y-6">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-6 space-y-6">
           <div>
-            <h1 className="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-50"><Upload size={20} className="text-emerald-600" /> {t("import.title")}</h1>
-            <p className="text-slate-500 text-sm mt-1">{t("import.subtitle")}</p>
+            <h1 className="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-50"><Upload size={20} className="text-emerald-600 dark:text-emerald-400" /> {t("import.title")}</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t("import.subtitle")}</p>
           </div>
 
           <label className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 bg-emerald-50 text-emerald-700 border-2 border-dashed border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-800 dark:hover:bg-emerald-500/20 rounded-xl text-sm font-semibold cursor-pointer hover:bg-emerald-100 hover:border-emerald-300 transition-colors">
@@ -227,8 +228,8 @@ export default function ImportPage() {
             <>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.columnSeparator")}</label>
-                  <select value={delimiter} onChange={(e) => setDelimiter(e.target.value as Delimiter)}
+                  <label htmlFor="import-delimiter" className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.columnSeparator")}</label>
+                  <select id="import-delimiter" value={delimiter} onChange={(e) => setDelimiter(e.target.value as Delimiter)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                     <option value="auto">{t("import.autoDetect")}</option>
                     <option value=",">{t("import.comma")}</option>
@@ -237,16 +238,16 @@ export default function ImportPage() {
                   <p className="text-[11px] text-slate-400 mt-1">Select before choosing the file.</p>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.amountFormat")}</label>
-                  <select value={kindMode} onChange={(e) => setKindMode(e.target.value as KindMode)}
+                  <label htmlFor="import-kind-mode" className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.amountFormat")}</label>
+                  <select id="import-kind-mode" value={kindMode} onChange={(e) => setKindMode(e.target.value as KindMode)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                     <option value="signed">{t("import.signed")}</option>
                     <option value="separate">{t("import.separate")}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.dateFormat")}</label>
-                  <select value={dateFmt} onChange={(e) => setDateFmt(e.target.value as DateFmt)}
+                  <label htmlFor="import-date-fmt" className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.dateFormat")}</label>
+                  <select id="import-date-fmt" value={dateFmt} onChange={(e) => setDateFmt(e.target.value as DateFmt)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                     <option value="YYYY-MM-DD">YYYY-MM-DD</option>
                     <option value="DD/MM/YYYY">DD/MM/YYYY</option>
@@ -272,25 +273,25 @@ export default function ImportPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.currencySource")}</label>
-                  <div className="flex p-1 bg-slate-100 rounded-xl mb-2 w-fit">
+                  <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-2 w-fit">
                     <button type="button" onClick={() => setCurrencyMode("fixed")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "fixed" ? "bg-white text-emerald-600 shadow-sm" : "text-slate-500"}`}>
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "fixed" ? "bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm" : "text-slate-500 dark:text-slate-400"}`}>
                       {t("import.fixedCurrency")}
                     </button>
                     <button type="button" onClick={() => setCurrencyMode("column")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "column" ? "bg-white text-emerald-600 shadow-sm" : "text-slate-500"}`}>
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${currencyMode === "column" ? "bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm" : "text-slate-500 dark:text-slate-400"}`}>
                       {t("import.fromColumn")}
                     </button>
                   </div>
 
                   {currencyMode === "fixed" ? (
-                    <select value={defaultCurrency} onChange={(e) => setDefaultCurrency(e.target.value)}
+                    <select id="import-default-currency" value={defaultCurrency} onChange={(e) => setDefaultCurrency(e.target.value)}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                       {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <select value={map.currencyCol} onChange={(e) => setMap({ ...map, currencyCol: e.target.value })}
+                      <select id="import-currency-col" value={map.currencyCol} onChange={(e) => setMap({ ...map, currencyCol: e.target.value })}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                         <option value="">{t("import.selectColumn")}</option>
                         {headers.map((h) => <option key={h} value={h}>{h}</option>)}
@@ -305,8 +306,8 @@ export default function ImportPage() {
                   )}
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.paymentMethod")}</label>
-                  <select value={defaultPaymentMethod} onChange={(e) => setDefaultPaymentMethod(e.target.value)}
+                  <label htmlFor="import-payment-method" className="block text-xs font-bold text-slate-500 uppercase mb-1">{t("import.paymentMethod")}</label>
+                  <select id="import-payment-method" value={defaultPaymentMethod} onChange={(e) => setDefaultPaymentMethod(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">
                     {PAYMENT_METHODS.map((p) => <option key={p} value={p}>{p.replace("_", " ")}</option>)}
                   </select>
@@ -326,12 +327,12 @@ export default function ImportPage() {
           )}
 
           {result && (
-            <div className="border-t border-slate-100 pt-4 space-y-2">
-              <div className="flex items-center gap-2 text-emerald-600 font-semibold">
+            <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-2">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold">
                 <CheckCircle2 size={18} /> {result.imported} {t("import.imported")}
               </div>
               {result.skipped > 0 && (
-                <div className="text-amber-700 bg-amber-50 rounded-xl p-3 text-sm space-y-1">
+                <div className="text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:border dark:border-amber-900/50 dark:text-amber-300 rounded-xl p-3 text-sm space-y-1">
                   <div className="flex items-center gap-2 font-semibold"><AlertTriangle size={16} /> {result.skipped} {t("import.skipped")}</div>
                   <ul className="list-disc pl-5 max-h-40 overflow-y-auto">
                     {result.errors.slice(0, 20).map((e, i) => <li key={i}>{e}</li>)}

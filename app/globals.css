@@ -31,3 +31,9 @@ body {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
+
+/* Alineación numérica financiera precisa */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+

@@ -98,23 +98,23 @@ export default function StatisticsContent({ data }: { data: any }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <input type="date" value={data.currentParams.startDate || ""} onChange={(e) => updateFilter({ startDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
-        <input type="date" value={data.currentParams.endDate || ""} onChange={(e) => updateFilter({ endDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
+        <input type="date" aria-label="Start date" value={data.currentParams.startDate || ""} onChange={(e) => updateFilter({ startDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
+        <input type="date" aria-label="End date" value={data.currentParams.endDate || ""} onChange={(e) => updateFilter({ endDate: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm" />
 
-        <select value={data.currentParams.type || "ALL"} onChange={(e) => updateFilter({ type: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
+        <select aria-label={t("statistics.allTypes")} value={data.currentParams.type || "ALL"} onChange={(e) => updateFilter({ type: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
           <option value="ALL">{t("statistics.allTypes")}</option>
           <option value="INCOME">{t("statistics.onlyIncomes")}</option>
           <option value="EXPENSE">{t("statistics.onlyExpenses")}</option>
         </select>
 
-        <select value={data.currentParams.categoryId || ""} onChange={(e) => updateFilter({ categoryId: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
+        <select aria-label={t("statistics.allCategories")} value={data.currentParams.categoryId || ""} onChange={(e) => updateFilter({ categoryId: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
           <option value="">{t("statistics.allCategories")}</option>
           {data.categories?.map((c: any) => (
             <option key={c.categoryId} value={c.categoryId}>{c.name}</option>
           ))}
         </select>
 
-        <select value={data.currentParams.paymentMethod || ""} onChange={(e) => updateFilter({ paymentMethod: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
+        <select aria-label={t("statistics.allMethods")} value={data.currentParams.paymentMethod || ""} onChange={(e) => updateFilter({ paymentMethod: e.target.value })} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-sm">
           <option value="">{t("statistics.allMethods")}</option>
           <option value="CASH">{t("statistics.cash")}</option>
           <option value="CREDIT_CARD">{t("statistics.creditCard")}</option>
@@ -135,12 +135,12 @@ export default function StatisticsContent({ data }: { data: any }) {
           {t("statistics.backToDashboard")}
         </button>
 
-        <div className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-4 md:space-y-6">
+        <div className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-4 md:space-y-6">
           <div className="md:hidden">
             <button
               type="button"
               onClick={() => setMobileFiltersOpen((open) => !open)}
-              className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-700 dark:text-slate-200 font-semibold"
+              className="flex w-full items-center justify-between gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-700 dark:text-slate-200 font-semibold"
               aria-expanded={mobileFiltersOpen}
               aria-controls="statistics-mobile-filters"
             >
@@ -165,23 +165,23 @@ export default function StatisticsContent({ data }: { data: any }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-emerald-50 dark:bg-emerald-500/10 p-6 rounded-3xl">
+          <div className="bg-emerald-50 dark:bg-emerald-500/10 p-6 rounded-xl">
             <p className="text-emerald-700 font-semibold text-sm">{t("statistics.totalIncomes")}</p>
-            <h2 className="text-3xl font-bold text-emerald-600 mt-2">{formatCurrency(data.totalIn, currency, true)}</h2>
+            <h2 className="text-3xl font-bold text-emerald-600 mt-2 tabular-nums">{formatCurrency(data.totalIn, currency, true)}</h2>
           </div>
-          <div className="bg-rose-50 dark:bg-rose-500/10 p-6 rounded-3xl">
+          <div className="bg-rose-50 dark:bg-rose-500/10 p-6 rounded-xl">
             <p className="text-rose-700 font-semibold text-sm">{t("statistics.totalExpenses")}</p>
-            <h2 className="text-3xl font-bold text-rose-600 mt-2">{formatCurrency(data.totalOut, currency, true)}</h2>
+            <h2 className="text-3xl font-bold text-rose-600 mt-2 tabular-nums">{formatCurrency(data.totalOut, currency, true)}</h2>
           </div>
-          <div className="bg-emerald-50/70 dark:bg-emerald-500/10 p-6 rounded-3xl border border-emerald-100/50 dark:border-emerald-900/30">
+          <div className="bg-emerald-50/70 dark:bg-emerald-500/10 p-6 rounded-xl border border-emerald-100/50 dark:border-emerald-900/30">
             <p className="text-emerald-800 dark:text-emerald-300 font-semibold text-sm flex items-center gap-2"><Activity size={16} /> {t("statistics.dailyAverage")}</p>
-            <h2 className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mt-2">{formatCurrency(data.dailyAverage, currency, true)}</h2>
+            <h2 className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mt-2 tabular-nums">{formatCurrency(data.dailyAverage, currency, true)}</h2>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2">
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2">
             <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2"><TrendingUp size={20} className="text-emerald-500" /> {t("statistics.accumulatedBalance")}</h3>
             <div className="w-full h-72">
               <Line data={lineChartData} options={{
@@ -192,7 +192,7 @@ export default function StatisticsContent({ data }: { data: any }) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center">
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50">{t("statistics.expensesByCategory")}</h3>
             <div className="w-full max-w-72">
               <Doughnut data={buildChartData(data.expensesByCategory)} options={{
@@ -201,7 +201,7 @@ export default function StatisticsContent({ data }: { data: any }) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center">
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50">{t("statistics.incomesByCategory")}</h3>
             <div className="w-full max-w-72">
               <Pie data={buildChartData(data.incomesByCategory)} options={{
@@ -210,7 +210,7 @@ export default function StatisticsContent({ data }: { data: any }) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2 flex flex-col items-center">
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2 flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50">{t("statistics.expensesComparison")}</h3>
             <div className="w-full h-72">
               <Bar data={barChartData} options={{
@@ -225,7 +225,7 @@ export default function StatisticsContent({ data }: { data: any }) {
           </div>
 
         </div>
-        <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 mt-8">
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 mt-8">
           <h3 className="text-lg font-semibold mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2">
             <Calendar size={20} className="text-emerald-500" /> {t("statistics.ledger")}
           </h3>
@@ -244,13 +244,13 @@ export default function StatisticsContent({ data }: { data: any }) {
                 </thead>
                 <tbody>
                   {data.transactions.map((tx: any, idx: number) => (
-                    <tr key={idx} className="border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">                      <td className="py-3 pr-4 text-sm whitespace-nowrap">{tx.date}</td>
+                    <tr key={idx} className="border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">                      <td className="py-3 pr-4 text-sm whitespace-nowrap tabular-nums">{tx.date}</td>
                       <td className="py-3 pr-4 text-sm font-medium text-slate-700 dark:text-slate-300">{tx.description || t("common.na")}</td>
                       <td className="py-3 pr-4 text-sm text-slate-500">
                         <span className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded-md text-xs">{tx.categoryName}</span>
                       </td>
                       <td className="py-3 pr-4 text-sm text-slate-500">{tx.paymentMethod?.replace('_', ' ')}</td>
-                      <td className={`py-3 text-sm font-semibold text-right whitespace-nowrap ${tx.type === 'INCOME' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                      <td className={`py-3 text-sm font-semibold text-right whitespace-nowrap tabular-nums ${tx.type === 'INCOME' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'}`}>
                         {tx.type === 'INCOME' ? '+ ' : '- '}
                         {(() => {
                           return formatCurrency(tx.amount, tx.currency, false, true);

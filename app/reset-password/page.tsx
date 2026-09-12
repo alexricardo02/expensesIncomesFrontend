@@ -51,37 +51,38 @@ function ResetPasswordForm() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 border border-slate-100 dark:border-slate-800">
         <button
           onClick={() => router.push("/login")}
-          className="flex items-center text-slate-400 hover:text-slate-600 mb-6 text-sm transition-colors cursor-pointer"
+          className="flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 mb-6 text-sm transition-colors cursor-pointer"
         >
           <ArrowLeft size={16} className="mr-1" /> {t("common.backToLogin")}
         </button>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">{t("auth.resetPassword.title")}</h1>
-          <p className="text-slate-500 mt-2">{t("auth.resetPassword.subtitle")}</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">{t("auth.resetPassword.title")}</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">{t("auth.resetPassword.subtitle")}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
-            <div className="bg-rose-50 text-rose-600 p-3 rounded-lg flex items-center text-sm border border-rose-100">
+            <div className="bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-300 p-3 rounded-lg flex items-center text-sm border border-rose-100 dark:border-rose-900/50">
               <AlertCircle size={18} className="mr-2" />
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">{t("auth.resetPassword.newPasswordLabel")}</label>
+            <label htmlFor="reset-new-password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("auth.resetPassword.newPasswordLabel")}</label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-slate-400" size={20} />
               <input
+                id="reset-new-password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="text-slate-900 w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                className="text-slate-900 dark:text-slate-100 w-full pl-10 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
                 placeholder="••••••••"
                 required
                 minLength={8}
@@ -89,7 +90,8 @@ function ResetPasswordForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -97,12 +99,13 @@ function ResetPasswordForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">{t("auth.resetPassword.confirmPasswordLabel")}</label>
+            <label htmlFor="reset-confirm-password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("auth.resetPassword.confirmPasswordLabel")}</label>
             <input
+              id="reset-confirm-password"
               type={showPassword ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="text-slate-900 w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+              className="text-slate-900 dark:text-slate-100 w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
               placeholder="••••••••"
               required
               minLength={8}
@@ -112,7 +115,7 @@ function ResetPasswordForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-100 disabled:opacity-50 cursor-pointer"
+            className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-100 dark:shadow-none disabled:opacity-50 cursor-pointer"
           >
             {loading ? t("auth.resetPassword.resetting") : t("auth.resetPassword.submit")}
           </button>

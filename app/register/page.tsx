@@ -80,52 +80,53 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-slate-50 to-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-slate-50 to-slate-50 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 text-2xl font-black tracking-tight text-slate-900">
-            <Wallet className="text-emerald-600" size={28} />
-            Finance<span className="text-emerald-600">Tracker</span>
+          <div className="inline-flex items-center gap-2 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50">
+            <Wallet className="text-emerald-600 dark:text-emerald-400" size={28} />
+            Finance<span className="text-emerald-600 dark:text-emerald-400">Tracker</span>
           </div>
-          <p className="text-slate-500 mt-2 text-sm">
+          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
             Take control of your money, one transaction at a time.
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 border border-slate-100 dark:border-slate-800">
           <button
             onClick={() => router.push("/login")}
-            className="flex items-center text-slate-400 hover:text-slate-600 mb-6 text-sm transition-colors cursor-pointer"
+            className="flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 mb-6 text-sm transition-colors cursor-pointer"
           >
             <ArrowLeft size={16} className="mr-1 cursor-pointer" /> {t("common.backToLogin")}
           </button>
 
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-slate-900">{t("auth.register.title")}</h1>
-            <p className="text-slate-500 mt-1 text-sm">{t("auth.register.subtitle")}</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">{t("auth.register.title")}</h1>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">{t("auth.register.subtitle")}</p>
           </div>
 
           <form onSubmit={handleRegister} className="space-y-5">
             {error && (
-              <div className="bg-rose-50 text-rose-600 p-3 rounded-lg flex items-center text-sm border border-rose-100">
+              <div className="bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-300 p-3 rounded-lg flex items-center text-sm border border-rose-100 dark:border-rose-900/50">
                 <AlertCircle size={18} className="mr-2 shrink-0" />
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label htmlFor="register-username" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                 {t("auth.register.usernameLabel")}
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-3 text-slate-400" size={20} />
                 <input
+                  id="register-username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                  className="text-slate-900 dark:text-slate-100 w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
                   placeholder={t("auth.register.usernamePlaceholder")}
                   required
                 />
@@ -133,53 +134,56 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label htmlFor="register-email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                 {t("auth.register.emailLabel")}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 text-slate-400" size={20} />
                 <input
+                  id="register-email"
                   type="email"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                     if (emailError) setEmailError("");
                   }}
-                  className={`text-slate-900 w-full pl-10 pr-4 py-3 bg-slate-50 border rounded-xl focus:ring-2 transition-all outline-none ${
+                  className={`text-slate-900 dark:text-slate-100 w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border rounded-xl focus:ring-2 transition-all outline-none ${
                     emailError
                       ? "border-rose-400 focus:ring-rose-500 focus:border-rose-500"
-                      : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
+                      : "border-slate-200 dark:border-slate-700 focus:ring-emerald-500 focus:border-emerald-500"
                   }`}
                   placeholder={t("auth.register.emailPlaceholder")}
                   required
                 />
               </div>
               {emailError && (
-                <div className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-rose-600 animate-in fade-in duration-200">
-                  <AlertCircle size={14} className="shrink-0 text-rose-600" />
+                <div className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-rose-600 dark:text-rose-400 animate-in fade-in duration-200">
+                  <AlertCircle size={14} className="shrink-0 text-rose-600 dark:text-rose-400" />
                   <span>{emailError}</span>
                 </div>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label htmlFor="register-password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                 {t("auth.register.passwordLabel")}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 text-slate-400" size={20} />
                 <input
+                  id="register-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="text-slate-900 w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                  className="text-slate-900 dark:text-slate-100 w-full pl-10 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
                   placeholder={t("auth.register.passwordPlaceholder")}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -194,14 +198,14 @@ export default function RegisterPage() {
                       <li
                         key={rule.id}
                         className={`flex items-center gap-2 text-xs font-medium transition-colors ${
-                          met ? "text-emerald-600" : "text-slate-400"
+                          met ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"
                         }`}
                       >
                         <span
                           className={`flex items-center justify-center w-4 h-4 rounded-full border transition-colors ${
                             met
                               ? "bg-emerald-500 border-emerald-500"
-                              : "border-slate-300"
+                              : "border-slate-300 dark:border-slate-600"
                           }`}
                         >
                           {met && <Check size={10} strokeWidth={3} className="text-white" />}
@@ -223,12 +227,12 @@ export default function RegisterPage() {
                 className="mt-1 cursor-pointer accent-emerald-600"
                 required
               />
-              <label htmlFor="acceptPolicy" className="text-sm text-slate-600 cursor-pointer">
+              <label htmlFor="acceptPolicy" className="text-sm text-slate-600 dark:text-slate-300 cursor-pointer">
                 {t("auth.register.policyText")}{" "}
                 <a
                   href="/datenschutzerklarung"
                   target="_blank"
-                  className="text-emerald-600 hover:underline font-medium"
+                  className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
                 >
                   {t("auth.register.privacyPolicy")}
                 </a>
@@ -239,7 +243,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading || !isFormValid}
-              className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-100 mt-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-emerald-600"
+              className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-100 dark:shadow-none mt-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-emerald-600"
             >
               {loading ? t("auth.register.creating") : t("auth.register.submit")}
             </button>
